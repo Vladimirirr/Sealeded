@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How Vue3 Reactive Works Basically</title>
+  </head>
+  <body bgcolor="gray">
+    <p>
+      Open your browser console panel and try to do following things:
+      <ol>
+        <li>run `window.debugValues.user.age++`</li>
+        <li>run `window.debugValues.greeting = 'hey'`</li>
+        <li>run `window.debugValues.user.name = 'jack'`</li>
+      </ol>
+    </p>
+    <div id="app" style="border: 1px solid papayawhip"></div>
+    <p>附上一张 Vue3 Reactivity Package 的结构图：</p>
+    <p>from https://www.vuemastery.com/courses/vue-3-reactivity/vue3-reactivity - P4</p>
+    <div>
+      <img
+        src="imgs/the tree structure of vue3 reactive codebase.jpg"
+        alt="failed to load the image"
+        style="width: 60%;"
+      />
+    </div>
+    <script>
+      // 调试相关，把一些基本信息暴露到window上，方便调试和测试
+      window.debugValues = {}
+      const debugOnWindow = (value, name) => (window.debugValues[name] = value)
+
+      // 常量：ref类型的原始值的键名
+      const BaseValueKeyOfRef = Symbol('the key of base value for a ref')
+
+      // 常量：保留的键名，即不能被跟踪的依赖的名字
+      const reservedKeys = [BaseValueKeyOfRef]
+
+      // 存储被跟踪的依赖
+      const targetMap = new WeakMap()
+      debugOnWindow(targetMap, 'targetMap')
+
+      // 当前的effect
+      // effect指的是当一个依赖改变时执行的副作用函数
+      let currentEffect = null
+      debugOnWindow(() => currentEffect, 'getCurrentEffect')
+
+      // 跟踪（或监听）一个依赖
+      // target[key]就是此依赖，其中target是依赖容器，key是依赖名字（简称依赖）
+      const track = (target, key) => {
+        // 依赖容器存在性
+        let depsMap = targetMap.get(target)
+        if (!depsMap) {
+          // 创建此依赖容器对应的map，此map保存此依赖容器上的【依赖名字】和【依赖的effect列表】
+          targetMap.set(target, (depsMap = new Map()))
+        }
+        // 依赖的effect列表存在性
+        let dep = depsMap.get(key)
+        if (!dep) {
+          // 创建此依赖的effect列表
+          depsMap.set(key, (dep = new Set())) // Set能避免重复的副作用收集
+        }
+        // 把当前effect收集到依赖的effect列表里面去
+        dep.add(currentEffect)
+      }
+
+      // 触发一个依赖全部的effect
+      const trigger = (target, key) => {
+        const depsMap = targetMap.get(target)
+        if (!depsMap) return
+        // 得到此依赖的effect列表
+        const dep = depsMap.get(key)
+        if (dep) {
+          dep.forEach((effect) => effect())
+        }
+      }
+
+      // 响应式化一个数据对象，相当于Vue2的observe方法
+      const reactive = (target) => {
+        const trap = {
+          get(target, key, reeciver) {
+            // 当前键是否要当作依赖
+            const shouldTrack = () =>
+              !!(currentEffect && !reservedKeys.includes(key))
+            shouldTrack() && track(target, key)
+            return Reflect.get(target, key, reeciver)
+          },
+          set(target, key, value, reeciver) {
+            const oldValue = Reflect.get(target, key, reeciver)
+            const newValue = Reflect.set(target, key, value, reeciver)
+            if (oldValue !== newValue) {
+              // 值不一样，告诉依赖执行需要的操作
+              // 可以使用其他比较策略，比如`Object.is`方法
+              trigger(target, key)
+            }
+            return newValue
+          },
+        }
+        return new Proxy(target, trap)
+      }
+
+      // 对一个基础类型进行响应式跟踪，本质上就是把此基本类型的值包裹在一个对象里，接着对它使用reative完成响应式跟踪
+      // ref = define a reactive [ref]erence using the object assessors
+      const ref = (value) =>
+        reactive({
+          [BaseValueKeyOfRef]: value, // 最佳实践是使用闭包保存原始的value值
+          get value() {
+            return this[BaseValueKeyOfRef]
+          },
+          set value(newValue) {
+            this[BaseValueKeyOfRef] = newValue
+            return true
+          },
+        })
+
+      // a computed value like Vue2
+      const computed = (getter) => {
+        const result = ref()
+        // 得到初始值
+        autoRun(() => (result.value = getter()))
+        return result
+      }
+
+      // 创造一个环境，传入一个副作用effect，使让effect里面的依赖能收集effect自己，当依赖改变时，此effect重新执行，从而让依赖派生的内容最新
+      const autoRun = (effect) => {
+        currentEffect = effect
+        effect()
+        currentEffect = null
+      }
+
+      // 一个数据对象
+      const user = reactive({
+        name: 'nat',
+        age: 22,
+        addr: {
+          desc: 'Ningbo, Zhejiang',
+          door: '808',
+        },
+        scores: [10, 20, 40, 100],
+      })
+      debugOnWindow(user, 'user')
+
+      // 一个基础数据
+      const greeting = ref('hello')
+      debugOnWindow(greeting, 'greeting')
+
+      // 一个computed
+      const nameWithEm = computed(() => `<em>${user.name}</em>`)
+      debugOnWindow(nameWithEm, 'nameWithEm')
+
+      // 目标dom
+      const targetDom = document.getElementById('app')
+
+      // 一个模拟的渲染函数，当作effect
+      const render = () => {
+        const result = `
+          <ol>
+            <li>the age is ${user.age} from a object property</li>
+            <li>the greeting is ${greeting.value} from a basic value</li>
+            <li>the name is ${nameWithEm.value} from a computed value like a getter</li>
+          </ol>
+        `
+        console.log(result)
+        // refresh dom finally
+        targetDom.innerHTML = result
+      }
+
+      // 让依赖自动收集此effect（即render），而当依赖变化时自动执行它收集的effect
+      autoRun(render)
+    </script>
+  </body>
+</html>

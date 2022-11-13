@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script type="module">
+      import {
+        runDisposableWorker,
+        runWorker,
+        runWorkerByActions,
+      } from './index.js'
+
+      {
+        // test runDisposableWorker
+        runDisposableWorker((a) => a * 2, 8).then((res) =>
+          console.log('test runDisposableWorker ok', res)
+        )
+      }
+
+      {
+        // test runWorker
+        const worker = runWorker((a) => a * 4)
+        // worker.post(10).then((res) => console.log('test runWorker ok', res)) // successful
+        // worker.post(20).then((res) => console.log('test runWorker ok', res)) // throw a Error, and this is Expected
+        // or you can connect some `post` after another using promise chain
+        worker
+          .post(100)
+          .then((res) => console.log('test runWorker ok', res))
+          .then(() => worker.post(200))
+          .then((res) => console.log('test runWorker ok', res))
+          .finally(() => worker.close())
+      }
+
+      {
+        // test runWorkerByActions
+        const worker = runWorkerByActions([
+          {
+            action: 'add',
+            work: ({ a, b }) => a + b,
+          },
+          {
+            action: 'sub',
+            work: ({ a, b }) => a - b,
+          },
+        ])
+        worker
+          .post('add', { a: 1, b: 2 })
+          .then((res) => console.log(res) && worker.close()) // output 3, this is Expected
+      }
+    </script>
+  </body>
+</html>
