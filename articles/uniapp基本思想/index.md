@@ -23,13 +23,13 @@ wx.previewImages({
 
 传统网页的【JS 执行】和【渲染】是互斥关系，又由于移动端性能普遍较低（微信小程序最早推出是 2015 年，移动端性能都不高），长时间执行的 JS 脚本会使得界面没响应，严重影响用户体验，所以，当时微信小程序提出将【JS 执行】和【渲染】独立出来到各自的线程中，并发运行。
 
-不过，也带来对应的缺点：由于线程相互独立，一次通信的成本较高（下文将提到此问题），在快速交互的情况下（比如快速下滑列表），导致页面反应跟不上的问题（下文将提到解决方法）。
+不过，也带来对应的缺点：由于线程相互独立，一次通信的成本较高（下文将提到此问题），在快速交互的情况下（比如快速下滑列表）可能导致页面反应跟不上的问题（下文将提到解决方法）。
 
 由于【JS 引擎】从 webview 单独独立，意味着在微信小程序的 JS 代码里无法访问任何与 dom 和 bom 相关的方法，也就使得著名的 Zepto.js 无法在小程序上运行，同时，iOS 端的 JavaScriptCore 和 Node.js 的 V8 也不尽相同，有些 npm 包可能无法正常运行。
-由于【渲染引擎】从 webview 单独独立，意味着在微信小程序的视图发生了交互，无法迅速地执行对应的 JS 逻辑，而是需要先经过消息管道通信到对应的逻辑线程，再有逻辑线程对应的 JS 逻辑执行，最终再将直接结果反馈到视图线程。
 
-什么是微信小程序的 WXS，它是能直接运行在视图层的 JS-like 代码。
-由于两层之间通信折损的问题，在低端机（低端安卓机）可能会出现，手势已经对列表向下滑动了，但是要过一会视图才真正开始滑动，有延迟。
+由于【渲染引擎】从 webview 单独独立，意味着在微信小程序的视图发生了交互，无法迅速地执行对应的 JS 逻辑，而是需要先经过消息管道通信到对应的逻辑线程，再由逻辑线程对应的 JS 逻辑执行，最终再将直接结果反馈到视图线程。
+
+什么是微信小程序的 WXS？它是能直接运行在视图层的 JS-like 代码。（从而避免两个引擎通信造成的时间浪费，但是有很多限制，不是特别好用）
 
 不同平台对应的 webview：
 
@@ -45,7 +45,7 @@ uniapp = 数据使用 vue 管理 + 视图依旧（也只能）由小程序管理
 
 uniapp = 编译时（将 vue 编写的项目转成符合微信小程序格式的项目） + 运行时（代理小程序的行为，比如代理小程序的事件和生命周期钩子）
 
-小程序的 setData 用法与 React 的 setState 相同，setData 同步地修改依赖，**同时<font color="red">立刻</font>向渲染层发送一个更新请求，也就导致了连续多次的 setData 不会合并**。
+小程序的 setData 用法与 React 的 setState 相同，但是 setData 是同步地修改依赖，**同时<font color="red">立刻</font>向渲染层发送一个更新请求，也就导致了连续多次的 setData 不会合并**。
 
 一次 setData 的过程：
 
@@ -109,21 +109,7 @@ uniapp = 编译时（将 vue 编写的项目转成符合微信小程序格式的
 
 总结：
 
-改写 vue2 的 patch 方法，复习一下 patch 方法的执行栈：
-
-1. a dependence changed
-2. setter of the dependence run dep.notify
-3. run watcher.update
-4. run queueWatcher(watcher) and push the watcher into a queue, by the way, the watcher queued is a render watcher from a component whose dependence changed
-5. --nextTick trigger--
-6. run fluashSchedulerQueue and pop all watchers fron the queue mentioned above
-7. run watcher.run
-8. run watcher.get
-9. run updateComponent
-10. run vm.update(vm.render())
-11. run patch(oldVNode, newVNode)
-
-而此时的 patch 只 diff 新旧数据，由于两者的组件实例相互引用，即`vueInstance.$wxInstance <--> wxInstance.$vue`，当 Vue 组件更新时，从`vueInstance.$data`得到最新的新值，从`wxInstance.$data`得到上一次的旧值，新旧值进行 diff，得出最小数据变化量 patch，再一次性执行 `wxInstance.setData`。
+此时 Vue 的 patch 只 diff 新旧数据，由于两者的组件实例相互引用，即`vueInstance.$wxInstance <--> wxInstance.$vue`，当 Vue 组件更新时，从`vueInstance.$data`得到最新的新值，从`wxInstance.$data`得到上一次的旧值，新旧值进行 diff，得出最小数据变化量 patch，再一次性执行 `wxInstance.setData`。
 
 由于 Vue 不再执行真正的 diff+patch，不需要 VNode 也不需要 render 函数以及其他有关的操作，降低了 30% 的 Vue 代码量。
 
