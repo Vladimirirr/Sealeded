@@ -1,30 +1,42 @@
-# 组合式语法与自定义 hook
+# 组合式语法与自定义 Hook
 
 ## 组合式语法
 
 Vue3 的组合式语法借鉴自 React16 的 Hook 语法，都是**一种更合理地<font color="red">组织组件内的数据与行为</font>以及<font color="red">组件公共逻辑复用</font>的编程方式**。
 
-受 React16 的 Hook 语法启发，而且越来越多的前端框架（比如 Preact10、Vue3）放弃基于类（代表 React15）或配置选项（代表 Vue2）的组件编写方式转而使用基于 Hook 或类似的编写方式，由此前端框架的编程思想从面向对象演变为面向函数。
+受 React16 的 Hook 语法启发，而且越来越多的前端框架（比如 Preact10、Vue3）放弃基于类（代表 React15）或配置选项（代表 Vue2）的组件编写方式转而使用基于 Hook 或类似的编写方式，由此前端框架的编程思想从面向对象演变为面向函数。**（根本原因：`UI = Render(CurrentState)`，即 UI 是 Render 函数根据 CurrentState 变量的演绎）**
 
 ### React 的基于类的组件和基于函数的组件的对比
 
 基于类的组件：
 
 ```tsx
-// 一个用于切换状态的组件公共逻辑的混入
-const mixinToggle = (component: Object, value: boolean) => {
-  // 放置对应的状态到组件，很可能将一个存在的同名状态覆盖，或者组件编写者需要让出此状态名字（因为toggleValue名字被此混入占用了）
-  this.state.toggleValue = value
-  // 放置操作方法，同样存在上述的问题
-  this.toggle = () => component.setState({ [toggleKey]: (value = !value) })
-  this.toggleTrue = () => component.setState({ [toggleKey]: (value = true) })
-  this.toggleFalse = () => component.setState({ [toggleKey]: (value = false) })
-  // 其他的副作用，比如注册生命周期钩子，混入编写者需要小心翼翼地组合新的副作用与原来的副作用
+/**
+ * 状态切换的组件公共逻辑的混入，一个 mixin 工厂函数
+ * @param component 被混入的组件
+ * @param value 初始值
+ * @param prefix 混入的名字，防止命名冲突
+ */
+const mixinToggle = (component: Object, value: boolean, prefix: string) => {
+  // 即便可以传入 prefix 来自定义混入功能的名字的前缀（功能依旧受限，不能完全自定义名字），但这无疑增加了编写和使用混入的心智负担
+  // 取得 prefix
+  prefix = prefix || 'toggle'
+  // 放置值
+  const toggleValueName = `${prefix}Value`
+  this.state[toggleValueName] = value
+  // 放置操作方法
+  this[prefix] = () =>
+    component.setState({ [toggleValueName]: (value = !value) })
+  this[`${prefix}True`] = () =>
+    component.setState({ [toggleValueName]: (value = true) })
+  this[`${prefix}False`] = () =>
+    component.setState({ [toggleValueName]: (value = false) })
+  // 其他的副作用，混入编写者需要小心翼翼地组合新的副作用与已经存在的副作用
   const originComponentDidMount = component.componentDidMount
   component.componentDidMount = () => {
     console.log('mounted and mixinToggle has been set.')
     // 执行原来的钩子（如果有的话）
-    originComponentDidMount && originComponentDidMount.call(component) // 让this指向正确
+    originComponentDidMount && originComponentDidMount.call(component) // 让 this 指向正确
   }
 }
 class Foo extends React.Component {
@@ -34,8 +46,8 @@ class Foo extends React.Component {
     // 使用混入来复用组件的公共逻辑（数据和方法）
     mixinToggle(this)
   }
-  setCount(){
-    this.setState{ count: this.state.count + 1 }
+  setCount() {
+    this.setState({ count: this.state.count + 1 })
   }
   componentDidMount() {
     // 设置一个计时器
@@ -52,7 +64,7 @@ class Foo extends React.Component {
     return <h1>count is {this.count}.</h1>
   }
 }
-// 使用高阶组件来组件的公共逻辑
+// 使用高阶组件来复用组件的公共逻辑
 class HOCWrapWithDivTag extends React.Component {
   constructor(component) {
     super()
@@ -73,35 +85,35 @@ const FooEnhanced = HOCWrapWithDivTag(Foo)
 缺点：
 
 1. 相同功能的代码被分割，上述代码里，【设置与清除定时器】被分割到两个独立的钩子里，【值 count 和它的方法 setCount】也被分割开（不过可以把方法 setCount 定义在构造函数里，这样就和它的值 count 紧密在一起，不过构造器的代码量会快速膨胀）
-2. 多个混入导致的【同名的功能被覆盖】、【一个功能的来源无法快速定位】、【团队合作带来的高心智负担】、等等的混乱问题
-3. 多个高阶组件来装饰一个组件，也会存在【多个混入导致的问题】
-4. 还可以使用不常用的基于类的继承来复用组件的公共逻辑，不过依旧存在像【多个混入导致的问题】
+2. 多个混入导致的【同名的功能被覆盖】、【一个功能的来源无法快速定位】、【团队合作带来的高心智负担】、等等的混乱问题，即便可以传入 prefix 但是也是功能受限的命名冲突解决方案
+3. 多个高阶组件来装饰一个组件，也会存在【多个混入导致的问题】，还存在嵌套过深的情况
+4. 还可以使用不常用的对象继承来复用组件的公共逻辑，不过与上面的 UI 公式理念不符
 
 使用 Hook 方式优化：
 
 基于函数的组件（Hook 依赖的宿主是函数）：
 
 ```tsx
-// 定义一个自定义hook，也就是对一些组件的公共逻辑封装为一个hook
+// 定义一个自定义 hook，也就是对一些组件的公共逻辑封装为一个 hook
 const useToggle = (defaultValue: boolean) => {
   // 这里的状态和方法名字可以任意定义，它们受限于当前的函数作用域，不会外溢！
   const [value, setValue] = React.useState(defaultValue)
   const toggle = React.useCallback(() => setValue(!value), [value])
   const toggleTrue = React.useCallback(() => setValue(true), [])
   const toggleFalse = React.useCallback(() => setValue(false), [])
-  // 注册一个钩子
+  // 注册一个 effect hook
   useEffect(() => {
     console.log('mounted and useToggle has been set.')
   }, [])
-  // 把需要暴露出去的状态和方法返回出去，外部在接收这些值时（比如使用数组的解构赋值）可以重新定义变量的名字
+  // 把需要暴露出去的状态和方法返回出去，外部在接收这些值时（比如使用数组的解构赋值）可以完全地自定义变量的名字
   return [value, toggle, toggleTrue, toggleFalse]
 }
 const Foo = () => {
-  const [count, setCount] = React.useState(0) // 内置hook，为基于函数的组件提供状态的功能
-  const timer = React.useRef(null) // 内置hook，代表一个静态的值，不当作组件的依赖而存在
-  const [value, toggle, toggleTrue, toggleFalse] = useToggle(false) // 复用toggle逻辑，可以随意取名，不需要担心混入带来的同名覆盖问题
-  const [value2, toggle2, toggleTrue2, toggleFalse2] = useToggle(false) // 再一次的复用toggle逻辑
-  // 内置hook，依赖数组为空，表示只在挂载和卸载时执行副作用函数
+  const [count, setCount] = React.useState(0) // 内置 hook，为基于函数的组件提供状态的功能
+  const timer = React.useRef(null) // 内置 hook，代表一个静态的值，不当作组件的依赖而存在
+  const [value, toggle, toggleTrue, toggleFalse] = useToggle(false) // 复用 toggle 逻辑，可以随意取名，不需要担心混入带来的同名覆盖问题
+  const [value2, toggle2, toggleTrue2, toggleFalse2] = useToggle(false) // 再一次的复用 toggle 逻辑
+  // 内置 hook，依赖数组为空，表示只在挂载和卸载时执行
   React.useEffect(() => {
     // 挂载时
     timer.current = window.setInterval(() => {
@@ -118,7 +130,7 @@ const Foo = () => {
 
 解决缺点：
 
-1. 相同的功能不再被分割，上述的【设置计时器和清除计时器】、【count 和 setCount 定义在一起】被紧密的定义在一起
+1. 相同的功能不再被分割，上述的【设置计时器和清除计时器】、【count 和 setCount 定义在一起】被紧密地定义在一起
 2. 清晰的组件公共逻辑复用方式，useToggle 编写时不需要考虑是否已经存在同名的状态或方法以及其他边缘情况，因为 useToggle 里的状态和方法都在它自己的函数作用域里，而且 useToggle 使用解构赋值来在主组件里创建状态和方法，无需担心同名的问题（因为名字可以随意命名）
 
 ### Vue 的基于选项式的组件和基于组合式的组件的对比
@@ -126,6 +138,7 @@ const Foo = () => {
 基于选项式：
 
 ```ts
+// 普通的 mixin 很笨重
 const mixinToggle = {
   data() {
     return {
@@ -147,9 +160,35 @@ const mixinToggle = {
     console.log('mounted and mixinToggle has been set.')
   },
 }
+// 和 React 一样的使用 prefix 的 mixin，一个 mixin 工厂函数
+const mixinToggle2 = (value: boolean, prefix: string) => {
+  prefix = prefix || 'toggle'
+  const toggleValueName = `${prefix}Value`
+  return {
+    data() {
+      return {
+        [toggleValueName]: value,
+      }
+    },
+    methods: {
+      [prefix]() {
+        this[toggleValueName] = !this[toggleValueName]
+      },
+      [`${prefix}True`]() {
+        this[toggleValueName] = true
+      },
+      [`${prefix}False`]() {
+        this[toggleValueName] = false
+      },
+    },
+    mounted() {
+      console.log('mounted and mixinToggle has been set.')
+    },
+  }
+}
 const Foo = {
   // 使用混入来复用组件的公共逻辑
-  mixins: [mixinToggle],
+  mixins: [mixinToggle, mixinToggle2(true, 'toggleHaha')],
   data() {
     return {
       count: 0,
@@ -173,25 +212,25 @@ const Foo = {
 基于组合式优化：
 
 ```ts
-// 定义一个自定义hook，也就是对一些组件的公共逻辑封装为一个hook
+// 定义一个自定义 hook，也就是对一些组件的公共逻辑封装为一个 hook
 const useToggle = (defaultValue: boolean) => {
   const value = Vue.ref(defaultValue)
   const toggle = () => (value.value = !value.value)
   const toggleTrue = () => (value.value = true)
   const toggleFalse = () => (value.value = false)
   // 注册一个钩子，会自动与目前存在的同名钩子组合
-  Vue.onMount(() => {
+  Vue.onMounted(() => {
     console.log('mounted and useToggle has been set.')
   })
   return [value, toggle, toggleTrue, toggleFalse]
 }
 const Foo = {
   setup() {
-    // 组件的setup函数只执行一次（即初始化组件），不同于React的每次执行
+    // 组件的 setup 函数只执行一次（即初始化组件，安装组件全部的配置项），不同于 React 的每次执行
     const count = Vue.ref(0)
     const setCount = () => count.value++
-    const [value, toggle, toggleTrue, toggleFalse] = useToggle(false) // 复用toggle逻辑
-    const [value2, toggle2, toggleTrue2, toggleFalse2] = useToggle(false) // 再一次复用toggle逻辑
+    const [value, toggle, toggleTrue, toggleFalse] = useToggle(false) // 复用 toggle 逻辑
+    const [value2, toggle2, toggleTrue2, toggleFalse2] = useToggle(false) // 再一次复用 toggle 逻辑
     return {
       count,
     }
@@ -224,7 +263,7 @@ const Foo = {
 
 但是，总体和长远来说，基于 Hook 的组件编写方式是目前的最优解。
 
-## 自定义 hook 的本质
+## 自定义 Hook 的本质
 
 ### React
 
@@ -297,6 +336,6 @@ const Foo = {
 
 ### 广义总结
 
-hook 就是一个有状态的函数，它能在任何能使用函数的地方，不过这也增加了对 JS 函数的编写心智负担：JS 函数本身不具备任何状态，hook 借助一些方法（比如把状态统一保存在外部的状态管理工具里）使得函数有状态。
+**Hook 就是一个有状态的函数**，它能在任何能使用函数的地方，不过这也增加了对 JS 函数的编写心智负担：JS 函数本身不具备任何状态，Hook 借助一些方法（比如把状态统一保存在外部的状态管理工具里）使得函数有状态。
 
 每一个被使用到的 Hook 都会创建**一个独立的函数作用域**，**此函数作用域内的数据和逻辑与主组件和其他 Hook 完全隔离**，而且**基于解构赋值**的值、方法和副作用导出就像定义变量一样，可以自由组合和使用。
