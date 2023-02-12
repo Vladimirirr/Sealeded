@@ -1,5 +1,8 @@
 # `npx @vue/cli create <projectName>`
 
+目前（2023 年）Vue 已经从 Webpack 迁移到 Vite。
+Vite 的配置和插件编写比 Webpack 简单，且 ESBuild 的配置也比 Babel 简单。
+
 ## 目录结构
 
 `/public/favicon.ico` 图标
@@ -42,8 +45,8 @@
     "vuex": "^3.0.3" // the state manager for vue
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.12.0", // a vue-cli-service plugin for handling babel config file
-    "@vue/cli-plugin-eslint": "^3.12.0", // a vue-cli-service plugin for handling eslint config file
+    "@vue/cli-plugin-babel": "^3.12.0", // a vue-cli-service plugin for handling babel config file and installing relatived dependencies
+    "@vue/cli-plugin-eslint": "^3.12.0", // a vue-cli-service plugin for handling eslint config file and installing relatived dependencies
     "@vue/cli-service": "^3.12.0", // a service for run and build a vue project using webpack4
     "babel-eslint": "^10.0.1", // a eslint parser that transform the ast created by babel to a new ast that can be recognized by eslint when using experimental features unsupported in eslint itself, otherwise use default parser instead
     "eslint": "^5.16.0", // the eslint core

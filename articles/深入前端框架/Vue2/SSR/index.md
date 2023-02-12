@@ -105,6 +105,8 @@ const VueApp = new Vue({
 })
 ```
 
+结果：
+
 ```html
 <div id="app">
   <p>hello {{ name }}</p>
@@ -117,10 +119,10 @@ const VueApp = new Vue({
 </div>
 ```
 
-compileToFunctions is from vue-server-renderer instead of Vue's origin
+`compileToFunctions` is from vue-server-renderer instead of Vue's origin to compile a template into a render used in SSR not client.
 
 ```js
-function anonymous() {
+const render = function () {
   with (this) {
     return _c(
       'div',
@@ -153,7 +155,7 @@ function anonymous() {
 
 ```js
 // 客户端的render
-;(function anonymous() {
+const render = function () {
   with (this) {
     return _c(
       'div',
@@ -232,7 +234,7 @@ function anonymous() {
       2
     )
   }
-})
+}
 ```
 
 ```html

@@ -1,5 +1,7 @@
 # 组件树构建流程
 
+（旧版本的，新版本的参见`https://github.com/Vladimirirr/HowVueWorksSealeded`的《组件树的构造》章节。）
+
 ## 文字描述
 
 1. 组件初始化，初始化传入的 componentOptions，如果存在`vm.$options.el`则执行`$mount`方法，否则初始化结束，`$mount`方法最终执行`mountComponent`方法进行组件的挂载，即得到组件对应的 dom（挂载在`vm.$el`）并将其插入到父组件相应的 dom 里

@@ -22,9 +22,9 @@ const Foo = {
     const { ref, computed, watch, watchEffect } = Vue
     const age = ref(22)
     const nextYearAge = computed(() => age.value + 1)
-    watch([age], (/* no args */) => console.log('watch'))
+    watch([age], ([newAge]) => console.log('watch age', newAge))
     watchEffect(() => {
-      // 立刻运行此函数（副作用，即Effect）
+      // 立刻运行此函数 effect
       // 当其中的依赖变化时，再次运行
       console.log('watchEffect', age.value)
     })
@@ -33,7 +33,7 @@ const Foo = {
   },
   template: `
     <div>
-      <!-- 2.7.8的模板支持ESNext的语法，比如可选链 -->
+      <!-- 2.7.8的模板支持ESNext的语法，比如可选链，因为它使用@vue/compiler-sfc的新的模板编译器 -->
       <p>The age value is {{age}} while the next year is {{nextYearAge}}.</p>
       <p><button v-on:click="addYear">add year</button></p>
     </div>
@@ -54,7 +54,7 @@ function computed(getter /* alias for effect */) {
   var watcher = new Watcher(getCurrentInstance(), getter, noop, { lazy: true })
   var ref = {
     __isRef: true,
-    __isReadonly: true,
+    __isReadonly: true, // computed is readonly
     effect: watcher,
     get value() {
       if (watcher.dirty) {
@@ -104,8 +104,8 @@ function watchEffect(effect) {
 
 ## 建议
 
-Vue2 就使用最经典的选项式语法，使用 2.5.17 或 2.6.14 版本。不要使用任何使用 polyfill 来对 Vue2 提供组合式支持的技术，包括`vue-composition-api`插件以及 2.7.x 版本内置对组合式的支持。
+Vue2 就使用最经典的选项式语法，使用 2.5.17 或 2.6.14 版本。
 
 ## 发现
 
-其实组合式语法不是 Proxy 特有的，使用 defineProperty 也能实现组合式语法，只不过实现很受限制，需要大量的 hack 方法，很不优雅。
+其实组合式语法不是 Proxy 特有的，使用 defineProperty 也能实现组合式语法。
