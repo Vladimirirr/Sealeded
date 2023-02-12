@@ -72,7 +72,7 @@ const _sfc_main = {
   setup(__props) {
     // 执行一次setup函数，注意，这里return的是一个函数！
     // 把这个return的函数保存起来，但每次依赖变化就调用这个函数！
-    // 这个函数就相当于是render函数了！
+    // 这个函数就相当于是render函数了！（只不过返回是当前组件最新的状态（数据）而非组件树（VTree））
     const title = common_vendor.ref('hello JS')
     const fnfn = (...args) => console.log('event', args)
     return (__ctx, __cache) => {
