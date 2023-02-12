@@ -351,16 +351,16 @@ Component Foo(props) = { // props 是对象的内置值
 
 ## 响应式系统与依赖收集
 
-Vue2 using `Object.defineProperty` function to transform all properties of a object into corresponding getter and setter in order to implement property interception to make reactive system.
+Vue2 using `Object.defineProperty` function to transform all properties of an object into corresponding getter and setter in order to implement property **interception** to make reactive system.
 
-Vue3 using `Proxy` function to intercept a object to make reactive system, the trap function get is the getter and set is the setter.
+Vue3 using `Proxy` technology to **proxy** an object to make reactive system.
 
 Because Vue2 has a bit of hack in its implementation, there are some edge problems that need special treatment:
 
-1. Unable to respond to `set` and `delete` a key on an object in real time, so the alternates are `$set` and `$del` functions
+1. Unable to respond to set and delete a key on an object on running time, so the alternates are `$set` and `$del` functions
 2. The Array needs to hijack its prototype to realize responsiveness
 3. The too complex object will cause too many getters and setters, resulting in serious memory consumption
-4. Vue2 needs to fully make a data object reactive first(convert all its properties into corresponding getters and setters), while Vue3 is lazy, and just makes a dependency reactive only when it to be used
+4. Vue2 needs to fully make a data object reactive first(convert all its properties into corresponding getters and setters), while Vue3 is lazy, and just makes a dependency reactive only when it need to be
 5. ...
 
 ## Template and JSX
@@ -378,7 +378,7 @@ Template 语法相比 JSX，它的灵活度低，但能进行静态优化（即 
 </div>
 ```
 
-#### Vue2's optimization
+#### Vue optimization
 
 当一个模板存在静态节点时，Vue2 codegen 将生成：
 
@@ -411,14 +411,6 @@ function renderStatic(index) {
 }
 ```
 
-#### Vue3's optimization
-
-A more stronger static optimization feature than Vue2:
-
-1. Vue3's compiled render function carries more origin VNode structure informations than Vue2's that improves the performance of diff algorithm
-2. static optimization is also available on a dynamic VNode, a template `<div foo="foo">{{ dynamic }}</div>` in Vue2 can not be optimized, but Vue3 optimizes the attribute foo as a static attribute and generates the render function like `createElement('div', { foo: 'foo' }, /* children */ [toDisplayString(dynamic)], /* static mark */ [attrs: ['foo']])`
-3. ...
-
 ## `key`的作用（React 同样适用）
 
 key 标识是否要复用当前的元素或组件。
@@ -430,11 +422,6 @@ key 标识是否要复用当前的元素或组件。
 ## SSR 与注水
 
 SSR 就是获取 App 某一个时刻的某一个状态的视图快照，一次性或流式交付此快照的文本。
-
-1. `new Vue` -> 创建根组件的整颗树
-2. 在首次 patch 时检查根 dom 是否存在`data-server-rendered`标记
-3. 存在的话，移除此标记，以 hydrate 方式渲染（同时设置全局的 hydrating 标记为真，这样子组件也将以 hydrate 方式渲染）
-4. 执行 hydrate，此方法检查是否匹配，匹配的话直接把对应的 dom 赋值给`VNode.elm`
 
 # Hook 与 组合式语法
 
@@ -474,29 +461,6 @@ Techniques, strategies and recipes for building a modern web app with multiple t
 
 4. 独立的运行时环境
    主框架会对每个微应用分配独立的全局运行时环境（独立且隔离的 全局对象 window、CSS 样式、JavaScript 脚本、等等）。
-
-方案：
-
-1. iframe
-2. 主容器 + 子应用 的手动解决方案
-   手动管理代码隔离：
-
-   1. window 全局对象快照与还原技术
-   2. Proxy 代理全局对象技术
-   3. ...
-
-   手动管理样式隔离：
-
-   1. 各种 CSS Scoped 方法
-   2. 父容器唯一标识符方案
-   3. ...
-
-   以及其他资源的手动隔离方案。
-
-   主容器会根据配置（比如当前的路由）载入子应用到不同的挂载点，同时触发一些来自主容器和子应用的 lifecycle hooks(like mounted, unmounted)。
-
-3. WebComponents
-4. [ShadowRealm](https://github.com/tc39/proposal-shadowrealm)
 
 # CSS `nth-child` selector
 
@@ -656,7 +620,7 @@ WeakMap 仅接收对象作为键。对象被弱持有，意味着如果对象本
 
 由于随时可能给 GC 回收，故不能得到它当前的 items 长度，也不能迭代它。
 
-# 一个简单的模板引擎的设计 learned from underscore#template
+# 一个简单的模板引擎的设计 - underscore#template
 
 ```js
 var userListView = `
