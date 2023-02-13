@@ -162,19 +162,22 @@ Component Foo(props) => {
   const age: ComponentStateEffect = @context.state(props.age || 22) // 定义一个仅在Foo组件函数上下文的副作用，下同
   // the useMemo in React or the computed in Vue
   const doubleAge: ComponentMemorizedEffect = @context.memorized(() => age * 2, [age])
-  // useEffect in React, the return value is useless, which is a wrapper that contains the function passed into `@context.effect`
+  // useEffect in React
   const userEffect: ComponentUserEffect = @context.effect(() => {
-    // do something after component updated and doubleAge changed
+    // do something when both component updated and the doubleAge changed
   }, [doubleAge])
   // 导入公共逻辑
   const [featureA, featureB] = SomeFeature(/* some parameters if needed */)
-  // 子组件
-  const SubView = SubView(/* some parameters if needed */)
   // finally return the view a VNode Tree
   return <div class="Foo"><p>The age * 2 is {doubleAge}</p><SubView age={age}></SubView></div>
 }
 
 ```
+
+## 为什么 React 的 Hook 必须写顶层？
+
+- 思想上：Hook 本质就是一个**受限于此组件函数执行上下文**的**副作用**
+- 实现上：React 把一个组件的全部 Hook 记录到一条**单链表**上，接下来的每次重新执行其实都是**按顺序**地存取值
 
 ## Use concurrent to improve the performance of re-render
 
