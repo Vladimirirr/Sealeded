@@ -4,25 +4,31 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>How Vue3 Reactive Works Basically</title>
+    <title>How Vue3 Reactive Core Works Basically</title>
   </head>
-  <body bgcolor="gray">
-    <p>
-      Open your browser console panel and try to do following things:
+  <body bgcolor="silver">
+    <div>
+      <p>Open your browser console panel and try to do following things:</p>
       <ol>
-        <li>run `window.debugValues.user.age++`</li>
-        <li>run `window.debugValues.greeting = 'hey'`</li>
-        <li>run `window.debugValues.user.name = 'jack'`</li>
+        <li>run <code>window.debugValues.user.age++</code></li>
+        <li>run <code>window.debugValues.greeting.value = 'hey'</code></li>
+        <li>run <code>window.debugValues.user.name = 'jack'</code></li>
       </ol>
+    </div>
+    <div id="app" style="border: 2px solid pink"></div>
+    <p>附上一张 Vue3 Reactivity 的结构图：</p>
+    <p>
+      <span>from</span>
+      <span>
+        https://www.vuemastery.com/courses/vue-3-reactivity/vue3-reactivity
+      </span>
+      <span>(P4)</span>
     </p>
-    <div id="app" style="border: 1px solid papayawhip"></div>
-    <p>附上一张 Vue3 Reactivity Package 的结构图：</p>
-    <p>from https://www.vuemastery.com/courses/vue-3-reactivity/vue3-reactivity - P4</p>
     <div>
       <img
         src="imgs/the tree structure of vue3 reactive codebase.jpg"
-        alt="failed to load the image"
-        style="width: 60%;"
+        alt="Failed to download the image."
+        style="width: 60%"
       />
     </div>
     <script>
@@ -31,23 +37,24 @@
       const debugOnWindow = (value, name) => (window.debugValues[name] = value)
 
       // 常量：ref类型的原始值的键名
-      const BaseValueKeyOfRef = Symbol('the key of base value for a ref')
+      const descKey = Symbol('a description of key')
 
       // 常量：保留的键名，即不能被跟踪的依赖的名字
-      const reservedKeys = [BaseValueKeyOfRef]
+      const reservedKeys = [descKey]
 
-      // 存储被跟踪的依赖
+      // 存储被跟踪的依赖的容器（即propertyOwner）
+      // propertyOwner -> [property](aka dependency) -> effectList
       const targetMap = new WeakMap()
       debugOnWindow(targetMap, 'targetMap')
 
-      // 当前的effect
-      // effect指的是当一个依赖改变时执行的副作用函数
+      // 当前活跃的effect
       let currentEffect = null
       debugOnWindow(() => currentEffect, 'getCurrentEffect')
 
-      // 跟踪（或监听）一个依赖
-      // target[key]就是此依赖，其中target是依赖容器，key是依赖名字（简称依赖）
+      // 跟踪一个依赖
+      // target[key]就是此依赖，其中target是依赖容器(Owner)，key是依赖名字（简称依赖）
       const track = (target, key) => {
+        if (!currentEffect) return
         // 依赖容器存在性
         let depsMap = targetMap.get(target)
         if (!depsMap) {
@@ -55,24 +62,25 @@
           targetMap.set(target, (depsMap = new Map()))
         }
         // 依赖的effect列表存在性
-        let dep = depsMap.get(key)
-        if (!dep) {
+        let effects = depsMap.get(key)
+        if (!effects) {
           // 创建此依赖的effect列表
-          depsMap.set(key, (dep = new Set())) // Set能避免重复的副作用收集
+          depsMap.set(key, (effects = new Set())) // Set能避免重复的副作用收集
         }
         // 把当前effect收集到依赖的effect列表里面去
-        dep.add(currentEffect)
+        effects.add(currentEffect)
       }
+      // 当前的key是否可以跟踪
+      track.shouldTrack = (key) =>
+        !!(currentEffect && !reservedKeys.includes(key))
 
       // 触发一个依赖全部的effect
       const trigger = (target, key) => {
         const depsMap = targetMap.get(target)
         if (!depsMap) return
-        // 得到此依赖的effect列表
-        const dep = depsMap.get(key)
-        if (dep) {
-          dep.forEach((effect) => effect())
-        }
+        const effects = depsMap.get(key)
+        if (!effects) return
+        effects.forEach((effect) => effect())
       }
 
       // 响应式化一个数据对象，相当于Vue2的observe方法
@@ -80,9 +88,9 @@
         const trap = {
           get(target, key, reeciver) {
             // 当前键是否要当作依赖
-            const shouldTrack = () =>
-              !!(currentEffect && !reservedKeys.includes(key))
-            shouldTrack() && track(target, key)
+            if (track.shouldTrack(key)) {
+              track(target, key)
+            }
             return Reflect.get(target, key, reeciver)
           },
           set(target, key, value, reeciver) {
@@ -103,19 +111,16 @@
       // ref = define a reactive [ref]erence using the object assessors
       const ref = (value) =>
         reactive({
-          [BaseValueKeyOfRef]: value, // 最佳实践是使用闭包保存原始的value值
-          get value() {
-            return this[BaseValueKeyOfRef]
-          },
-          set value(newValue) {
-            this[BaseValueKeyOfRef] = newValue
-            return true
-          },
+          value,
+          [descKey]: 'isRef',
         })
 
       // a computed value like Vue2
       const computed = (getter) => {
-        const result = ref()
+        const result = reactive({
+          value: undefined,
+          [descKey]: 'isComputed',
+        })
         // 得到初始值
         autoRun(() => (result.value = getter()))
         return result
@@ -155,7 +160,7 @@
       const render = () => {
         const result = `
           <ol>
-            <li>the age is ${user.age} from a object property</li>
+            <li>the age is ${user.age} from an object property</li>
             <li>the greeting is ${greeting.value} from a basic value</li>
             <li>the name is ${nameWithEm.value} from a computed value like a getter</li>
           </ol>
