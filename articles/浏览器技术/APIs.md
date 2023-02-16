@@ -14,3 +14,37 @@ This feature is compatibility on all browsers.
 ### atob(ascii to binary)
 
 反向操作。
+
+## encodeURIComponent 与 encodeURI
+
+### encodeURIComponent
+
+将输入当作 URI 的组件进行转义（UTF-8 的格式）。
+
+不被转换的字符：`A-Za-z` `0-9` `-` `_` `.` `!` `~` `*` `'` `(` `)`
+
+反向操作：decodeURIComponent
+
+### encodeURI
+
+将输入当作一个 URI 整体进行转义（UTF-8 的格式）。
+
+不被转换的字符：
+
+- URI 保留：`;` `,` `/` `?` `:` `@` `&` `=` `+` `$`
+- 不需要被处理的：`A-Za-z` `0-9` `-` `_` `.` `!` `~` `*` `'` `(` `)`
+- 其他：`#`
+
+反向操作：decodeURI
+
+### escape
+
+This function had been deprecated.
+
+当字符 `< 0xFF` 时，使用 `%udd` 替换。
+当字符 `> 0xFF` 且 `< 0xFFFF` 时，使用 `%udddd` 替换。
+如果字符 `> 0xFFFF` 将被替换成代理对的格式。
+
+不被转换的字符：`@` `*` `_` `+` `-` `.`
+
+反向操作：unescape（不能识别代理对）

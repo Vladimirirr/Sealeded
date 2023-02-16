@@ -22,6 +22,8 @@ Unicode 编码的字符集的汉字【你】的编号是 20320，十六进制是
 
 这个字符不位于基本平面，它的码点是 0x20bb7。传统的 JavaScript 字符串长度 length 认为 2 个字节就是 1 个字符，而 ES6 的字符串内置的迭代器能正常识别 UTF-16 的代理对。
 
+为什么传统的 JavaScript 方法不能识别代理对，是因为 JavaScript 被创造出来的时候认为 UCS-2 已经足够了。
+
 ### 方法
 
 ES5 的 String.fromCharCode(Number)：返回 Number 指定的 Unicode 码点的字符，在[U+0000, U+FFFF]范围，超过 U+FFFF 则做高位截断处理，例如 0x20bb7 会被截断成 0x0bb7，验证`String.fromCharCode(0x20bb7) == String.fromCharCode(0x0bb7)`输出`true`
