@@ -13,7 +13,7 @@ window.currentDB = null
  */
 const request = indexedDB.open('TestDB11', 1)
 request.onerror = (error) => {
-  // index 的事件都是 dom 事件类型
+  // all index event is the dom event type
   console.error('Open failed', error)
 }
 request.onsuccess = (event) => {
@@ -26,6 +26,7 @@ request.onsuccess = (event) => {
   window.currentDB = event.target.result
 }
 request.onupgradeneeded = async (event) => {
+  // event: IDBVersionChangeEvent
   // it means that the db need to upgrade
   // now the db is available to modify the structure of the db, such as create, delete or modify an object store in the db
   // a versionchange transaction opened in this event callback
