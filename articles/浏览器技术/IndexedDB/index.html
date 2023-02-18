@@ -4,11 +4,152 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/idb@7/build/umd.js"></script>
     <title>Document</title>
+    <style>
+      .controller > div {
+        margin-bottom: 10px;
+        padding: 4px;
+        border: 2px pink solid;
+      }
+      .controller input {
+        width: 60px;
+      }
+      #tip {
+        display: none;
+        position: fixed;
+        top: 4px;
+        left: 50%;
+        width: 50%;
+        transform: translateX(-50%);
+        padding: 10px 14px;
+        background: rgb(225, 225, 225);
+        transition: all 0.2s;
+      }
+      #tip #tipContent.err {
+        color: red;
+      }
+      #tip #tipContent.ok {
+        color: green;
+      }
+    </style>
+    <script>
+      // form operations
+      const formInputs = ['bookId', 'bookName', 'bookPrice', 'bookDesc']
+      const getFormData = () => {
+        const res = {}
+        return formInputs.reduce((acc, cur) => {
+          const el = document.getElementById(cur)
+          let v = el.value
+          if (cur == 'bookPrice') v = +v
+          return (acc[cur] = v), acc
+        }, res)
+      }
+      const clearFormData = () => {
+        formInputs.forEach((i) => (document.getElementById(i).value = ''))
+      }
+
+      // message tip show operations
+      const msgTip = (type, msg) => {
+        clearTimeout(msgTip.timer)
+        const el = document.getElementById('tip')
+        const contentEl = document.getElementById('tipContent')
+        el.style.display = 'block'
+        contentEl.innerHTML = msg
+        contentEl.classList.remove('err')
+        contentEl.classList.remove('ok')
+        switch (type) {
+          case 'err':
+            contentEl.classList.add('err')
+            break
+          case 'ok':
+            contentEl.classList.add('ok')
+            break
+        }
+        msgTip.timer = setTimeout(() => {
+          el.style.display = 'none'
+        }, 3 * 1e3)
+      }
+      msgTip.timer = undefined
+
+      // db operations
+      const addTheBook = () => {
+        const { bookId, bookName, bookPrice, bookDesc } = getFormData()
+        addBook(bookId, bookName, bookPrice, bookDesc)
+      }
+      const delTheBook = () => {
+        const { bookId } = getFormData()
+        delBook(bookId)
+      }
+      const refreshTable = async () => {
+        const data = await getAllBooks()
+        const res = data
+          .map(
+            (i) => `
+              <tr>
+                <td>${i.bookId}</td>
+                <td>${i.bookName}</td>
+                <td>${i.bookPrice}</td>
+                <td>${JSON.stringify(i.bookDesc)}</td>
+              </tr>
+            `
+          )
+          .join('')
+        document.getElementById('tableContent').innerHTML = res
+      }
+      const fullData = () => {
+        const preset = ['JavaScript', 'Java', 'PHP', 'Python']
+        preset.forEach((i, ii) => {
+          addBook(ii + '', i, 20 + ii, '')
+        })
+      }
+    </script>
   </head>
   <body>
-    <div class="controller"></div>
-    <div class="displayPanel"></div>
+    <div class="controller">
+      <div>
+        <div>DB Versions</div>
+        <button onclick="openDB(1)">Open v1</button>
+        <button onclick="openDB(2)">Open v2</button>
+        <button onclick="openDB(3)">Open v3</button>
+      </div>
+      <div>
+        <div>DB Modify</div>
+        <label for="bookId">id: </label>
+        <input type="text" id="bookId" />
+        <label for="bookName">name: </label>
+        <input type="text" id="bookName" />
+        <label for="bookPrice">price: </label>
+        <input type="number" id="bookPrice" />
+        <label for="bookDesc">desc: </label>
+        <input type="text" id="bookDesc" />
+
+        <br />
+
+        <button onclick="addTheBook()">add</button>
+        <button onclick="delTheBook()">del</button>
+        <button onclick="refreshTable()">display</button>
+        <button onclick="fullData()">full</button>
+      </div>
+    </div>
+    <div class="displayPanel">
+      <p>Result:</p>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>price</th>
+            <th>desc</th>
+          </tr>
+        </thead>
+        <tbody id="tableContent"></tbody>
+      </table>
+    </div>
+    <div id="tip">
+      <b>提示：</b>
+      <span id="tipContent"></span>
+    </div>
     <script src="index.js"></script>
   </body>
 </html>
