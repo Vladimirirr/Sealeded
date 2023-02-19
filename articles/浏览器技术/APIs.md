@@ -48,3 +48,17 @@ This function had been deprecated.
 不被转换的字符：`@` `*` `_` `+` `-` `.`
 
 反向操作：unescape（不能识别代理对）
+
+## document.adoptedStyleSheets
+
+Set an array of constructed(or compiled) stylesheets for a document(`window.document` or `customElement.shadowRoot`).
+
+与直接在文档内使用的 `<style>`标签、`<link rel="stylesheet">`标签 相同，但是它具有可编程的接口 —— `CSSStyleSheet`。
+
+举例：
+
+```js
+const css = new CSSStyleSheet()
+css.replaceSync('p{ color: pink; }')
+window.document.adoptedStyleSheets.push(css) // Safari(2023.02) 不支持
+```
