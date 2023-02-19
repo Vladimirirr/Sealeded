@@ -1,5 +1,7 @@
 # IndexedDB
 
+## 概述
+
 IndexedDB（下面简称 index）是浏览器端（前端）的非关系（使用索引表）DBMS，一种专门针对 JavaScript 优化的 NoSQL，能存储大量的 JavaScript 数据结构（经过结构化处理），甚至包括二进制数据（Blob 或 ArrayBuffer 对象），且具备事务一致性。
 
 简单地说：
@@ -9,10 +11,10 @@ IndexedDB（下面简称 index）是浏览器端（前端）的非关系（使�
 
 参考文献：
 
-- W3C 的标准规范：https://www.w3.org/TR/IndexedDB/
-- MDN 的标准指南：https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
-- index 使用的存储对象的方法：https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
-- index 标准教程：https://javascript.info/indexeddb
+- [W3C 的标准规范](https://www.w3.org/TR/IndexedDB/)
+- [MDN 的标准指南](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
+- [index 使用的存储对象的方法](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)
+- [index 标准教程](https://javascript.info/indexeddb)
 
 数据结构支持情况：
 
@@ -36,15 +38,23 @@ index 受限同源策略。
 - https://github.com/jakearchibald/idb-keyval
 - https://github.com/ujjwalguptaofficial/JsStore
 
-## 示例
+## 实践
 
-[Open](./index.html)
+### 基本使用
+
+参见 [此目录下的 index.html](./index.html) 的例子。
+
+### 简单高效的最佳实践
+
+保存对象，对象的其中一个键当作主键（比如 id），对象的结构固定，对象可以存在一个键值对（比如 data）来保存任意类型的数据。
+
+宽松的：同一时间仅保存一对键值对，键名是当前值格式的 version（比如 20230219.1），值是一个 JSON 串或任意结构的对象（或数组），如果更新导致了值结构的变化，将直接新增一条当前 version 值（比如 20230219.2）的记录，同时将旧数据可以复用的内容复制，再将旧记录的值的内容清空（或移除此旧的记录）
 
 ## 版本控制
 
 index 具备内建的版本控制系统，这在传统的 DBMS 是不存在的，因为 index 保存在客户端，软件编写者不能实时访问它，因此，当发布新版本的软件时，使用者再次访问我们的软件，可能需要更新它。
 
-如果本地 DB 的 version 低于 open 指定的 version，将触发特殊的 upgradeneeded 事件，同时创建一个特殊的 versionchange 事务，在此事务下，我们可以更新此 DB 的结构和数据（权限最高的事务），我们也只能在此事务下修改 DB 的结构。
+如果本地 DB 的 version 低于 open 指定的 version，将触发特殊的 onupgradeneeded 事件，同时创建一个特殊的 versionchange 事务，在此事务下，我们可以更新此 DB 的结构和数据（权限最高的事务），我们也只能在此事务下修改 DB 的结构。
 
 当此 DB 还不存在时，其 version 默认是 0，而 open 方法不指定第二个 version 参数，默认是 1。
 
@@ -56,7 +66,7 @@ DB 的 version 是一个非 0 的自然数。
 
 在其他 DBMS 里叫做“表”（比如 MySQL）或“集合”（比如 MongoDB）。一个 db 可以存在多个对象仓。
 
-仓的每个值都需要一个唯一的主键（数字、字符串、等）。
+仓的每个值都需要一个唯一的主键（数字、字符串、Date、ArrayBuffer、等）。
 
 ```mermaid
 classDiagram
@@ -72,10 +82,12 @@ DataBase <-- ObjectStore
 
 ```
 
+![对象仓示例图](./imgs/dbWithStores.jpg)
+
 | keyPath | autoIncrement | the created object store                                                         |
 | ------- | ------------- | -------------------------------------------------------------------------------- |
 | N       | N             | 此仓可以存储任意类型的值（对象和基本类型），新增的值必须提供单独的主键           |
-| Y       | N             | 此仓只能存储对象，且对象必须存在与 ketpath 同名的 property                       |
+| Y       | N             | 此仓只能存储对象，且对象必须存在与 keyPath 同名的 property                       |
 | N       | Y             | 此仓可以存储任意类型的值，每条记录的主键将自动生成，或者也可以提供一个单独的主键 |
 | Y       | Y             | 此仓只能存储对象（前两者综合）                                                   |
 
@@ -85,11 +97,11 @@ DataBase <-- ObjectStore
 
 index 的全部与 DB 相关的操作都要在一个事务里执行。
 
-index 的事务是自提交的（不需要也不能手动提交），index 的制定者认为 index 的事务应该是短时间的（为了浏览器的性能考虑）。
+index 的事务是自提交的（不需要也不能手动提交），index 的制定者认为 index 的事务应该是短时间的。
 
 自提交时机：当此事务的全部请求的处理器（存在的）已经处理，且当前的 microtask 队列空时
 
-index 也有手动提交的方法 commit（正常情况，不需要使用此方法），执行 commit，将不再等待还没返回的请求。
+index 也有手动提交的方法 commit（正常情况，不需要使用此方法）：立刻提交当前的事务，而不再等待还没返回的请求（相当于假定请求都会成功），但是一旦出现请求失败，之前提交的事务将被迫回滚（因此，除非有十足的把握，否则不要手动 commit）
 
 事务类型：（标记不同的性能）
 
@@ -103,14 +115,55 @@ index 也有手动提交的方法 commit（正常情况，不需要使用此方�
 2. onabort：事务被中止
 3. onerror：有失败的请求冒泡到了此事务
 
-## 索引
+## 索引（建立在对象仓的基础上的搜索视图）
 
-根据对象的某一个 keyPath 来创建新的搜索方式（按特定的 keyPath 搜索）。
+索引是一个对象仓的特殊搜索视图（本体还是该对象仓），它根据对象的其他 keyPath 来创建新的搜索方式（按此特定的 keyPath 搜索）。
 
-下面的 key 在不同语义下有不同含义：
+**索引可以在一个对象仓上创建除了主索引（主键）外的其他额外索引（和使用此索引的搜索视图）。**
 
-- 在索引下，key 表示此索引指定的 keyPath
-- 在非索引下，key 就是记录的 primaryKey
+下图展示了按照 price 键为索引的示例图：
+
+![索引示例图](./imgs/storeWithExtraIndex.jpg)
+
+因此 key 在不同语义下有不同含义：
+
+- 在正常的对象仓下，key 就是 primaryKey
+- 在索引的对象仓下，key 表示此索引指定的 keyPath 的值
+
+```js
+const ta = currentDB.transaction('books')
+const os = ta.objectStore('books')
+const priceIndex = os.index('priceIndex') // booksStoreObject.createIndex('priceIndex', 'price')
+// 假设 books 存在如下数据
+// [
+//   {
+//     id: '01',
+//     name: 'AA',
+//     price: 22,
+//   },
+//   {
+//     id: '02',
+//     name: 'BB',
+//     price: 22,
+//   },
+//   {
+//     id: '03',
+//     name: 'CC',
+//     price: 24,
+//   },
+// ]
+priceIndex.openCursor().onsuccess = (e) => {
+  const cursor = e.target.result
+  const primaryKey = cursor.primaryKey // primaryKey in original object store
+  const key = cursor.key // the key list in index object store
+  const value = cursor.value // the value
+  console.log('find', primaryKey, key, value)
+}
+// 上面的 log 将输出（可以使用 openCursor(undefined, 'nextunique') 来过滤相同的 key 值）
+// find 01 22 { id, name, price }
+// find 02 22 { id, name, price }
+// find 03 24 { id, name, price }
+```
 
 ## 搜索
 
@@ -141,21 +194,21 @@ index 的事件冒泡：operations request event -> transaction -> db
 
 我们可以监视`db.onerror`，从而代理全部的错误，就像`window.onerror`一样。
 
-有些时候，我们的操作可能失败，比如`store.add`操作，失败的 error event 将默认中止它的事务，我们可以在此 onerror 事件处理器里执行`event.preventDefault()`来阻止默认的中止行为，从而避免中止整个事务，还可以执行`event.stopPropagation()`来阻止冒泡到它的 transaction 和 db。
+有些时候，我们的操作可能失败，比如`store.add`操作插入了一条相同的记录，失败的 error event 将默认中止它的事务，我们可以在此 onerror 事件处理器里执行`event.preventDefault()`来阻止默认的中止行为，从而避免中止整个事务，还可以执行`event.stopPropagation()`来阻止冒泡到它的 transaction 和 db。
 
 ## 游标
 
 一条一条地读取记录，从而避免一下子读取大量数据造成内存消耗过载。
 
-- `const req = store.openCursor(query, direction = 'next')` - similar to getAll but with a cursor
-- `const req = store.openKeyCursor(query, direction = 'next')` - similar to getAllKeys but with a cursor
+- `const req = store.openCursor(query?, direction = 'next')` - similar to getAll but with a cursor
+- `const req = store.openKeyCursor(query?, direction = 'next')` - similar to getAllKeys but with a cursor
 
 其中 direction：
 
 - `next`: default, begin from the min index
 - `prev`: begin from the max index
-- `nextUniqe`: similar to next but skip the same key
-- `prevUniqe`: similar to prev but skip the same key
+- `nextunique`: similar to next but skip the same key
+- `prevunique`: similar to prev but skip the same key
 
 游标的 req 的 onsuccess 每次都会触发。
 
@@ -164,8 +217,8 @@ index 的事件冒泡：operations request event -> transaction -> db
 cursorReq.onsuccess = (e) => {
   const cursor = e.target.result // if no more records, cursor is null
   if (cursor) {
-    const primaryKey = cursor.primaryKey // the record's primary key
-    const key = cursor.key // the key
+    const primaryKey = cursor.primaryKey // the record's primarKey
+    const key = cursor.key // it is same with primarKey when open cursor on a normal object store and is index's keyPath value when open on index object store
     const value = cursor.value
     console.log('find', primaryKey, key, value)
     cursor.continue()
@@ -178,9 +231,8 @@ cursorReq.onsuccess = (e) => {
   const cursor = e.target.result // if no more records, cursor is null
   if (cursor) {
     const primaryKey = cursor.primaryKey
-    // cursor.key === cursor.value
     const key = cursor.key
-    const value = cursor.value // the value, always undefined in this mode
+    const value = cursor.value // always undefined in this mode
     console.log('find', primaryKey, key, value)
     cursor.continue()
   } else {
@@ -319,16 +371,34 @@ instance properties:
 
 static methods:
 
-1. bound()
-2. lowerBound()
+1. bound
+2. lowerBound
 3. only
-4. upperBound()
+4. upperBound
 
 instance methods:
 
-1. includes()
+1. includes
 
 ### IDBIndex
+
+instance properties:
+
+1. keyPath
+2. multiEntry
+3. name
+4. objectStore
+5. unique
+
+instance methods:
+
+1. count
+2. get
+3. getAll
+4. getAllKeys
+5. getKey
+6. openCursor
+7. openKeyCursor
 
 ### IDBFactory
 
@@ -342,7 +412,7 @@ instance properties:
 
 instance methods:
 
-1. cmp()
+1. cmp
 2. databases
 3. deleteDatabase
 4. open

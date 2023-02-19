@@ -61,7 +61,8 @@ request.onupgradeneeded = async (event) => {
    * options.keyPath: string - use the keyPath as the primary key for objects
    * options.autoIncrement: boolean - use an auto increment as the primary key for values with any type
    */
-  db.createObjectStore('books', { keyPath: 'bookId' })
+  const store = db.createObjectStore('books', { keyPath: 'bookId' })
+  window.priceIndex = store.createIndex('priceIndex', 'bookPrice')
   // db.deleteObjectStore('books') // deleteObjectStore also is a sync operate
 }
 
