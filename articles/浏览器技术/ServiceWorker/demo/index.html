@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="common.css" />
+  </head>
+  <body>
+    <h1>A Demo for ServiceWorker with indexedDB.</h1>
+    <div>
+      <button onclick="dataJson()">get and cache the file data.json</button>
+      <button onclick="comment()">put a comment</button>
+      <button onclick="commentList()">get commentList</button>
+    </div>
+    <script>
+      const dataJson = () => {
+        fetch('/data.json', {
+          headers: {
+            'Need-Cache': 1,
+          },
+        })
+          .then((res) => res.json())
+          .then((res) => alert(JSON.stringify(res)))
+      }
+      const comment = () => {
+        const id = prompt('Input id...', 0)
+        const content = prompt('Input something...', 'abcd')
+        fetch('/comment', {
+          method: 'POST',
+          body: JSON.stringify({
+            id,
+            content,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Need-Control': 1,
+          },
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.code != 200) return alert('Fail: ' + res.error)
+            alert('Ok')
+          })
+      }
+      const commentList = () => {
+        fetch('/commentList', {
+          headers: {
+            'Need-Control': 1,
+          },
+        })
+          .then((res) => res.json())
+          .then((res) => alert(JSON.stringify(res.data)))
+      }
+    </script>
+    <script>
+      // SW 的功能非常强大，只能在 https 或 localhost 下使用
+      navigator.serviceWorker.register('/index.js').then(
+        (e) => {
+          console.log('SW registered', e)
+          // swInstance = e.active = navigator.serviceWorker.controller
+        },
+        (err) => {
+          console.error(err)
+        }
+      )
+    </script>
+  </body>
+</html>
