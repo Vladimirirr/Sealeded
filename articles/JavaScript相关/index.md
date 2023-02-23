@@ -2,7 +2,7 @@
 
 ## JavaScript 执行上下文
 
-![image](./imgs/JavaScript%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87.png)
+[See document.](./Context/index.md)
 
 ## 类型转换
 

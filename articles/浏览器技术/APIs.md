@@ -62,3 +62,21 @@ const css = new CSSStyleSheet()
 css.replaceSync('p{ color: pink; }')
 window.document.adoptedStyleSheets.push(css) // Safari(2023.02) 不支持
 ```
+
+## setTimeout 与 setInterval
+
+TODO
+
+## ElementsSearcher
+
+TODO
+
+### `getElement*`
+
+### `querySelector*`
+
+### 实时集合
+
+## DOM MutationObserver
+
+TODO
