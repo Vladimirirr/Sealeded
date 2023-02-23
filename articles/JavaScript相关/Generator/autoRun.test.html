@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script type="module">
+      import { autoRun } from './autoRun.js'
+
+      function* test(numA) {
+        console.log('Begin')
+        if (numA > 10) throw 'Something broken!'
+        const numB = yield 4
+        console.log('End')
+        return numA + numB
+      }
+
+      autoRun(test, 2).then((res) => alert(res))
+    </script>
+  </body>
+</html>
