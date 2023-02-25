@@ -11,3 +11,4 @@
 5. [前端的 NoSQL -- IndexedDB](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/IndexedDB/index.md)
 6. [构建 PWA 技术的核心 -- ServiceWorker](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/ServiceWorker/index.md)
 7. [浏览器内置组件封装技术 -- WebComponents](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/WebComponents/index.md)
+8. [JavaScript 与二进制数据](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/HandleBinary/index.md)
