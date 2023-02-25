@@ -23,3 +23,11 @@
 ## 字符编码
 
 [See document.](./%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81/index.md)
+
+## 访问安全
+
+[See document.](./SafelyAccess/index.md)
+
+## 弱引用的数据
+
+[See document.](./WeakData/index.md)

@@ -1,5 +1,4 @@
 /**
- * async await 的简易实现版本
  * 一个自执行的生成器
  * @param {GeneratorFunction} gen - a generator
  * @param {any[]} inits - init values to the generator
@@ -15,7 +14,7 @@ export const autoRun = (gen, ...inits) => {
   })
   // current value of the iterator
   let value = undefined
-  // get the iterator from its generator with init value
+  // get the iterator from its generator with init values
   const it = gen(...inits)
   // try next
   const next = () => {

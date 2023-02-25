@@ -65,17 +65,27 @@ window.document.adoptedStyleSheets.push(css) // Safari(2023.02) 不支持
 
 ## setTimeout 与 setInterval
 
-TODO
+### setTimeout
 
-## ElementsSearcher
+将函数推迟到一段时间之后再执行。
 
-TODO
+签名：`setTimeout(func, delay = 0, ...args)`
 
-### `getElement*`
+注意：此函数只是告诉浏览器想要在 delay 毫秒之后执行，但是如果浏览器正在执行其他事情或者当前系统正忙时，可能会推迟它的执行，**也就是真正的执行时机会延后（但绝对不会提前）**
 
-### `querySelector*`
+### setInterval
 
-### 实时集合
+以此时间间隔重复执行此函数。
+
+签名与 setTimeout 相同。
+
+浏览器内部会按照`[c + delay, c + 2delay, c + 3delay, c + n * delay]`的时刻重复执行此函数（其中 c = currentTime，即执行 setInterval 的时刻）。
+
+func 函数的实际执行时间间隔要比代码中设定的时间间隔要短！（因为执行此函数被包括在了 delay 期间。）
+
+### 休眠
+
+当页面处于非活跃状态，浏览器会显著地降低计时器的频率。
 
 ## DOM MutationObserver
 
