@@ -1,8 +1,12 @@
 # JavaScript 操作二进制数据
 
+## 直接看总结
+
+[传送门！Go to Summary!](#summary)
+
 ## ArrayBuffer
 
-二进制数据的容器载体。
+二进制数据的容器载体（缓冲区）。
 
 示例：
 
@@ -22,8 +26,6 @@ int main(){
   return 0;
 }
 ```
-
-文档：https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
 
 ### 操作二进制数据
 
@@ -78,8 +80,6 @@ int main(){
 }
 ```
 
-文档：https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray
-
 #### 数据视图 -- DataView
 
 与 TypedArray 相比，它更灵活，而且还能设置大小端模式。
@@ -103,15 +103,21 @@ dataView.setUint32(12, 10, true)
 console.log(data)
 ```
 
-文档：https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView
+### 文档
+
+ArrayBuffer: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer>
+
+TypedArray: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray>
+
+DataView: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView>
 
 ## Blob 与 File
 
-File <- Blob <- Object
+继承关系：`File <- Blob <- Object`
 
 ArrayBuffer 和 它的各种视图 都是 ECMAScript 的标准，而 Blob 和 File 不是，它们是 W3C 的标准。
 
-它们都表示一个固定不变的二进制数据块（就像字符串一样，不能改变它，但是可以在它基础上创造一个它的变体），而 File 侧重表示此二进制数据块是一个本地上传的文件（标签 `input[type="input"]` 获取到的文件），File 继承自 Blob，在 Blob 的基础上多了 fileName、fileType、fileSize、fileLastModified 等与文件相关的值。
+它们都表示一个固定不变的且不可见的（密封的）二进制数据块（就像字符串一样，不能改变它，但是可以在它基础上创造一个它的变体），而 File 侧重表示此二进制数据块是一个本地上传的文件（标签 `input[type="file"]` 获取到的文件），File 继承自 Blob，在 Blob 的基础上多了 fileName、fileType、fileSize、fileLastModified 等与文件相关的值。
 
 ```js
 /**
@@ -128,12 +134,31 @@ const blobData = new Blob(['aabb'], { type: 'text/plain' })
  * @param {string?} mime - 新 blob 的 type，默认与父的相同
  */
 const blobDataWithFirstTwoChars = blobData.slice(0, 2)
+
+/**
+ * 返回包含此 blob 数据的 ArrayBuffer 对象
+ */
+blobData.arrayBuffer(/* no params */).then((res) => console.log(res))
+
+/**
+ * 返回包含此 blob 数据的文本值（使用 UTF-8）
+ * 与 FileRader.readAsText 相同，但是仅支持 UTF-8
+ */
+blobData.text(/* no params */).then((res) => console.log(res))
+
+/**
+ * 返回包含此 blob 数据的 ReadableStream 对象
+ */
+const readableStreamToTheBlob = blobData.stream(/* no params */)
 ```
 
-可以使用`URL.createObjectURL`来为一个 blob 创建一个网络访问地址，类似于`blob:http://127.0.0.1/1e65100e-860d-aaa5-89ae-6ab0cbee6217`，主要注意的是，当不再需要访问此 blob 资源时，要使用`URL.revokeObjectURL`来清空它占的内存。
+可以使用`URL.createObjectURL`来为一个 blob 创建一个网络访问地址（诸如，`blob:http://127.0.0.1/1e65100e-860d-aaa5-89ae-6ab0cbee6217`），注意的是，当不再需要访问此 blob 资源时，要使用`URL.revokeObjectURL`来清空它占的内存。
 
-- 文档：https://developer.mozilla.org/en-US/docs/Web/API/Blob
-- 标准：https://www.w3.org/TR/FileAPI/
+### 文档
+
+Blob: <https://developer.mozilla.org/en-US/docs/Web/API/Blob>
+
+Blob 和 File 的 W3C 标准: <https://www.w3.org/TR/FileAPI/>
 
 ## Base64
 
@@ -141,7 +166,11 @@ const blobDataWithFirstTwoChars = blobData.slice(0, 2)
 
 浏览器有内置的操作 Base64 的方法，[btoa 与 atob](/articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/APIs.md#btoa%20%E4%B8%8E%20atob)。
 
-DataURL 是 Base64 的衍生，将 Base64 的`/`和`+`（与 URL 的特殊字符冲突）变成`*`和`-`。
+### DataURL
+
+DataURL 是 Base64 的衍生，将 Base64 的`/`和`+`（与 URL 的特殊字符冲突）变成`*`和`-`，在网络上传输带有格式的 Base64 数据。
+
+格式：`data:[mime][;base64],<data>`
 
 ## FileReader
 
@@ -158,7 +187,7 @@ const reader = new FileReader(/* no params */)
 reader.readAs = function (type, source) {
   // ArrayBuffer = Binary Array
   // DataURL = Base64 String
-  // Text = Unicode Text
+  // Text = Unicode Text 可选的第二个参数，支持传入文本被编码的类型
   // BinaryString - Latin1 Text
   const types = ['ArrayBuffer', 'DataURL', 'Text', 'BinaryString']
   if (!types.includes(type)) throw 'Unknown type foound.'
@@ -211,5 +240,41 @@ reader.readAs('Text', blobData).then(
 
 在 WebWorker 下可以使用它的变体 —— `FileReaderSync`接口，此时的各种`readAs*`方法将直接返回数据，这些阻塞不会影响到主线程。
 
-- 文档：https://developer.mozilla.org/en-US/docs/Web/API/FileReader
-- 文档：https://developer.mozilla.org/en-US/docs/Web/API/FileReaderSync
+### 文档
+
+FileReader: <https://developer.mozilla.org/en-US/docs/Web/API/FileReader>
+
+FileReaderSync: <https://developer.mozilla.org/en-US/docs/Web/API/FileReaderSync>
+
+## Summary
+
+```mermaid
+flowchart TD
+
+ab[/"ArrayBuffer 二进制数据"/]
+typed["TypedArray 视图"]
+view["DataView 视图"]
+blob[/"Blob 密封的二进制数据"/]
+input["File 标签"]
+file["File 本地文件"]
+fr["FileReader 读取"]
+dataURL["Base64 with type"]
+text["Text 普通文本"]
+blobURL["A URL for accessing the Blob"]
+ser[("Server")]
+
+
+ab --"读写"--> typed
+ab --"读写"--> view
+ab --"new Blob"--> blob
+
+blob --> fr --> ab
+blob --> fr --> dataURL
+blob --> fr --> text
+blob --"createObjectURL"--> blobURL
+
+ab --"send"--> ser
+blob --"send"--> ser
+
+input --"得到"--> file --"继承自"--> blob
+```
