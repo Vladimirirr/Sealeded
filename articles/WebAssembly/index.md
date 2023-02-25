@@ -17,7 +17,7 @@ C\C++ -> JavaScript 有两个最大的难点：
 1. 前者是静态语言，后者是动态语言
 2. 前者是手动垃圾回收，后者是自动垃圾回收
 
-而`asm.js`使用下列方法来解决：
+而 asm.js 使用下列方法来解决：
 
 1. 保证变量类型不会发生突变，而且仅支持定义的 2 种类型（signed int 和 signed double）
 2. 取消自动垃圾回收机制（使用 ArrayBuffer 模拟内存）
@@ -38,14 +38,16 @@ C\C++ -> JavaScript 有两个最大的难点：
 
 ### 编译器前置知识
 
-传统的编译器架构（代表：GCC）
-编译器的前端：将编译器支持的各种语言的源代码做词法分析、语法分析和 AST 构建，生成与源代码相关但是与目标机器平台不相关的中间代码
-编译器的后端：将中间代码优化同时生成目标机器平台的二进制文件
+传统的编译器架构（代表：GCC）：
+
+- 编译器的前端：将编译器支持的各种语言的源代码做词法分析、语法分析和 AST 构建，生成与源代码相关但是与目标机器平台不相关的中间代码
+- 编译器的后端：将中间代码优化同时生成目标机器平台的二进制文件
 
 最初 LLVM(Low Level Virtual Machine) 是伊利诺伊大学厄巴纳香槟分校的学生 Chris Lattner 在研究编译器优化时搭建的一个虚拟机，这个虚拟机内建了一套中立的中间代码（即 LLVM IR），并围绕此中间代码提出了一套全新的编译架构，随着此论文的一发表，位于此虚拟机的这套编译架构越来越出名，慢慢地 LLVM 不再指代此虚拟机，而是指代了这套编译架构。
 
 基于 LLVM 架构的编译器：
-统一中间代码为 LLVM IR(Intermediate Representation) 格式，每个新的语言只需要实现自己对应的前端插件（将源代码编译为 LLVM IR），每个新的机器平台也只需要实现自己对应的后端插件（将 LLVM IR 编译为对应机器平台的二进制文件）。
+
+- 统一中间代码为 LLVM IR(Intermediate Representation) 格式，每个新的语言只需要实现自己对应的前端插件（将源代码编译为 LLVM IR），每个新的机器平台也只需要实现自己对应的后端插件（将 LLVM IR 编译为对应机器平台的二进制文件）。
 
 LLVM IR 的优化由 LLVM 自己实现，当然可以传入自定义的优化配置，甚至可以编写自己需要的优化策略的插件。
 
@@ -110,11 +112,9 @@ https://github.com/appcypher/awesome-wasm-langs
 
 ## 最终
 
-能 transiple 到 JavaScript 的其他语言应该编译到对应的 WASM，这是大趋势，JavaScript 和 WASM 模块能很方便地交互。
-底层 交给 WASM。
-业务层 交给 JavaScript。
+能 compile 到 JavaScript 的其他语言应该都编译到对应的 WASM，这是大趋势，JavaScript 和 WASM 模块能很方便地交互。
 
-## 扩展阅读：SIMD.js 技术与规范
+## 拓展阅读：SIMD.js 技术与规范
 
 其实还存在一项提高 JavaScript 数学计算效率的技术（和规范），即 JavaScript 版本的 SIMD（单指令多数据，Single Instruction and Multiple Data），此技术暴露的 API 能直接调用 CPU 或 GPU 的计算能力，不过遗憾的是此技术没被纳入标准（也没有被浏览器正式版本实现过），代码示例：
 
@@ -124,4 +124,5 @@ const result = SIMD.float32x4(2.1, 2.2, 2.4, 2.8)
 ```
 
 立项背景：2014 年 Mozilla、Google 和 Intel 合作，起草了此技术项目
+
 项目终止：随着更强大的 WASM 技术立项，SIMD.js 技术被 WASM 合入并取代，并从提案的第三阶段删除
