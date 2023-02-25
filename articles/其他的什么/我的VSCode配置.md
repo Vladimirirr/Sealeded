@@ -95,8 +95,10 @@
 
 1. Dark+ (using currently)
 2. Monokai
-3. Solarized Dark
-4. Solarized Light
+3. One Dark
+4. Solarized Dark
+5. One Light
+6. Solarized Light
 
 ## 代码补全 (Code Snippets)
 
