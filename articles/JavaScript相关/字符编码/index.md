@@ -101,3 +101,7 @@ UCS = Universal Character Set
 #### UCS-4(UTF-32)
 
 能表示全部平面，始终 4 字节。
+
+## JavaScript 的支持
+
+JavaScript 的字符集编解码工具：[TextEncoder 与 TextDecoder 的使用](./Codec.md)

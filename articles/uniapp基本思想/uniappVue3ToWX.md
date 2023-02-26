@@ -144,8 +144,11 @@ source:
 ```
 
 `/pages/index/index.wxss`
+
 `/pages/index/index.json`
+
 `/static`
+
 `app.js` 来自 App.vue 的 script + main.js
 
 ```js
@@ -171,7 +174,11 @@ common_vendor.createSSRApp(App)
 ```
 
 `app.json`
+
 `app.wxss` 来自 App.vue 的 style
+
 `project.config.json`
+
 `project.private.config.json`
+
 `sitemap.json`

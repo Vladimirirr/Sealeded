@@ -2,7 +2,7 @@
 
 ## 什么是微前端
 
-微前端的概念借鉴自后端的微服务：一种软件开发的架构，其中，软件的后端由数个小而独立的子服务组成，每个子服务由各个独立的团队负责，图示：
+微前端的概念来自 Server 端：一种软件设计架构，软件的 MainServer 由数个小而独立的 SubServer 组成，而每个 SubServer 由各个独立的团队负责，其中 SubServer 也叫做 MicroSerevr，图示如下，
 
 ![image](./imgs/1.png)
 
@@ -15,7 +15,7 @@ Techniques, strategies and recipes for building a modern web app with multiple t
 图示：
 
 ```mermaid
-flowchart LR
+flowchart TD
 
 reactAppRepo["a React App repo"] --> appDev --> reactProdPkg["a React App production"] --> composedToMainApp
 jQueryAppRepo["a jQuery App repo"] --> appDev --> jQueryProdPkg["a jQuery App production"] --> composedToMainApp
@@ -23,7 +23,7 @@ solidJSAppRepo["a solidJS App repo"] --> appDev --> solidJSProdPkg["a solidJS Ap
 
 appDev["develop -> test -> build -> deploy"]
 
-composedToMainApp["composed all micro Apps(or all productions) into one"]
+composedToMainApp["composed all micro Apps(all these productions) into one"]
 
 ```
 

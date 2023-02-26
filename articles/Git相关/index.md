@@ -1,16 +1,18 @@
 # Git 相关
 
-**Git 官网：https://git-scm.com/**
+**Git 官网：<https://git-scm.com/>**
 
-**图解 Git 基本操作：http://marklodato.github.io/visual-git-guide/index-zh-cn.html**
+**书《Pro Git》：<https://github.com/progit/progit2>**
+
+**图解 Git 基本操作：<http://marklodato.github.io/visual-git-guide/index-zh-cn.html>**
 
 **Git 操作建议使用可视化工具，比如 VSCode 的 GitLens 和 GitGraph 插件，和跨平台的 SourceTree。**
 
-## 合并
+## Merge
 
 main：主干分支
 
-feature：开发分支，需要合到 main
+feature：需求分支，需要合到 main
 
 ### fast-forward merge
 
@@ -20,11 +22,11 @@ feature：开发分支，需要合到 main
 
 ### no-ff merge
 
-自 feature 分支从 main 创建出来后，main 分支也提交过 commit，比如线上 bug 紧急修复的 commit，此时 feature 合到 main，由于 Git 无法知道应该使用哪个分支的数据，故将两个分支最新的版本尝试进行合并，如果有文件存在冲突（比如 main 和 feature 的最新版本都对`Home.vue`的第 20 行做了修改），就必须手动解决冲突（采用 main 的版本还是 feature 的版本，亦或者两者都采用），同时提交一个合并 commit。
+自 feature 分支从 main 创建出来后，main 分支也提交过 commit，比如线上 bug 紧急修复的 commit，此时 feature 合到 main，此时 Git 不知道该使用谁的提交，故将两个分支最新的版本尝试进行整合(merge)，如果有文件存在冲突（比如 main 和 feature 的最新版本都对`Home.vue`的第 20 行做了修改），就必须手动解决冲突（采用 main 的版本还是 feature 的版本，亦或者两者都采用），同时提交一个 merged commit。
 
 ### squash merge
 
-传统的 merge（即 --no-ff merge）提交的合并 commit 存在两个父 commit 引用，一个指向 main 一个指向 feature，而使用 squash merge 的方式，合并 commit 只存在一个指向 main 的父 commit 引用，毕竟 feature 作为需求开发分支，一旦合入了 main 分支，就没有存在的必要了（应当定期删除一些不再使用的 feature 分支）。
+传统的 merge（即 no-ff merge）提交的 merged commit 存在两个父 commit 引用，一个指向 main 一个指向 feature，而使用 squash merge 的方式，merged commit 只存在一个指向 main 的父 commit 引用，毕竟 feature 作为需求分支，一旦合入了 main 分支，就没有存在的必要了（定期删除一些不再使用的 feature 分支）。
 
 ### cherry-pick
 
@@ -49,9 +51,9 @@ gitGraph
 
 ### rebase
 
-在 main 分支重做 feature 分支的全部提交，本质就是自动化的 cherry-pick 操作，使得原本非线性的常规合并(--no-ff)变地线性化。
+在 main 分支重做 feature 分支的全部提交，其实就是自动化的 cherry-pick 操作，使得非线性的常规 merge 变地线性化。
 
-提交历史看上去，feature 分支就好像直接从 main 分支开发的一样，也就是变基，即 rebase。
+提交历史看上去，feature 就好似不存在一样，也就是变基，即 rebase。
 
 ## 恢复
 
@@ -91,6 +93,7 @@ gitGraph
 ## 远端
 
 一个本地仓库通常会与一个或多个远端仓库相互关联（即 Git 的分布式思想），这些仓库都是等价的，能够相互替换。
+
 当然，服务器端仓库（比如 GitHub）不需要工作区和暂存区，只需要一个版本库即可，这种仓库也叫做 bare repo（使用`git init --bare`即可创建），不过，现在很多服务端仓库提供了在线代码编辑的功能，此时就会为此仓库创建出对应的工作区和暂存区。
 
 由于一个远端仓库是一个 URL（https 协议或 git 协议），而 URL 都较长（比如`https://github.com/Vladimirirr/Sealeded`），为此，Git 允许为特定的远端 URL 取一个别名，默认的别名就是`origin`。

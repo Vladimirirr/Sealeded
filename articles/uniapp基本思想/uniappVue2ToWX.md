@@ -1,7 +1,9 @@
 # `uniapp(vue2) -> 微信小程序` 打包输出的项目源码分析
 
 环境：
-HBuilder 3.4.18.20220630
+
+- HBuilder 3.4.18.20220630
+
 uniapp 编译器版本：
 
 - "@dcloudio/uni-mp-vue": "^2.0.1-34920220630001" 修改版的 Vue，下面简称 uni-vue2
