@@ -97,6 +97,7 @@ const handler = async (request) => {
     responseData.who = username ?? 'unknown'
     const scriptText = `
       window.jsonpCallbacks.${jsonpCallbackId}(
+        // ！！！！important！！！！
         // We pad the response data with JSON format into the callback provided by UA !
         // This is origin of the name JSONP!
         // 我们把要返回的数据以JSON的格式填充到了浏览器提供给我们的callback里！
@@ -148,16 +149,39 @@ Test:
 
 CORS 使用 HTTP 的 Headers 来处理各种跨域问题，即，将跨域问题直接让 HTTP 协议来处理。
 
-### Request Headers
+具体：
 
-1. `Access-Control-Allow-Origin`
-2. `Access-Control-Expose-Headers`
+1. A 网站 发送一个请求到 B 网站，其中请求的 origin header 标识了自己
+2. B 网站 查看 A 网站 是否有资格得到结果
+3. 有的话，就向 response 里填入需要的数据，同时设置 `Access-Control-Allow-Origin: A网站发来的origin值`
+4. 没有的话，就直接填入空数据，设置 404 或 403 等表示拒绝的状态码，不设置`Access-Control-Allow-Origin`
+5. 浏览器检查 response
+6. 如果带有`Access-Control-Allow-Origin`且值与当前相同，就代表此次请求成功，将响应 response 传给需要的 JS 处理器
+7. 否则，拦截掉此请求，同时报错
+
+图示：
+
+```mermaid
+sequenceDiagram
+
+Browser ->> Serevr: A网站发送一个请求到B网站
+Serevr ->> Serevr: B网站查看A网站是否有资格得到结果
+Serevr ->> Browser: 如果有资格设置 Allow 标识
+Browser ->> Browser: 浏览器检查返回是否有 Allow 标识
+Browser ->> Browser: 有的话就返回给需要的处理器
+Browser ->> Browser: 否则直接拦截和报错
+```
+
+### Response Headers
+
+1. `Access-Control-Allow-Origin` 准许的域，供浏览器检查
+2. `Access-Control-Expose-Headers` 准许浏览器可获得除 `Cache-Control` `Content-Language` `Content-Type` `Expires` `ETag` 等基本信息外的其他 headers
 3. `Access-Control-Max-Age`
 4. `Access-Control-Allow-Credentials`
 5. `Access-Control-Allow-Methods`
 6. `Access-Control-Allow-Headers`
 
-### Response Headers
+### Request Headers
 
 1. `Origin`
 2. `Access-Control-Request-Method`

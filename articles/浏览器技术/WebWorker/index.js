@@ -1,4 +1,4 @@
-// mdn reference for WebWorker: https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers#web_workers_api
+// mdn reference for WebWorker: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#web_workers_api
 
 const Worker = window.Worker
 const Blob = window.Blob
@@ -6,9 +6,9 @@ const createObjectURL = window.URL.createObjectURL
 const revokeObjectURL = window.URL.revokeObjectURL
 
 /**
- * 根据传入的worker字符串模板创建对应的真正worker
+ * 根据传入的worker字符串模板得到其真正的worker
  * @param {string} workerTemplate a worker template
- * @returns {{worker: Worker, workBlobURL: string}} a worker with its blobURL
+ * @return {{worker: Worker, workBlobURL: string}} a worker with its blobURL
  */
 const createWorker = (workerTemplate) => {
   const workBlob = new Blob([workerTemplate], {
@@ -23,19 +23,19 @@ const createWorker = (workerTemplate) => {
 }
 
 /**
- * 一次性运行的worker
- * @param {Function} work a function named work to run in worker
+ * 一次性的worker
+ * @param {Function} work a work function to run in the worker
  * @param {any} data data to the work
- * @returns {Promise} a promise to get the result from worker
+ * @return {Promise} a promise to get the result from the worker
  */
 export const runDisposableWorker = (work, data) => {
   const workerTemplate = `
     self.onmessage = (e) => {
-      // 收到message立刻执行任务，再将结果发出去
+      // 收到message立刻执行，再将结果发出去
       self.postMessage(
         (${work})(e.data)
       )
-      // 一次性的worker
+      // 一次性
       self.close()
     }
   `
@@ -50,7 +50,7 @@ export const runDisposableWorker = (work, data) => {
 /**
  * 普通的worker
  * @param {Function} work same as above
- * @returns {{post: Function, close: Function}} a worker controller
+ * @return {{post: Function, close: Function}} a worker controller
  */
 export const runWorker = (work) => {
   const workerTemplate = `
@@ -70,7 +70,7 @@ export const runWorker = (work) => {
     post(data) {
       // 执行此worker
       if (promiseResolve) {
-        throw Error('can not begin a new work when another work is working')
+        throw Error('Can not begin a new work when another work is working.')
       }
       const promise = new Promise((resolve, reject) => {
         promiseResolve = resolve
@@ -81,12 +81,12 @@ export const runWorker = (work) => {
         (data) => {
           // 重置promiseResolve和promiseReject
           resetPromise()
-          // 结果原封不动返回出去
+          // 结果
           return data
         },
         (err) => {
           resetPromise()
-          // 重新抛出错误
+          // 错误
           throw err
         }
       )
@@ -99,16 +99,17 @@ export const runWorker = (work) => {
 
 /**
  * 根据不同action执行不同任务的worker
- * @param {{action: string, work: Function}[]} actions actions make the worker can accept a set of action
- * @returns {{post: Function, close: Function}} a worker contoller
+ * @param {{action: string, work: Function}[]} actions all actions that the worker accepts
+ * @return {{post: Function, close: Function}} a worker contoller
  */
 export const runWorkerByActions = (actions) => {
   const workerTemplate = `
     self.onmessage = (e) => {
-      const actions = [${actions.map(
-    ({ action, work }) =>
-      `{ action: '${action}', work: ${work.toString()} }`
-  )}]
+      const actions = [
+        ${actions.map(
+          ({ action, work }) => `{ action: '${action}', work: ${work} }`
+        )}
+      ]
       const action = actions.find(i => i.action === e.data.action)
       action && self.postMessage((action.work)(e.data.data))
     }
@@ -123,7 +124,7 @@ export const runWorkerByActions = (actions) => {
     post(action, data) {
       // 执行其中的一个action
       if (promiseResolve) {
-        throw Error('can not begin a new work when another work is working')
+        throw Error('Can not begin a new work when another work is working.')
       }
       const promise = new Promise((resolve, reject) => {
         promiseResolve = resolve
@@ -134,12 +135,12 @@ export const runWorkerByActions = (actions) => {
         (data) => {
           // 重置promiseResolve和promiseReject
           resetPromise()
-          // 结果原封不动返回出去
+          // 结果
           return data
         },
         (err) => {
           resetPromise()
-          // 重新抛出错误
+          // 错误
           throw err
         }
       )

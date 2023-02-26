@@ -4,7 +4,7 @@
 
 # 前言
 
-此文章是 articles 目录的重点节选，某章节的详细内容请在 articles 目录里寻找对应的章节目录。
+**此文章是 articles 目录的重点节选，某章节的详细内容请在 articles 目录里寻找对应的章节目录。**
 
 # 目录
 
@@ -13,12 +13,11 @@
 # 事件循环
 
 The **EventLoop** model is essentially a **concurrency** model, which is **good at I/O-bound**.
-A successful case is **Node.js** while its EventLoop model is a little difference with browser's.
 
 一些注意点：
 
-1. 如果在微任务执行期间又继续设定新的微任务，将导致页面卡顿，因为微任务执行期间必须要把当前的微任务队列执行清空而导致的
-2. 如果在 RAF 任务执行期间又继续设定新的 RAF 任务，不会延迟页面渲染，新的 RAF 任务将在下一轮事件循环的 RAF 执行期间再执行
+1. 如果在 microtask cycle 继续设定新的 microtask，将导致页面卡顿，因为 microtask cycle 必须要把当前的 microtask 队列执行清空而导致的
+2. 如果在 rAF cycle 继续设定新的 rAF ，不会延迟页面渲染，新的 rAF 将在下一轮事件循环的 rAF cycle 再执行
 
 一个经典的题目：
 
@@ -57,7 +56,7 @@ Why:
 
 基本工作方式：
 
-1. 设置本机的 npm 源为内网地址：`npm config set registry http://172.31.0.10`
+1. 设置本机 npm 的到内网地址：`npm config set registry http://172.31.0.10`
 2. 搭建服务器，代理需要的 npm 请求（比如下载、上传）
 3. 拦截下载请求，去内部的仓库数据库里查找是否存在此包，存在的话就返回
 4. 不存在的话就就查询外网地址（比如 npm 的官方地址），下载和缓存此包再返回
@@ -140,7 +139,7 @@ Axios.prototype.request = function request(config) {
 
 基本公式：`view = render(state)`
 
-渲染函数 render 根据目前状态 state 得出的视图 view 是 VNode 树结构，它与平台无关，每次更新都会生成一颗最新的 VNode 树，再照着新树修改旧树，使得旧树与新树相同，此过程叫做 patch。而 patch 由各自的平台渲染器（Web 平台渲染器 ReactDOM，移动平台渲染器 ReactNative，服务端平台渲染器 ReactServer）实现。
+渲染函数 render 根据目前状态 state 得出的视图 view 是 VNode 树结构，它与平台无关，每次更新都会生成一颗最新的 VNode 树，再照着新树修改旧树，使得旧树与新树相同，此过程叫做 patch。而 patch 由各自的平台渲染器（Web 平台渲染器 ReactDOM，移动平台渲染器 ReactNative）实现。
 
 **心智模型**：组件 = **副作用受限**于函数执行上下文的**纯函数**
 
@@ -476,76 +475,19 @@ Techniques, strategies and recipes for building a modern web app with multiple t
 - `:first-of-type` === `:nth-of-type(1)`
 - `:last-of-type` === `:nth-last-of-type(1)`
 
-# Git
-
-## merge
-
-### fast-forward merge
-
-直接将 main 的指针指向 feature。
-
-### squash merge
-
-传统的 merge commit 存在两个父 commit 引用，使用 squash merge 方式的 merge commit 只存在一个指向 main 的父 commit 引用。
-
-### cherry-pick
-
-Apply one or more commits on current branch's HEAD.
-
-### rebase
-
-自动化的 cherry-pick 操作，使得非线性的传统 merge 变地线性化。
-提交历史看上去，feature 就好像直接从 main 开发的一样，也就是变基，即 rebase。
-
-## recover
-
-### reset
-
-1. `reset --soft commit` only reset current worktree
-2. `reset --mixed commit` reset both worktree and stage
-3. `reset --hard commit` reset all including worktree, stage and library
-
-### revert
-
-**重做**某一次有错误的提交，历史记录永远是前进的，不会像`reset --hard`一样丢失历史提交记录。
-
-`git revert commit`：对当前工作区重做此提交，如果重做操作和当前工作区文件没有冲突将自动提交一个重做 commit，否则需要解决冲突。
-
-### restore
-
-还原文件：`git restore [--worktree] [--staged] [--source fromSource] [files | .]`
-
-- --worktree | -W：将文件还原到工作区，默认选项
-- --staged | -S：将文件还原到暂存区
-- --source | -s：指定还原文件来源，可选的值有[commitHash, branchName, tagName]
-
-  1. 如果没有指定 source，但是指定了 staged，就从 HEAD 还原暂存区
-  2. 如果没有指定 source，也没有指定 staged，就从暂存区还原到工作区
-
-- files：还原文件的列表（空格分隔），或一个 glob 表达式，或一个`.`表示全部
-
-### commit --amend
-
-让新提交的 commit 替换掉上一次提交的 commit（比如上一次 commit 有错误，但是又不想保留上一次的 commit 记录）。
-
-## How works
-
-- 分布式：Git 基于分布式的思想，每个 Git 仓库都是对等体，不像 SVN 的基于集中式思想
-- 快照：每一次的提交都是创建变化的文件集合的快照，不像 SVN 的基于文件变化差量的提交
-
-`git add files...`：将工作区的文件放入暂存区（即将被提交的区域）
-`git commit -m "comment"`：对当前暂存区生成一个 version 快照（一个 commit object）从而提交到 library
-
 # JavaScript
 
 ## 闭包
 
-词法作用域和函数一等公民导致的副作用，闭包是一个**函数**及其引用的父级**作用域**（一个或多个，这些作用域被引擎存活）。
-由于词法作用域，闭包在书写函数代码时就被创建。
+词法作用域 + 函数一等公民 导致的副作用，闭包是一个**函数**及其引用的父级**作用域**。
+
+详见[闭包](./articles/JavaScript%E7%9B%B8%E5%85%B3/%E9%97%AD%E5%8C%85/index.md)章节。
 
 ## Promise
 
-Promise 目的：使异步任务**可控制可信任**且**高效地链式组合**的技术
+Promise 目的：可信任可组合的 callbacks
+
+详见[Promise](./articles/JavaScript%E7%9B%B8%E5%85%B3/Promise/index.md)章节。
 
 ### 为什么 Promise 本身不能取消或不支持取消？
 
@@ -553,7 +495,9 @@ Promise 目的：使异步任务**可控制可信任**且**高效地链式组合
 
 ## Generator
 
-一个可以被暂停的函数、一个可以被编程的迭代器，JavaScript 里协程的实现。
+一个可以被暂停的函数、一个可以被编程的迭代器。
+
+详见[Generator](./articles/JavaScript%E7%9B%B8%E5%85%B3/Generator/index.md)章节。
 
 ## How `==` works
 
@@ -610,18 +554,20 @@ uniapp's dependencies for using Vue2:
 # WebAssembly
 
 WebAssembly is a low-level assembly-like language that can be compiled into a compact binary format like bytecode of Java, which runs on modern JavaScript engines directly, and also provides languages such as `C/C++`, `Golang` and `Rust` with a cross-compilation target so that they can run on the web.
+
 WebAssembly is designed to complement and run alongside with JavaScript, and they communicate easily.
 
 # WebWorker - DedicatedWorker
 
-创建一个 JavaScript 线程。线程间使用结构化克隆方法传递数据。
+创建一个 JavaScript 线程。
+
+详见[WebWorker](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/WebWorker/index.md)章节。
 
 # WeakMap and WeakSet
 
-WeakMap 仅接收对象作为键。对象被弱持有，意味着如果对象本身被垃圾回收掉，那么在 WeakMap 中的记录也会被移除。这是代码层面观察不到的。
-同理，WeakSet 只是弱持有它的值。
+关键词：弱持有、垃圾回收
 
-由于随时可能给 GC 回收，故不能得到它当前的 items 长度，也不能迭代它。
+详见[WeakData](./articles/JavaScript%E7%9B%B8%E5%85%B3/WeakData/index.md)章节。
 
 # 一个简单的模板引擎的设计 - underscore#template
 
@@ -646,11 +592,11 @@ var userListData = [
   { name: 'jack', age: 22, url: 'http://localhost:3000/jack' },
 ]
 function templateSimple(str) {
-  var head = "var p = []; with(data){ p.push('" // the begin push
+  var head = "var p = []; with(data){ p.push('" // the begining push
   var body = str
     .replace(/[\r\n]/g, ' ') // 防止换行导致的 parse failed
     .replace(/<%=(.+?)%>/g, "');p.push($1);p.push('") // 替换表达式，它是<%和%>的特殊例子
-    // 下面两行顺序无关紧要，因为被替换的字符串本身不存在交集
+    // 下面两行可以互换位置，因为被替换的字符串本身不存在交集
     .replace(/%>/g, "p.push('")
     .replace(/<%/g, "');")
   var tail = "');} return p.join('');" // the end push
@@ -672,8 +618,8 @@ function template(str) {
   var escapeRegexp = /[\n\r\u2028\u2029\\']/g
   var escapeChar = (match) => '\\' + escapes[match]
   str.replace(matcher, function (match, interpolate, evaluate, offset) {
-    // 正则对象的lastIndex属性只有在开启g标志且在regexp.exec和regexp.test方法有效，指定下次匹配的位置，可读可写，如果方法没找到任何匹配就设0，而在这里，用index来模拟lastIndex的作用
-    // 需要注意，matcher最后的`$`目的是匹配字符串结束位置，从而得到结束位置的offset，当`$`发生匹配时，match是空字符串，因为`$`是零宽断言，确实发生匹配但是没有匹配内容，故返回空字符串
+    // 正则对象的lastIndex只有在开启g标志且在regexp.exec和regexp.test方法有效，指定下次匹配的位置，可读可写，如果方法没找到任何匹配就设0，而在这里，index来模拟lastIndex的作用
+    // 需要注意，matcher最后的`$`目的是匹配字符串结束位置，从而得到结束位置的offset，当`$`发生匹配时，match是空字符串，因为`$`是零宽断言，发生匹配但是没有匹配内容，因此返回空字符串
 
     // 使用slice方法取子字符串的副本，确保str保持不变
     // 将本次匹配到的<%=xxx%>或<%xxx%>前面的文本进行特殊字符转义
@@ -683,8 +629,8 @@ function template(str) {
     index = offset + match.length
 
     // 进行替换
-    // 这里巧妙利用正则表达式的 捕获分组 和 或运算
-    // `/part1(group1)|part2(group2)|part3/g`这是上面matcher的结构，由于或的逻辑关系，只要三者之一匹配成功，整个正则表达式匹配成功，就会执行replace的回调函数，由于group1和group2必然要存在（因为它们写在正则表达式里面），那么其中某一个就得是undefined，如果是part3发生的匹配，那么group1和group2都是undefined
+    // 这里巧妙使用正则表达式的 捕获分组 和 或运算
+    // `/part1(group1)|part2(group2)|part3/g`这是上面matcher的结构，由于或的逻辑关系，只要三者之一匹配成功，整个正则表达式匹配成功，就会执行replace的替换函数，由于group1和group2必然要存在（因为它们写在正则表达式里面），那么其中某一个就得是undefined，如果是part3发生的匹配，那么group1和group2都是undefined
     if (interpolate) {
       p += `' + (${interpolate} || \'\') + '`
     } else if (evaluate) {

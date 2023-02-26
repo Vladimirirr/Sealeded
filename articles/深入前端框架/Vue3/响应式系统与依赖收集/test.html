@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>How Vue3 Reactive Core Works Basically</title>
+    <title>How Vue3 Core Reactive Works Basically</title>
   </head>
   <body bgcolor="silver">
     <div>
@@ -32,11 +32,11 @@
       />
     </div>
     <script>
-      // 调试相关，把一些基本信息暴露到window上，方便调试和测试
+      // 将一些基本信息暴露到window上，方便调试和测试
       window.debugValues = {}
       const debugOnWindow = (value, name) => (window.debugValues[name] = value)
 
-      // 常量：ref类型的原始值的键名
+      // 常量：ref的真正值的键名
       const descKey = Symbol('a description of key')
 
       // 常量：保留的键名，即不能被跟踪的依赖的名字
