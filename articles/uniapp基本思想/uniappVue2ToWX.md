@@ -211,7 +211,7 @@ App.vue 的`style`字段将编译到`/common/main.wxss`（此文件会被 app.wx
 事件注册的格式：
 
 ```js
-;[
+const events = [
   [
     'tap',
     [
