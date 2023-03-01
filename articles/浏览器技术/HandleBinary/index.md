@@ -6,7 +6,9 @@
 
 ## ArrayBuffer
 
-二进制数据的容器载体（缓冲区）。
+表示一个固定长度的二进制数据缓冲区。一个字节数组。不能直接操作它，而是需要建立一个它的视图来间接地操作它。
+
+The ArrayBuffer object is used to represent a generic raw binary data buffer with length fixed.
 
 示例：
 
@@ -26,6 +28,12 @@ int main(){
   return 0;
 }
 ```
+
+### properties and methods
+
+- `ArrayBuffer.prototype.byteLength`: represents the length of an ArrayBuffer in bytes
+- `ArrayBuffer.prototype.slice`: returns a new ArrayBuffer whose contents are a copy of this
+- `ArrayBuffer.isView`: checks if the passed value is an ArrayBuffer view (TypedArray or DataView)
 
 ### 操作二进制数据
 
