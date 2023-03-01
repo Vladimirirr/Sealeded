@@ -10,6 +10,11 @@ WebWorker 目前主要的类型:
 
 其中，ServiceWorker 需要上下文安全（即 localhost 和 HTTPS），而且它是单例模式（即一个 same-origin 只能存在一个 ServiceWorker）。
 
+传送门：
+
+1. [SharedWorker](../SharedWorker/index.md)
+1. [ServiceWorker](../ServiceWorker/index.md)
+
 大多数情况下 WebWorker 或 Worker 指的都是 DedicatedWorker。
 
 ## 构造器
