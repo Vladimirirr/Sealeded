@@ -2,39 +2,79 @@
 
 ## 前生：asm.js
 
-浏览器是一个相当成功的跨平台环境，随着 Firefox（2004 - 2016 年）和 Chrome（2008 - 至今）对 Web 平台的称霸，以及 IE 的没落（2022 年微软宣布正式关停 IE），越来越多的 PWA(Progressive Web App) 在浏览器上遍地开花，但是由于 JavaScript 运行效率的问题，浏览器上很难跑大型应用，而将大型应用（比如微软的在线 VSCode 编辑器）甚至把大型游戏搬上浏览器一直是浏览器和前端开发工程师的终极目标。
+浏览器是一个极佳的跨平台环境，随着 Firefox（2004 - 2016 年）和 Chrome（2008 - 至今）对 Web 平台的称霸，及 IE 的没落（2022 年微软宣布正式关停 IE），越来越多的 PWA(Progressive Web App) 在浏览器上出现，但是由于 JavaScript 运行效率的问题，浏览器上很难跑大型软件，而将大型软件（比如微软的在线 VSCode，谷歌的 GoogleEarth）甚至大型游戏搬上浏览器一直是浏览器和前端工程师的终极目标。
 
-2012 年，Firefox 母公司 Mozilla 的工程师 Alon Zakai 在研究 LLVM 编译器工具链时（下文有解释），突发奇想，能否把 C\C++ 代码转译为对应的高效率的 JavaScript 代码，毕竟 JavaScript 语言也参考了 C\C++，而 C\C++ 是写大型应用和游戏的首选语言。
+2012 年，Firefox（Mozilla 公司）的工程师 Alon Zakai 在研究 LLVM 编译器工具链时（下文有解释），突发奇想，能否把 C/C++ 代码转译为对应的高效率的 JavaScript 代码，毕竟 JavaScript 语言也参考了 C/C++，而 C/C++ 是写大型软件和游戏的首选语言。
 
-于是乎，一个名为[Emscripten](https://github.com/emscripten-core/emscripten)的项目由此诞生，将 C\C++ 代码编译为高度优化的 JavaScript，这个规范叫做 asm.js。
+于是乎，一个名为 [Emscripten](https://github.com/emscripten-core/emscripten) 的项目由此诞生，将 C/C++ 代码编译为高度优化的 JavaScript，这个规范叫做 asm.js。
 
-无独有偶，当时如火如荼（2016 年以前）的 Adobe Flash 同样存在一个叫做 Mandreel 的框架，使用 C\C++ 来创建 Adobe Flash\AIR 应用，类似地，把 C\C++ 代码编译为高度优化的 ActionScript3 代码，从而能直接调用原生的 OpenGL 来开发高效率的 2D 和 3D 游戏。
+无独有偶，当时如火如荼（2016 年以前）的 Adobe Flash 同样存在一个叫做 Mandreel 的框架，使用 C/C++ 来创建 Adobe Flash/AIR 软件，类似地，把 C/C++ 代码编译为高度优化的 ActionScript3 代码。
+
+asm.js 规范：<http://asmjs.org/spec/latest/>
 
 ### 实现 asm.js 的难点
 
-C\C++ -> JavaScript 有两个最大的难点：
+C/C++ -> JavaScript 有两个最大的难点：
 
-1. 前者是静态语言，后者是动态语言
-2. 前者是手动垃圾回收，后者是自动垃圾回收
+1. 静态语言 vs 动态语言
+2. 手动垃圾回收 vs 自动垃圾回收
 
 而 asm.js 使用下列方法来解决：
 
 1. 保证变量类型不会发生突变，而且仅支持定义的 2 种类型（signed int 和 signed double）
-2. 取消自动垃圾回收机制（使用 ArrayBuffer 模拟内存）
+2. 尽可能地阻止自动垃圾回收的触发（使用 ArrayBuffer 模拟内存）
 
 ### 浏览器上的 asm.js
 
-当浏览器识别到是 asm.js 规范的 JavaScript 代码时（如果浏览器不认识 asm.js，比如 IE，也没关系，因为 asm.js 只是 JavaScript 高度优化的子集，按照未优化的代码继续执行），就会跳过常规的词法分析、语法分析、构建 AST 等步骤，直接生成对应的汇编代码，还可能调用 WebGL 借助 GPU 执行 JavaScript 代码，asm.js 在 V8 引擎下的效率接近了原生程序的 50 ~ 80%。
+当浏览器识别到是 asm.js 规范的 JavaScript 代码时（如果浏览器不认识 asm.js，比如 IE，也没关系，因为 asm.js 只是 JavaScript 高度优化的子集），就会跳过针对 JavaScript 语言的诸多类型检查，甚至唤出 WebGL 来帮助执行，asm.js 能到达 50% ~ 80% 的本地语言执行速度。
 
 ### asm.js 代码示例
 
 ```js
-// TODO
+function foo() {
+  'use asm' // 语法标记
+  // 需要在 declare 变量的同时赋值，使得引擎能立刻知晓它的类型
+  const x = 2 | 0 // 断言 x 是一个整数，否则默认是浮点数
+  // 下面，我们 1 + ... + 100
+  let i = 0 | 0 // 1 = 整数
+  let sum = 0 | 0 // sum 也是
+  for (i = 1; i <= 100; i++) {
+    sum = (sum + i) | 0
+  }
+  return (sum + 2) | 0 // 断言函数的结果是整数
+}
+function bar() {
+  'use asm'
+  const heap = new Int32Array(64) // 得到一个 64bit 的堆内存，我们在这里手动维护此内存空间，不让JS引擎的垃圾回收干预
+  // 如果我们需要一个字符串，我们需要手动维护这个字符串（一个指针和字符数组，就像C语言一样）
+
+  // 正常的方法不符合 asm.js 规范
+  // let str = 'ABC' // 这会导致JS引擎自己创建一个堆内存
+  // str = null // 这会导致JS引擎垃圾回收此堆内存
+
+  // 符合 asm.js 规范的写法
+  const A = 65 | 0
+  const B = 66 | 0
+  const C = 67 | 0
+  const EOL = 0 | 0 // 字符串结束标记
+  // 填入内存
+  heap[0] = A
+  heap[1] = B
+  heap[2] = C
+  heap[3] = EOL
+  // 输出此字符串
+  for (let i = 0 | 0; ; ) {
+    if (heap[i] === (0 | 0)) break
+    console.log(String.fromCharCode(heap[i]))
+  }
+  // 在函数结束时，将释放这些内存
+  return // 显式的 return，断言此函数不返回值
+}
 ```
 
 ## WASM 诞生
 
-慢慢地，各大浏览器厂商都接受了 [asm.js 规范](http://asmjs.org/)，接着，asm.js 演变成了 [WebAssembly](https://webassembly.org/)（简称 WASM），**一种直接运行在浏览器上的二进制代码，相当于 Java 的字节码**，让其他语言（比如 C\C++）来代替 JavaScript 运行复杂的计算。
+慢慢地，各大浏览器都接受了 [asm.js 规范](http://asmjs.org/)，接着，asm.js 演变成了 [WebAssembly](https://webassembly.org/)（简称 WASM），**一种直接运行在浏览器上的二进制代码，相当于 Java 的字节码**，让其他语言（比如 C/C++）来代替 JavaScript 运行 CPU 密集的工作。
 
 ### 编译器前置知识
 
@@ -56,41 +96,26 @@ LLVM IR 的优化由 LLVM 自己实现，当然可以传入自定义的优化配
 ### 使用 LLVM 编译 WASM 的流程图
 
 ```mermaid
-graph LR
+graph TD
 
-sourceCode["a C\C++ Source Code"] --> frontend["Clang, a frontend for LLVM"] --> llvm["LLVM optimizer"]
+cCode["C/C++ Code"] --> cCompiler["Clang"] --> ir["LLVM IR"] --> llvm["LLVM"]
 
-llvm --> backendEmscripten["Emscripten, a backend for LLVM"] --> result
-llvm --> backendBinaryen["Binaryen, a backend for LLVM"] --> result
+llvm --> backendEmscripten["Emscripten"]
+llvm --> backendBinaryen["Binaryen"] --> result
 
-result["the asm.js or WASM code with optional sourcemap"] --> run
+backendEmscripten --> result
+backendEmscripten --> resultAsm
+
+result["WASM"] --> run
+resultAsm["Asm.js"] --> run
 
 run["browser run it with high efficiency"]
 
 ```
 
-### 代码示例：在 C 语言代码里面执行 JavaScript 代码
-
-```c
-#include <emscripten.h>
-#include <stdio.h>
-
-int main() {
-  short origin = 20;
-  /**
-    使用宏EM_ASM_INT执行一段JavaScript表达式（必须使用大括号包围起来），允许传入来自C代码的参数，例如下面的$0表示将C代码的origin变量作为参数传入，返回对应的结果
-   */
-  short res = EM_ASM_INT({ return $0 * 2; }, origin);
-
-  printf('%d\n', res);
-
-  return 0;
-}
-```
-
 ## Emscripten 概述
 
-摘自[Emscripten](https://emscripten.org/)官网的概述：
+摘自 [Emscripten](https://emscripten.org/) 官网：
 
 Emscripten is a complete Open Source compiler toolchain to WebAssembly. Using Emscripten you can:
 
@@ -108,15 +133,15 @@ Emscripten is a complete Open Source compiler toolchain to WebAssembly. Using Em
 
 ## 支持编译为 WASM 语言的清单列表
 
-https://github.com/appcypher/awesome-wasm-langs
+地址：<https://github.com/appcypher/awesome-wasm-langs>
 
 ## 最终
 
-能 compile 到 JavaScript 的其他语言应该都编译到对应的 WASM，这是大趋势，JavaScript 和 WASM 模块能很方便地交互。
+能 compile 到 JavaScript 的其他语言都编译到 WASM，而且 JavaScript 和 WASM 模块能很方便地交互。
 
-## 拓展阅读：SIMD.js 技术与规范
+## 衍生阅读：SIMD.js 技术与规范
 
-其实还存在一项提高 JavaScript 数学计算效率的技术（和规范），即 JavaScript 版本的 SIMD（单指令多数据，Single Instruction and Multiple Data），此技术暴露的 API 能直接调用 CPU 或 GPU 的计算能力，不过遗憾的是此技术没被纳入标准（也没有被浏览器正式版本实现过），代码示例：
+在 asm.js 的时代，还存在一项提高 JavaScript 数学执行效率（剑指 complex computation）的技术（规范），即 JavaScript 上的 SIMD（单指令多数据，Single Instruction and Multiple Data），此技术暴露的 API 能直接将 complex computation 交给 CPU 或 GPU ，不过遗憾的是此技术没被纳入标准（也没被任何的浏览器支持），代码示例：
 
 ```js
 const result = SIMD.float32x4(2.1, 2.2, 2.4, 2.8)
@@ -125,4 +150,4 @@ const result = SIMD.float32x4(2.1, 2.2, 2.4, 2.8)
 
 立项背景：2014 年 Mozilla、Google 和 Intel 合作，起草了此技术项目
 
-项目终止：随着更强大的 WASM 技术立项，SIMD.js 技术被 WASM 合入并取代，并从提案的第三阶段删除
+项目终止：随着更强大的 WASM 技术立项，SIMD.js 技术被 WASM 合入，提案中止

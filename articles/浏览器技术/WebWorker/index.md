@@ -1,17 +1,25 @@
-# web worker
+# WebWorker - DedicatedWorker
 
-**下面的 worker 均指 web worker（也叫专用 worker），与 shared worker 、 service worker 、 audio worker 以及其他的 worker 相区分。**
+**WebWorker 是真正的操作系统级别的线程。它们是 W3C 的标准而非 JavaScript 的，使浏览器端的 JavaScript 赋能多线程技术。**
 
-**web worker 是真正的操作系统级别的线程。**
+WebWorker 目前主要的类型:
+
+1. DedicatedWorker = `window.Worker`
+2. SharedWorker = `window.SharedWorker`
+3. ServiceWorker = `navigator.serviceWorker`
+
+其中，ServiceWorker 需要上下文安全（即 localhost 和 HTTPS），而且它是单例模式（即一个 same-origin 只能存在一个 ServiceWorker）。
+
+大多数情况下 WebWorker 或 Worker 指的都是 DedicatedWorker。
 
 ## 构造器
 
 ```js
-new Worker(workerPath, ?options)
-// workerPath：需要加载的worker的脚本路径（可以是本页面创建的BlobURL），必须返回有效且同源的JavaScript的mime类型，比如text/javascript
+new Worker(workerPath, ?options) // under same-origin policy
+// workerPath：需要载入的worker的文件路径（可以是本页面创建的BlobURL），必须返回有效的JavaScript的mime类型，比如text/javascript
 // options: {
 //   type: 'classic' | 'module' = 'classic', // worker的类型，对于Chrome>=80支持module，从而在worker之间使用标准的模块化编程，而Firefox目前的最新版本102依旧不支持
-//   name?: string, // 此worker的名字，用于调试
+//   name?: string, // 此worker的名字（主要方便debug）
 //   credentials？: 'omit' | 'same-origin' | 'include' = 'omit' // 指定凭证，如果是classic的worker默认moit，即不需要凭证
 // }
 

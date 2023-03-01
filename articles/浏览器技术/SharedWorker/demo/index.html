@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // DWorker = DedicatedWorker
+      const w = new window.SharedWorker('./index.js') // 构造器的参数与 DWorker 相同
+      w.onerror = (e) => {
+        // SharedWorker 出现了错误
+        console.error('[SharedWorker] onerror', e)
+      }
+
+      // 一个 ChannelMessage 的 MessagePort，它的一端连接当前页面，还有一端转交给了 SharedWorker
+      const messagePort = w.port
+
+      messagePort.onmessage = (e) => {
+        // SharedWorker 发来的消息
+        console.log('[SharedWorkerPort] onmessage', e)
+      }
+      messagePort.onmessageerror = (e) => {
+        // got a data that can not be resolved, just like DWorker's
+        console.error('[SharedWorkerPort] onmessageerror', e)
+      }
+      messagePort.onerror = (e) => {
+        console.error('[SharedWorkerPort] onerror', e)
+      }
+
+      console.log('The SharedWorker instance', w)
+    </script>
+  </body>
+</html>
