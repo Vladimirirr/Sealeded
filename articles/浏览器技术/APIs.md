@@ -86,3 +86,21 @@ func 函数的实际执行时间间隔要比代码中设定的时间间隔要短
 ### 休眠
 
 当页面处于非活跃状态，浏览器会显著地降低计时器的频率。
+
+## crypto
+
+crypto 接口提供了最基本的密码学方面的 API。（WebWorker 同样）
+
+- `crypto.getRandomValues(typedArray)`: 向 typedArray 填入密码安全的随机数
+- `crypto.getRandomValues()`: 仅在安全上下文，得到密码安全的 UUID 值
+- `crypto.subtle`: 仅在安全上下文，得到一个 subtleCrypto 对象
+
+### subtleCrypto
+
+提供了密码学上的基本操作方法。
+
+- `encrypt`
+- `decrypt`
+- `digest`
+- `sign`
+- ...
