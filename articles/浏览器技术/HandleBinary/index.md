@@ -47,6 +47,10 @@ int main(){
 - Float64Array = float64 = double
 - and more
 
+TypedArray 的 BYTES_PER_ELEMENT 值表示它每个元素占据的字节个数。
+
+TypedArray 有大量与 Array 相同的方法（比如，find、includes、indexOf、map、filter、reduce、等等），但是没有会导致数组长度变化的方法（比如，push、splice、等等）。
+
 示例：
 
 ```js

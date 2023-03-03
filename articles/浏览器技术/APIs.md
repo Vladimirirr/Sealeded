@@ -11,6 +11,8 @@ This feature is compatibility on all browsers.
 
 将字符串表示(latin-1)的二进制数据转换成 base64。
 
+如果传入非字符串，将对其字符串化，例如，传入 TypedArray 将执行它的 toString 方法（与 Array 的一样）。
+
 ### atob(ascii to binary)
 
 反向操作。
