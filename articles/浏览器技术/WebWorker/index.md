@@ -20,21 +20,41 @@ WebWorker 目前主要的类型:
 ## 构造器
 
 ```js
-new Worker(workerPath, ?options) // under same-origin policy
-// workerPath：需要载入的worker的文件路径（可以是本页面创建的BlobURL），必须返回有效的JavaScript的mime类型，比如text/javascript
+new Worker(workerURL, ?options) // must be under same-origin policy
+// workerURL：需要载入的worker路径（可以是BlobURL，甚至可以是DataURL），同时MIME必须是text/javascript（或合法的JavaScript类型）
 // options: {
-//   type: 'classic' | 'module' = 'classic', // worker的类型，对于Chrome>=80支持module，从而在worker之间使用标准的模块化编程，而Firefox目前的最新版本102依旧不支持
-//   name?: string, // 此worker的名字（主要方便debug）
-//   credentials？: 'omit' | 'same-origin' | 'include' = 'omit' // 指定凭证，如果是classic的worker默认moit，即不需要凭证
+//   type: ('classic' | 'module') = 'classic', // worker的类型，对于Chrome>=80支持module，从而在worker间使用标准模块化技术，而Firefox目前的最新版本102依旧不支持
+//   ?name: string, // 此worker的名字（主要方便debug）
+//   ?credentials: ('omit' | 'same-origin' | 'include' = 'omit') // 凭证，如果是classic的worker默认moit，即不需要凭证
 // }
 
 ```
 
 ## 数据传递
 
-worker 的 postMessage 传递的是数据的副本（传值而非传址），数据使用[**结构化的克隆**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)进行拷贝和传递，可以简单地理解为强化的 JSON，它还能传递 JS 专有的数据类型。
+worker 的 postMessage 传递的是数据的副本（传值而非传址），数据被[**结构化的克隆**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)拷贝和传递，可以简单地理解为强化的 JSON，它还能传递 JS 专有的数据类型。
 
-不过可以通过 postMessage 的第二个参数使用传址方式（传递一个对象的引用），即转让一个对象。
+不过可以通过 postMessage 的第二个参数直接转让一个数据。
+
+### 转让数据
+
+当需要 postMessage 发送大体积的数据时（比如，一个数据量很大的 ArrayBuffer），如果是复制传递将很消耗内存，此时，我们可以直接转让这个数据。
+
+示例：
+
+```js
+const w = new Worker('./testWorker.js')
+const largeData = new ArrayBuffer(8192) // 模拟一个很大的数据
+// w.postMessage(largeData) // 不好，现在内存里直接出现两个相同的大块数据！
+w.postMessage({ data: largeData }, [largeData]) // 第二个参数是一个可传递对象数组，描述发送出去的数据里需要被转让的数据
+console.log(largeData.byteLength) // 输出 0，因为此数据已经被转让
+
+// 当worker处理好数据了，可以同样postMessage把数据再转让回来（如果需要的话）
+```
+
+可传递对象：ArrayBuffer、MessagePort、ReadableStream、WritableStream、TransformStream、等等
+
+TransferableObject: <https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects>
 
 ## 访问限制
 
