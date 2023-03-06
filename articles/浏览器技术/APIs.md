@@ -106,3 +106,9 @@ crypto 接口提供了最基本的密码学方面的 API。（WebWorker 同样�
 - `digest`
 - `sign`
 - ...
+
+## textContent 与 innerText
+
+textContent 获取节点包含的**全部**文本内容，innerText 获取节点**已经渲染出来**的文本。因此，innerText 获取不到 script 和 style 的内容。
+
+如果对 textContent 或 innerText 赋值，其实就是 innerHTML 的赋值！只是赋值的内容都将转成文本（特殊字符将被转义）。

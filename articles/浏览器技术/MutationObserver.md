@@ -34,7 +34,7 @@ A MutationRecord represents an individual DOM mutation. It is the object that is
 
 ### `disconnect()`
 
-暂停接收变化通知，直到再次执行 observe 方法。同时释放被观察的 DOM 树（也就是说，观察者不会干涉此节点的垃圾回收，就如同 WeekMap 与 WeekSet 一样）。
+停止接收变化通知，直到再次执行 observe 方法。同时释放被观察的 DOM 树（也就是说，观察者不会干涉此节点的垃圾回收，就如同 WeekMap 与 WeekSet 一样）。
 
 已经检测到变化但是尚未报告给观察者的变化信息都将被丢掉。
 
@@ -66,7 +66,7 @@ A MutationRecord represents an individual DOM mutation. It is the object that is
 
 除了被动地接收变化的通知，还可以主动拉取全部的但还没通知观察者的变化信息，即 takeRecords 方法。注意，主动的拉取不会再触发 callback。
 
-我们可以在 disconnect 前拉取一下剩下的变化。
+我们可以在 disconnect 前拉取一下剩下的还没处理的变化。
 
 ## 示例
 
@@ -121,6 +121,8 @@ document
 跨浏览器：事件类型过于繁多和零散，不同浏览器支持程度不尽相同
 
 性能：
+
+MutationObserver 与事件机制有着根本的不同，事件机制是独立的、立刻的，这意味着，如果一下子有 1000 个节点的变化，将触发 1000 个事件，而 MutationObserver 会在合适的时机（相对空闲的时候），将对这 1000 个已经变化的内容分组（相同类型一组）和整合（一个变化信息的列表），接着触发**一次**callback（因此，callback 的第一个参数是一个变化内容的列表）。类似于 Vue 里的批量更新理念。
 
 1. 每个节点内容的变化都会触发一个事件，又 DOM Event 的优先级较高（还具有捕获和冒泡两个阶段），一下子较多的变化会触发大量的事件，而 MutationObserver 会收集一段时间里的全部变化，再在空闲时一起汇报给它的观察器
 2. 浏览器以事件形式实现 DOM 树变化的观察会影响浏览器自己的性能
