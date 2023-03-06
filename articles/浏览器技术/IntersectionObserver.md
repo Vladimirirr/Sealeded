@@ -27,11 +27,48 @@
 
 目标的首次 observe 一定会触发一次 callback，即初始化位置的定位。
 
-### cfg
+### 配置项 -- cfg
 
 1. root: 目标的容器（参与检查的可见区域，得是目标的父元素），默认是当前视窗可见区域
-2. rootMargin: 延长容器的外边距（格式与 CSS 的 margin 一样），默认 `'0px'`
+2. rootMargin: 延长容器的外边距（格式与 CSS 的 margin 一样）（也可以是负数），默认 `'0px'`
 3. threshold: 触发的阈值，一个 0 到 1 的浮点数，表示相交区域的比例，默认 `0`
+
+#### rootMargin
+
+示例：
+
+```html
+<style>
+  #con {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background-color: antiquewhite;
+  }
+  #tar {
+    position: absolute;
+    left: 140px; /* 慢慢地降低此值，在距离容器外20px的地方将触发callback */
+    border: 1px red solid;
+  }
+</style>
+<div id="con">
+  <div id="tar">HERE</div>
+</div>
+<script>
+  const ob = new IntersectionObserver(
+    ([entry]) => {
+      // 在距离容器20px外的地方触发！
+      // 在做懒加载的时候，不必等到目标进入容器才触发，可以提前触发！即提前下载数据！
+      console.log(entry)
+    },
+    {
+      root: window.con,
+      rootMargin: '20px',
+    }
+  )
+  ob.observe(window.tar)
+</script>
+```
 
 #### threshold
 
