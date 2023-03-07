@@ -6,7 +6,7 @@
 
 ## 综合的
 
-1. [万字精华知识总结](./essence.md)
+1. [什么都有的大杂烩](./essence.md)
 
 ## 框架相关的
 
@@ -16,14 +16,23 @@
 
 ## 浏览器技术相关的
 
-1. [写一个 WebWorker 工具](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/WebWorker/index.md)
-2. [前端的 NoSQL -- IndexedDB](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/IndexedDB/index.md)
+1. [多线程技术 -- WebWorker](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/WebWorker/index.md)
+2. [浏览器的 NoSQL -- IndexedDB](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/IndexedDB/index.md)
 3. [构建 PWA 技术的核心 -- ServiceWorker](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/ServiceWorker/index.md)
 4. [浏览器内置组件封装技术 -- WebComponents](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/WebComponents/index.md)
-5. [JavaScript 与二进制数据](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/HandleBinary/index.md)
-6. [DOM 树观察器 MutationObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/MutationObserver.md)
-7. [元素交叉检测观察器 IntersectionObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/IntersectionObserver.md)
+5. [数据与管道 -- Stream](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/Stream/index.md)
+6. [处理二进制数据](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/HandleBinary/index.md)
+7. [DOM 树观察器 MutationObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/MutationObserver.md)
+8. [元素可见性检测观察器 IntersectionObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/IntersectionObserver.md)
+
+## JavaScript 相关的
+
+1. [看，这就是闭包！](./articles/JavaScript%E7%9B%B8%E5%85%B3/%E9%97%AD%E5%8C%85/index.md)
+2. [Promise 拯救嵌套！](./articles/JavaScript%E7%9B%B8%E5%85%B3/Promise/index.md)
+3. [这不是我想要的类型转换！](./articles/JavaScript%E7%9B%B8%E5%85%B3/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/index.md)
 
 ## 其他什么的
 
 1. [曾经的神话 -- JSONP](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/JSONP.md)
+2. [让我们再快点 -- WebAssembly](./articles/WebAssembly/index.md)
+3. [再见巨石 -- 微前端技术](./articles/%E5%BE%AE%E5%89%8D%E7%AB%AF/index.md)
