@@ -38,7 +38,7 @@
 2. [让我们再快点 -- WebAssembly](./articles/WebAssembly/index.md)
 3. [再见巨石 -- 微前端技术](./articles/%E5%BE%AE%E5%89%8D%E7%AB%AF/index.md)
 
-# 🐂 工具
+# 🐂 工具 (All Tools)
 
 1. [indexedDB 工具 -- idbStorage](./tools/idbStorage/)
 2. [无限列表 -- infiniteList](./tools/infiniteList/)
