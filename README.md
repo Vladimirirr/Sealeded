@@ -36,3 +36,8 @@
 1. [曾经的神话 -- JSONP](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/JSONP.md)
 2. [让我们再快点 -- WebAssembly](./articles/WebAssembly/index.md)
 3. [再见巨石 -- 微前端技术](./articles/%E5%BE%AE%E5%89%8D%E7%AB%AF/index.md)
+
+# 小工具
+
+1. [indexedDB 工具 -- idbStorage](./tools/idbStorage/README.md)
+2. [无限列表 -- infiniteList](./tools/infiniteList/README.md)

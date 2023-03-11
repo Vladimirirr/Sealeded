@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script type="module">
+      import { install, uninstall } from './index.js'
+
+      // the test function
+      const test = async () => {
+        // 安装，同时得到存储对象
+        const storage = await install()
+
+        // 也可以从 window 获取存储对象，就像 localStorage 与 sessionStorage 一样
+        // const storage = window.idbStorage
+
+        // 一个测试的键名
+        const testKey = '__test__currentTime'
+
+        // 写一个值
+        await storage.setItem(testKey, new Date().toLocaleTimeString())
+
+        // 读一个值
+        console.log(`Stored time is ${await storage.getItem(testKey)}.`)
+
+        // 移除一个值
+        // await storage.removeItem(testKey)
+
+        // 清空
+        // await storage.clear()
+
+        // 卸载
+        // await uninstall()
+      }
+
+      // run test
+      setTimeout(test)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "infinite-list",
+  "version": "0.0.0",
+  "description": "A infinite list based on WebComponents.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Open the test.html for testing.\""
+  },
+  "author": "RYZZ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vladimirirr/Sealeded",
+    "directory": "tools/infiniteList"
+  },
+  "keywords": [
+    "infiniteList",
+    "infinite",
+    "list",
+    "WebComponents"
+  ],
+  "license": "LGPL-3.0-or-later"
+}
