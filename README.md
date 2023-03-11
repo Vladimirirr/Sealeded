@@ -1,6 +1,7 @@
 # What is this
 
-一些前端相关的知识点。（均在`articles`目录下！）
+- `articles`目录：一些前端相关的知识点
+- `tools`目录：一些前端相关的工具
 
 # 🤪 精选文章 (Selected Articles)
 
@@ -37,7 +38,7 @@
 2. [让我们再快点 -- WebAssembly](./articles/WebAssembly/index.md)
 3. [再见巨石 -- 微前端技术](./articles/%E5%BE%AE%E5%89%8D%E7%AB%AF/index.md)
 
-# 小工具
+# 🐂 工具
 
-1. [indexedDB 工具 -- idbStorage](./tools/idbStorage/README.md)
-2. [无限列表 -- infiniteList](./tools/infiniteList/README.md)
+1. [indexedDB 工具 -- idbStorage](./tools/idbStorage/)
+2. [无限列表 -- infiniteList](./tools/infiniteList/)
