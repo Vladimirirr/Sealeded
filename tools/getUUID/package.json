@@ -1,0 +1,21 @@
+{
+  "name": "get-uuid",
+  "version": "0.0.0",
+  "description": "Get a uuid in all browsers.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Open the test.html for testing.\""
+  },
+  "author": "RYZZ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vladimirirr/Sealeded",
+    "directory": "tools/getUUID"
+  },
+  "keywords": [
+    "uuid",
+    "random"
+  ],
+  "license": "LGPL-3.0-or-later"
+}

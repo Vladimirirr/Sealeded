@@ -7,17 +7,18 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="controller">
-      <button>add 10 items</button>
-      <button>del 10 items</button>
-    </div>
-    <div class="display">
-      <infinite-list></infinite-list>
-    </div>
     <script type="module">
-      import InfiniteList from './index.js'
+      import getRandom from './index.js'
 
-      window.customElements.define('infinite-list', InfiniteList)
+      // the test function
+      const test = () => {
+        Array(20)
+          .fill(0)
+          .forEach(() => console.log(getRandom()))
+      }
+
+      // run test
+      setTimeout(test)
     </script>
   </body>
 </html>

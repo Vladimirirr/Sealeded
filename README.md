@@ -41,4 +41,5 @@
 # 🐂 工具 (All Tools)
 
 1. [indexedDB 工具 -- idbStorage](./tools/idbStorage/)
-2. [无限列表 -- infiniteList](./tools/infiniteList/)
+2. [UUID 生成器 -- getUUID](./tools/getUUID/)
+3. [无限列表 -- infiniteList](./tools/infiniteList/)

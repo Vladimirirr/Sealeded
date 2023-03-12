@@ -94,7 +94,7 @@ func 函数的实际执行时间间隔要比代码中设定的时间间隔要短
 crypto 接口提供了最基本的密码学方面的 API。（WebWorker 同样）
 
 - `crypto.getRandomValues(typedArray)`: 向 typedArray 填入密码安全的随机数
-- `crypto.getRandomValues()`: 仅在安全上下文，得到密码安全的 UUID 值
+- `crypto.randomUUID()`: 仅在安全上下文，得到密码安全的 UUID 值
 - `crypto.subtle`: 仅在安全上下文，得到一个 subtleCrypto 对象
 
 ### subtleCrypto
