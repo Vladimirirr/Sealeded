@@ -30,7 +30,8 @@
 
 1. [看，这就是闭包！](./articles/JavaScript%E7%9B%B8%E5%85%B3/%E9%97%AD%E5%8C%85/index.md)
 2. [Promise 拯救嵌套！](./articles/JavaScript%E7%9B%B8%E5%85%B3/Promise/index.md)
-3. [这不是我想要的类型转换！](./articles/JavaScript%E7%9B%B8%E5%85%B3/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/index.md)
+3. [变来变去的 this！](./articles/JavaScript%E7%9B%B8%E5%85%B3/%E5%85%B3%E9%94%AE%E8%AF%8Dthis/index.md)
+4. [这不是我想要的类型转换！](./articles/JavaScript%E7%9B%B8%E5%85%B3/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/index.md)
 
 ## 其他什么的
 

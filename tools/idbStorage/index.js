@@ -80,7 +80,10 @@ const getItem = (db, key) => {
   return new Promise((resolve, reject) => {
     const ta = db.transaction(internalStoreName, 'readonly')
     const os = ta.objectStore(internalStoreName)
-    const req = os.get(key)
+    const [req, immediateErr] = tryCatch(() => os.get(key))
+    if (immediateErr) {
+      return reject(immediateErr)
+    }
     req.onsuccess = (e) => {
       readInfo.value = e.target.result.value
       return e
@@ -110,7 +113,10 @@ const removeItem = (db, key) => {
   return new Promise((resolve, reject) => {
     const ta = db.transaction(internalStoreName, 'readwrite')
     const os = ta.objectStore(internalStoreName)
-    const req = os.delete(key)
+    const [req, immediateErr] = tryCatch(() => os.delete(key))
+    if (immediateErr) {
+      return reject(immediateErr)
+    }
     req.onsuccess = (e) => {
       return e // e.target.result = undefined
     }
@@ -138,7 +144,10 @@ const clear = (db) => {
   return new Promise((resolve, reject) => {
     const ta = db.transaction(internalStoreName, 'readwrite')
     const os = ta.objectStore(internalStoreName)
-    const req = os.clear()
+    const [req, immediateErr] = tryCatch(() => os.clear())
+    if (immediateErr) {
+      return reject(immediateErr)
+    }
     req.onsuccess = (e) => {
       return e // e.target.result = undefined
     }
