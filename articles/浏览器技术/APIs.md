@@ -111,4 +111,84 @@ crypto 接口提供了最基本的密码学方面的 API。（WebWorker 同样�
 
 textContent 获取节点包含的**全部**文本内容，innerText 获取节点**已经渲染出来**的文本。因此，innerText 获取不到 script 和 style 的内容。
 
+```html
+<div id="test">
+  <p>Hello</p>
+  <p style="display: none;">Jack</p>
+  <p style="visibility: hidden;">Jack</p>
+  <p style="opacity: 0;">Jack</p>
+</div>
+<script>
+  console.log(document.getElementById('test').textContent) // 'Hello\nJack\nJack\nJack'
+  console.log(document.getElementById('test').innerText) // 'Hello\n\nJack'
+</script>
+```
+
 如果对 textContent 或 innerText 赋值，其实就是 innerHTML 的赋值！只是赋值的内容都将转成文本（特殊字符将被转义）。
+
+## alert、confirm 与 prompt
+
+这些是浏览器提供的最基本的反馈式交互组件，它们都以模态框的形式出现。（模态，model，意味着当它出现时，除了它的其他内容都不能被交互，甚至将暂停当前正在执行的代码。）
+
+- `alert(message: string = ''): void` 提示框
+- `confirm(message: string = ''): boolean` 确认框
+- `prompt(title: string, default?: string = ''): string | null` 输入框
+
+## 对象拷贝 -- Object.assign 与 structuredClone
+
+### Object.assign
+
+ES6 标准。
+
+语法：`Object.assign(target: Object, ...sources: Object[]): Object`
+
+浅拷贝一个对象，将一些对象的全部可枚举建（不含继承）赋值（操作符`=`）到目标对象上。
+
+### structuredClone
+
+深拷贝一个值（任意类型）。
+
+语法：`structuredClone(value: any, { transfer?: Transferable[] }): any`
+
+这其实是浏览器内部的[结构化拷贝方法](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)对外暴露的实现方法。
+
+浏览器很多与值的传输和保存方法均在使用：
+
+- postMessage
+- indexedDB
+- ...
+
+浏览器兼容性：
+
+- Chrome >= 98, 2022.02
+- Firefox >= 94, 2021.11
+- Safari >= 15.4, 2022.03
+- AndroidWebview >= 111, 2023.03
+
+## eval
+
+语法：`eval(code: string): any`
+
+eval 的结果是最后一条语句的值，eval 内的代码在当前词法环境（lexical environment）下执行，且能修改外面的变量。
+
+在严格模式下，eval 有自己单独的词法环境，不能影响到外面。
+
+不在严格模式下，eval 没有自己单独的词法环境，它共享它执行时的词法环境。
+
+注意，使用 `window.eval` 执行时，它的词法环境限制在 window 下。
+
+常规代码只能得到一个表达式的值，不能得到一条语句的值，得到一条语句的值我们只能可以借助浏览器的控制台、或者 eval 方法。但是，在过去，有一个被撤销的提案可以得到语句的值：
+
+```js
+// 使用 Call 关键词，紧跟着一个语句块
+const result = Call {
+  1 + 1
+}
+console.log(result) // output: 2
+```
+
+## new Function
+
+语法：`new Function(code: string, ...params: string[]): Function`
+
+与 eval 一样，但是它始终在 window 词法环境下执行传入的字符串代码。
