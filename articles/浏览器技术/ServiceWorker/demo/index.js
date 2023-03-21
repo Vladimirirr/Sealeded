@@ -3,19 +3,18 @@
 const thisVersion = '20230222.1' // the version of the sw, which created in building stage
 
 oninstall = (e) => {
-  // initialize the indexedDB or cache
-  // 此时此 sw 可能不能立刻激活，因为可能其他正在使用旧 sw 的页面还没全部关闭
-  // 可以在这里执行 skipWaiting() 来立刻激活此 sw 而不需要再等待
-  // 此操作需要注意的是，只是接下来 open 的页面使用此 sw，老的已经 opened 的页面继续使用旧的 sw
+  // initialize the indexedDB or caches
+  // 此时此 sw 可能不能立刻激活（可能其他正在执行旧 sw 的页面还没全部关闭）
+  // 可以在这里执行 skipWaiting() 来立刻激活此 sw 而不需要再等待，需要注意的是，只是接下来 open 的页面执行此 sw，老的已经 opened 的页面继续旧的 sw
   // 一个 sw 的 install 只执行一次
   console.log('sw installing', e)
   // install 的准备工作
   const initWorks = async () => {
     {
-      // 初始化 cache
+      // 初始化一个 cache
       // cache 能完整地保存一次请求的 request 和 response 对象
-      const cache = await caches.open(thisVersion) // sw 和 cache 的 version 需要始终相同
-      // 下列的请求将被自动缓存
+      const cache = await caches.open(thisVersion) // sw 和 cache 的 version 需要始终相同，避免缓存错乱
+      // 缓存列出的请求
       // 不要缓存入口文件！（比如 index.html）
       await cache.addAll(['/common.css'])
     }
@@ -39,24 +38,42 @@ oninstall = (e) => {
 }
 
 onactivate = (e) => {
-  // 此 sw 需要做激活前的准备工作（比如，清除旧 sw 的缓存和数据）
+  // 此 sw 需要做激活前的准备工作（比如，清除旧的缓存）
   // 一个 sw 的 activate 只执行一次
   console.log('sw activating', e)
-  // e.waitUntil(new Promise((resolve, reject) => {
-  // // do somethng for activating and keep the sw in activating stage
-  // }))
+  e.waitUntil(async () => {
+    // do somethng for activating and keep the sw in activating stage
+    // 清除旧的缓存
+    const allCaches = await caches.keys()
+    await Promise.all(
+      allCaches.map((name) => {
+        if (name != thisVersion) {
+          // del all unmatched caches
+          return caches.delete(i)
+        }
+      })
+    )
+  })
 }
 
-// 简单资源的缓存处理（使用 Cache API 来简单粗暴地缓存请求的整个 request 和 response）
+// 简单资源的缓存处理（使用 Cache API 来简单粗暴但高效地缓存请求的整个 request 和 response）
 const handleCachedResources = async (request) => {
+  // 检查
   const cached = await caches.match(request)
   if (cached) return cached
+
+  // 请求
   const response = await fetch(request)
+
+  // 缓存
   const cache = await caches.open(thisVersion)
-  await cache.put(request, response.clone()) // 保存此请求的 request 和 response
+  // 保存此请求的 request 和 response
+  // 注意，clone 是必须的，put 会消耗此 response，而一个已经消耗的 response 不能再被读取了
+  await cache.put(request, response.clone())
+
   return response
 }
-// 响应体的工具方法
+// 工具方法
 const getResponse = (error = '', data = null) => {
   return new Response(
     JSON.stringify({
@@ -134,6 +151,6 @@ onfetch = (e) => {
 }
 
 // message channel with its main thread
-onmessage = (e) => {
-  console.log(`The ServiceWorker received a message from host: ${e.data}`)
-}
+// onmessage = (e) => {
+//   console.log(`The ServiceWorker received a message from host: ${e.data}`)
+// }

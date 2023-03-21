@@ -5,10 +5,10 @@
 The properties of the MessageEvent:
 
 - `data` 承载的信息
-- `source` 信息发送者
+- `source` 信息发送者（仅浏览器端存在，Server 端发来的信息此值是 null）
 - `origin` 信息发送者的唯一标识
 - `ports` MessagePort 数组，表示此信息正在传输特定的信息交换端口
-- `lastEventId` 当前信息的唯一标识
+- `lastEventId` 当前信息的唯一标识，SSE 特有（Server 端发送的 id 字段的映射）
 
 【浏览上下文】代表一个独立的 window 环境（一个独立的线程或进程（取决具体实现））：
 

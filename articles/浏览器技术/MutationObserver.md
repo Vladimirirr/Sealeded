@@ -2,6 +2,8 @@
 
 MutationObserver 接口提供了观察一颗 DOM 树变化的能力。它是旧的 Mutation Events 的替代品。
 
+MutationObserver is a **micro-task**.
+
 Provides the ability to watch for changes being made to the DOM tree. It is designed as a replacement for the older Mutation Events feature which was part of the DOM3 Events specification.
 
 目前(2023-03-04)全部的浏览器都完全支持此技术。
@@ -12,23 +14,37 @@ Provides the ability to watch for changes being made to the DOM tree. It is desi
 
 当树变化时，就会唤起此 callback，它接收两个参数：
 
-1. `mutationList: MutationRecord[]` 全部变化的描述信息的列表
+1. `mutationList: MutationRecord[]` 一段时间内（本次 EventLoop）的全部变化的描述信息列表
 2. `observer: MutationObserver` 此观察者自己
 
 一个节点可以被多个观察者观察。
 
 ### MutationRecord
 
-A MutationRecord represents an individual DOM mutation. It is the object that is passed to MutationObserver's callback.
+A MutationRecord represents an **individual** DOM mutation. It is the object inside the array passed to the callback of a MutationObserver.
 
-1. `type: ('childList', 'attribute' | 'characterData')` 变化类型
-2. `target: Node` 触发的节点
-3. `addedNodes: Node[]` 新增的节点们
-4. `removedNodes: Node[]` 移除的节点们
-5. `previousSibling: Node` 新增或移除的上一个兄弟节点
-6. `nextSibling: Node` 新增或移除的下一个兄弟节点
-7. `attributeName: string` 变化了的特性名字
-8. `oldValue: any` 变化前的值（只有当 attributeOldValue 或 characterDataOldValue 是 true 时）
+1. `type: ('childList' | 'attribute' | 'characterData')` 变化类型
+2. `target: Node` 发生变化的节点
+3. `addedNodes: Node[]` 新增的节点们（当 `append(...nodes)` 时）
+4. `removedNodes: Node[]` 移除的节点们（目前没有方法像 `append` 一样能批量移除多个节点）
+5. `previousSibling: Node | null` 新增或移除的上一个兄弟节点
+6. `nextSibling: Node | null` 新增或移除的下一个兄弟节点
+7. `attributeName: string | null` 变化了的特性名字
+8. `oldValue: type | null` 变化前的值（只有当 attributeOldValue 或 characterDataOldValue 是 true 时），若 type 是 childList 值是 null
+
+#### 备注
+
+CharacterData 是一个抽象接口（意味着没有 CharacterData 类型的对象），它包含一个节点全部的字符信息，我们需要实现此接口的接口（比如 Text、Comment）。
+
+- Text 文本节点 `['Text', 'CharacterData', 'Node', 'EventTarget', 'Object']`
+- Comment 注释节点 `['Comment', 'CharacterData', 'Node', 'EventTarget', 'Object']`
+- HTMLDivElement 普通元素节点 `['HTMLDivElement', 'HTMLElement', 'Element', 'Node', 'EventTarget', 'Object']`
+
+#### 小结
+
+MutationRecord 使得 MutationObserver 很灵活，它可以处理多个变化，而不需要对每个变化都创建一个单独的事件处理器。
+
+文档：<https://developer.mozilla.org/en-US/docs/Web/API/MutationRecord>
 
 ## 方法
 
@@ -48,8 +64,8 @@ A MutationRecord represents an individual DOM mutation. It is the object that is
 
 这些参数可以相互重叠。
 
-1. subtree：观察目标节点的整棵树（深度观察）
-2. childList：观察目标节点的直接子代节点的变化（新增或移除）
+1. childList：观察目标节点的直接子代节点的变化（新增或移除）
+2. subtree：深度观察目标节点的整棵树（与 childList 搭配）
 3. attributes：观察目标节点的特性的变化
 4. attributeFilter：观察的特性的白名单（此值 true 那么 attributes 默认 true）
 5. attributeOldValue：保存特性的变化前的值（此值 true 那么 attributes 默认 true）
@@ -91,20 +107,9 @@ ob.observe(document.getElementById('infoList'), {
 1. 查看 MutionRecord 信息，你甚至可以撤回节点的更改（即撤销操作），与 contentEditable 特性配合实现文本编辑器
 2. 监视页面上任何内容的变化，及时做出反应，比如引入第三方广告时，不想让第三方的广告肆无忌惮地破坏我们的页面布局
 
-## 旧的 Mutation Events
+## 旧的 Mutation Events（存在设计缺陷）
 
 不再推荐！已被移除规范！仅作参考！
-
-示例：
-
-```js
-document
-  .getElementById('infoList')
-  .addEventListener('DOMSubtreeModified', (e) => {
-    // e: MutationEvent <- Event
-    console.log(e)
-  })
-```
 
 全部支持的类型：
 
@@ -118,11 +123,31 @@ document
 8. DOMNodeRemovedFromDocument
 9. DOMSubtreeModified
 
-跨浏览器：事件类型过于繁多和零散，不同浏览器支持程度不尽相同
+事件类型繁多且零散，不同浏览器支持程度不尽相同（Safari 没有 DOMAttrModified，Firefox 没有 DOMElementNameChanged 和 DOMAttributeNameChanged）。
 
-性能：
+而且 MutationEvent 包含的信息很少（仅有）：
 
-MutationObserver 与事件机制有着根本的不同，事件机制是独立的、立刻的，这意味着，如果一下子有 1000 个节点的变化，将触发 1000 个事件，而 MutationObserver 会在合适的时机（相对空闲的时候），将对这 1000 个已经变化的内容分组（相同类型一组）和整合（一个变化信息的列表），接着触发**一次**callback（因此，callback 的第一个参数是一个变化内容的列表）。类似于 Vue 里的批量更新理念。
+- `attrChange`: Indicates what kind of change triggered the DOMAttrModified event. It can be MODIFICATION (1), ADDITION (2) or REMOVAL (3). It has no meaning for other events and is then set to 0.
+- `attrName`: Indicates the name of the node affected by the DOMAttrModified event. It has no meaning for other events and is then set to the empty string.
+- `newValue`: In DOMAttrModified events, contains the new value of the modified Attr node. In DOMCharacterDataModified events, contains the new value of the modified CharacterData node. In all other cases, returns the empty string.
+- `prevValue`: In DOMAttrModified events, contains the previous value of the modified Attr node. In DOMCharacterDataModified events, contains previous value of the modifiedCharacterData node. In all other cases, returns the empty string.
+- `relatedNode`: Indicates the node related to the event.
 
-1. 每个节点内容的变化都会触发一个事件，又 DOM Event 的优先级较高（还具有捕获和冒泡两个阶段），一下子较多的变化会触发大量的事件，而 MutationObserver 会收集一段时间里的全部变化，再在空闲时一起汇报给它的观察器
-2. 浏览器以事件形式实现 DOM 树变化的观察会影响浏览器自己的性能
+示例：
+
+```js
+document
+  .getElementById('infoList')
+  .addEventListener('DOMSubtreeModified', (e) => {
+    // e: MutationEvent <- Event
+    console.log(e)
+  })
+```
+
+## 性能
+
+MutationObserver 与 EventMutation 有着根本的不同:
+
+1. EventMutation 构建在 DOM Event System 的基础上，而每个 Event 都是自主和立刻的（高优先级，且还具有捕获和冒泡两个过程），这意味着，如果一下子有 1000 个节点的变化，将触发 1000 个 Events 在整个文档里穿梭
+2. 而 MutationObserver 会在合适的时候（尽快但相对空闲，浏览器将其以 micro-task 的方式实现），对这 1000 个已经变化的内容构建 1000 个 MutationRecord，而这 1000 个 Records 将被整合到一个数组里，接着只触发**一次**callback
+3. 当对整个 document 放置 EventMutation Listener 时，整个页面的性能将急剧下降（-150% ~ -700%）

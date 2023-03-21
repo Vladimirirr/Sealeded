@@ -8,6 +8,7 @@
 ## 综合的
 
 1. [什么都有的大杂烩](./essence.md)
+2. [一些浏览器 API](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/APIs.md)
 
 ## 框架相关的
 
@@ -44,5 +45,6 @@
 1. [indexedDB 工具 -- idbStorage](./tools/idbStorage/)
 2. [UUID 生成器 -- getUUID](./tools/getUUID/)
 3. [无限列表 -- infiniteList](./tools/infiniteList/)
+4. [小工具集合](./tools/utilities/)
 
 注意：工具类代码的许可是独立的，是 LGPL-3.0（详见此目录下的许可文件）

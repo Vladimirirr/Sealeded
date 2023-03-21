@@ -36,6 +36,8 @@ worker 的 postMessage 传递的是数据的副本（传值而非传址），数
 
 不过可以通过 postMessage 的第二个参数直接转让一个数据。
 
+postMessage 是一个低优先级的 macro-task。
+
 ### 转让数据
 
 当需要 postMessage 发送大体积的数据时（比如，一个数据量很大的 ArrayBuffer），如果是复制传递将很消耗内存，此时，我们可以直接转让这个数据。
