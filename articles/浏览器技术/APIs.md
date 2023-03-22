@@ -157,7 +157,11 @@ eval 的结果是最后一条语句的值，eval 内的代码在当前词法环�
 
 不在严格模式下，eval 没有自己单独的词法环境，它共享它执行时的词法环境。
 
-注意，使用 `window.eval` 执行时，它的词法环境限制在 window 下。
+注意，使用 `window.eval` 执行时，它的词法环境将被限制在 window 下。
+
+不节制地 eval 会导致 minifier 工具不能正常工作（工具不能预知什么样的代码会被构建）。
+
+### 语句的值
 
 常规代码只能得到一个表达式的值，不能得到一条语句的值，得到一条语句的值我们只能可以借助浏览器的控制台、或者 eval 方法。但是，在过去，有一个被撤销的提案可以得到语句的值：
 
@@ -171,6 +175,6 @@ console.log(result) // output: 2
 
 ## new Function
 
-语法：`new Function(code: string, ...params: string[]): Function`
+语法：`new Function(...params: string[], code: string): Function`
 
-与 eval 一样，但是它始终在 window 词法环境下执行传入的字符串代码。
+与 eval 一样，但是它始终在 window 词法环境下执行传入的字符串代码（这不仅提高了构建未知代码的安全性和效率，也使得各种 minifier 工具能正常工作）。
