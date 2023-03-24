@@ -178,3 +178,20 @@ console.log(result) // output: 2
 语法：`new Function(...params: string[], code: string): Function`
 
 与 eval 一样，但是它始终在 window 词法环境下执行传入的字符串代码（这不仅提高了构建未知代码的安全性和效率，也使得各种 minifier 工具能正常工作）。
+
+## sendBeacon
+
+Beacon：n. 信标
+
+This method is intended for analytics and diagnostics code to send data to a server. (Only available in window but not WebWorker)
+
+在 onbeforeunload 或 onunload 事件里你的代码不能阻止此卸载过程（preventDefault 没有效果），浏览器会限制此事件处理器代码的执行时长，浏览器也不会保证 fetch 或 XHR 一定会被发送出去。
+
+此接口将向 Server 发送一个少量内容的 POST 网络请求，不接收它的结果。浏览器会保证（承诺）将请求发出去(enqueue the request into the BackgroundTask list)，此方法不阻塞页面的卸载，请求可能在页面已经卸载了才被真正发出去，因此请求的结果不再有意义。
+
+全部浏览器兼容。
+
+语法：`navigator.sendBeacon(URL: string, data?: any): boolean`
+
+- 任何 fetch 或 XHR 支持的内容类型都可以被发送（包括，ArrayBuffer、Blob、FormData、字符串、等等）
+- 返回值表示浏览器是否已经接受了此请求（同时也做出承诺）

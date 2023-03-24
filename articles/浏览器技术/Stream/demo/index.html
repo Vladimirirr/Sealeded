@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="beginReading()">读取</button>
+    <button onclick="cancelReading()">取消读取</button>
+    <script>
+      let count = 0
+      let timerPush = null
+      let timerPull = null
+      const timePassedRecorder = new ReadableStream({
+        start(controller) {
+          // 立刻执行
+          timerPush = window.setInterval(() => {
+            // 生成一块内容，放入内容池子里，等待被读取
+            controller.enqueue(count++)
+          }, 3e3)
+        },
+        // cancel event 处理器 当一个consumer不再读取时
+        cancel(reason) {
+          console.log(`cancelled, because that ${reason}.`)
+          clearInterval(timerPush)
+        },
+      })
+
+      let timePassedRecorderReader
+      const beginReading = () => {
+        // 创建一个读取器
+        timePassedRecorderReader = timePassedRecorder.getReader()
+        // 读取比生成的快
+        timerPull = setInterval(async () => {
+          // 尝试从池子里读取一块，如果池子里暂时没有，就等待，Promise保持pending状态
+          // done = true 时 value = undefined
+          const { value, done } = await timePassedRecorderReader.read()
+          console.log('read', value, done)
+        }, 1e3)
+      }
+      const cancelReading = () => {
+        timePassedRecorderReader.cancel() // 取消读取
+        timePassedRecorderReader.releaseLock() // 释放锁
+        clearInterval(timerPull) // 清除定时器
+      }
+    </script>
+  </body>
+</html>

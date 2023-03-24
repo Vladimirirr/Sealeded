@@ -131,6 +131,8 @@ Emscripten is a complete Open Source compiler toolchain to WebAssembly. Using Em
 
 比如 Python 编译为 WASM，实际上是把 CPython（C 语言实现的 Python 编译器）编译为了 WASM，在基于此 WASM 的运行时上执行 Python 代码。
 
+注意：自实现垃圾回收的静态编译语言（比如，C#、Go、Java），需要将它们的垃圾回收机制也编译到 wasm 里
+
 ## 支持编译为 WASM 语言的清单列表
 
 地址：<https://github.com/appcypher/awesome-wasm-langs>
