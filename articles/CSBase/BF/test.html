@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul>
+      <li><button onclick="printTest1()">打印 "Hello, World!"</button></li>
+      <li><button onclick="printTest2()">打印 "Hi"</button></li>
+      <li>
+        <button onclick="calcTest()">
+          乘方 2^8 的结果（保存在首个内存单元里）
+        </button>
+      </li>
+      <li>
+        <button onclick="ioTest()">从标准输入获取一个值再打印到标准输出</button>
+      </li>
+    </ul>
+    <script type="module">
+      import BF from './index.js'
+
+      // 测试
+      const runTest = (code, verbose = true, memSize = 8) => {
+        // 输出的内容
+        const buffer = []
+        // 创建一个带有配置的 BF 运行时
+        const vm = new BF({
+          verbose, // 打印很影响性能，真正性能测试时要关掉
+          memSize,
+          stdout: (ch) => buffer.push(ch),
+        })
+
+        // 性能测试
+        console.time('TimePassed')
+        console.log(vm.run(code)) // 运行代码，返回值是运行结束时的内存信息
+        console.log(buffer.join('')) // 输出的内容（如果有的话）
+        console.timeEnd('TimePassed')
+
+        // 重置
+        // vm.reset();
+      }
+
+      // 各种测试
+      const printTest1 = () => {
+        const code =
+          '++++++++[>++++[>++>+++>+++>+>+<<<<<-]>+>+>->+[<]<-]>>.>---.+++++++..+++.>>++++.>.<<-.<.+++.------.--------.>>>+.'
+        runTest(code, false, 128)
+      }
+      const printTest2 = () => {
+        const code = '++++++++++[>++++++++++<-]>++++.+.'
+        runTest(code)
+      }
+      const calcTest = () => {
+        const code = '>++++++++[<++>-]'
+        runTest(code)
+      }
+      const ioTest = () => {
+        const code = ',.'
+        runTest(code)
+      }
+
+      // 暴露出去
+      window.printTest1 = printTest1
+      window.printTest2 = printTest2
+      window.calcTest = calcTest
+      window.ioTest = ioTest
+    </script>
+  </body>
+</html>
