@@ -115,3 +115,23 @@ setTimeout(() => {
   }, 2 * 1e3)
 }, 4 * 1e3)
 ```
+
+## WeakMap 的 polyfill
+
+```js
+var WeakMap = function () {
+  // 假设已存在 getUUID
+  this.name = '__wm__' + getUUID()
+}
+WeakMap.prototype.set = function (key, value) {
+  Object.defineProperty(key, this.name, {
+    // 重点
+    value: [key, value],
+  })
+  return this
+}
+WeakMap.prototype.get = function (key) {
+  var entry = key[this.name] // 取到 set 时候放在目标对象键值对的值
+  return entry && (entry[0] === key ? entry[1] : undefined)
+}
+```
