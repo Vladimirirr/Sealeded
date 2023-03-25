@@ -195,3 +195,46 @@ This method is intended for analytics and diagnostics code to send data to a ser
 
 - 任何 fetch 或 XHR 支持的内容类型都可以被发送（包括，ArrayBuffer、Blob、FormData、字符串、等等）
 - 返回值表示浏览器是否已经接受了此请求（同时也做出承诺）
+
+## WebShare API
+
+The Web Share API provides a mechanism for sharing text, links, files, and other content to an arbitrary share target selected by the user.
+
+需要安全的上下文环境。不存在 WebWorker 里。
+
+此 API 仅有两个方法：
+
+1. `navigator.canShare(sharedData: Object): boolean` 检测内容是否可以被共享
+2. `navigator.share(sharedData: Object): Promise<undefined | Error>` 尝试共享（需要已与页面发生过人机交互，因此它必须是由 UI 控件触发而来，而且 sharedData 必须符合格式）
+
+sharedData:
+
+- `url: string`: A string represents a URL to be shared
+- `text: string`: A string represents a normal text to be shared
+- `title: string`: A string represents a sharing title (may be ignored by the UA)
+- `files: File[]`: An array of File objects represents files to be shared
+
+可共享的文件类型：文本文件、媒体文件（图片、音频、视频）以及 PDF
+
+示例：
+
+```js
+const sharedData = {
+  title: 'Look something amazing',
+  text: 'Hello!',
+}
+
+const btn = document.querySelector('button#share')
+
+btn.addEventListener('click', async () => {
+  if (!navigator.canShare(sharedData)) {
+    return alert('失败（格式错误）')
+  }
+  try {
+    await navigator.share(sharedData)
+    alert('已共享。')
+  } catch (err) {
+    alert('失败（其他）')
+  }
+})
+```

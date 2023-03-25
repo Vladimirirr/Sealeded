@@ -2,7 +2,8 @@
 
 - `articles`目录：一些前端相关的知识点
 - `tools`目录：一些前端相关的工具
-- `books`目录：一些前端相关的书籍
+- `books`目录：一些前端相关的书籍学习笔记
+- `blogs`目录：大学时写的博客【已精选、已存档】
 
 # 🤪 精选文章 (Selected Articles)
 
@@ -25,8 +26,8 @@
 4. [浏览器内置组件封装技术 -- WebComponents](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/WebComponents/index.md)
 5. [数据与管道 -- Stream](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/Stream/index.md)
 6. [处理二进制数据](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/HandleBinary/index.md)
-7. [DOM 树观察器 MutationObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/MutationObserver.md)
-8. [元素可见性检测观察器 IntersectionObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/IntersectionObserver.md)
+7. [DOM 树观察器 MutationObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/DomObserver/MutationObserver.md)
+8. [元素可见性检测观察器 IntersectionObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/DomObserver/IntersectionObserver.md)
 
 ## JavaScript 相关的
 
