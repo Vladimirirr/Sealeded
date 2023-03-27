@@ -238,3 +238,16 @@ btn.addEventListener('click', async () => {
   }
 })
 ```
+
+## import.meta
+
+import.meta 是一个语法！是一个整体！而非普通对象与它键值对的组合！
+
+它的表现是一个特殊的对象，此对象描述着与此模块运行时有关的信息。
+
+它的实体（表现出来的对象）由 JavaScript 运行时在装载此模块时被构建，此对象的 `__proto__` 是 null，它的全体特性都是可配置的、可写的、可枚举的。
+
+默认的特性：
+
+- `url`：模块的绝对路径
+- `resolve(path: string): string`：类似 node.js 里的 resolve 方法，以当前路径和传入路径得到新路径

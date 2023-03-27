@@ -20,10 +20,10 @@ WebComponents 技术的基建工具：
 
 ## Custom elements
 
-- customElements.define(name, class, opts?) - defines a new custom element
-- customElements.get(name) - returns the class of a custom element
-- customElements.upgrade(elem) - tries to upgrade all elements containing shadow dom in the elem, even if they are not connected
-- customElements.whenDefined(name) - returns a promise that resolves when the element is defined
+- `customElements.define(name: string, class: HTMLElement, { extends?: string })` - defines a new custom element
+- `customElements.get(name: string)` - returns the class of a custom element
+- `customElements.upgrade(elem: HTMLElement)` - tries to upgrade all elements containing shadow dom in the elem, even if they are not connected
+- `customElements.whenDefined(name: string)` - returns a promise that resolves when the element is defined
 
 ### Upgrade of custom elements
 
@@ -60,7 +60,7 @@ Order: div constructed -> div connected -> p constructed -> p connected -> div d
 <user-info><b>Jack</b></user-info>
 ```
 
-这与传统的框架(Vue、React)不同，传统的框架必须要先把子组件渲染出来，然后插入到父组件里，但是 WebComponents 不需要，它的渲染由浏览器渲染。
+这与传统的框架(Vue、React)不同，传统的框架必须要先把子组件渲染出来，然后插入到父组件里，但是 WebComponents 不需要，它的渲染直接由浏览器渲染。
 
 ### Autonomous custom elements
 
@@ -86,7 +86,7 @@ Order: div constructed -> div connected -> p constructed -> p connected -> div d
 可以存在 ShadowDom 的元素：
 
 1. 自定义元素
-2. 这些内置元素：`atticle` `aside` `blockquote` `body` `div` `footer` `h1` `h2` `h3` `h4` `h5` `h6` `header` `main` `nav` `p` `secion` `span`
+2. 这些内置元素：`article` `aside` `blockquote` `body` `div` `footer` `h1` `h2` `h3` `h4` `h5` `h6` `header` `main` `nav` `p` `secion` `span`
 
 ### ShadowDom 的样式
 
