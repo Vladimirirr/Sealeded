@@ -108,6 +108,8 @@ textContent 获取节点包含的**全部**文本内容，innerText 获取节点
 
 如果对 textContent 或 innerText 赋值，其实就是 innerHTML 的赋值！只是赋值的内容都将转成文本（特殊字符将被转义）。
 
+换句话说，它和光标选中的此元素的文本内容相同。
+
 ## alert、confirm 与 prompt
 
 这些是浏览器提供的最基本的反馈式交互组件，它们都以模态框的形式出现。（模态，model，意味着当它出现时，除了它的其他内容都不能被交互，甚至将暂停当前正在执行的代码。）
@@ -132,7 +134,14 @@ ES6 标准。
 
 语法：`structuredClone(value: any, { transfer?: Transferable[] }): any`
 
-这其实是浏览器内部的[结构化拷贝方法](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)对外暴露的实现方法。
+这其实是浏览器内部的 [结构化拷贝方法](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) 对外暴露的实现方法。
+
+下面列出的值不能拷贝：
+
+1. 函数
+2. 对象的特性描述符
+3. 对象的`__proto__`
+4. DOM 节点
 
 浏览器很多与值的传输和保存方法均在使用：
 

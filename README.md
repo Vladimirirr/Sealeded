@@ -1,3 +1,7 @@
+# 目录
+
+[TOC]
+
 # What is this
 
 - `articles`目录：一些前端相关的知识点
@@ -6,6 +10,15 @@
 - `blogs`目录：大学时写的博客【已精选、已存档】
 
 # 🤪 精选文章 (Selected Articles)
+
+## 计科基础
+
+## 外文技术文章翻译（带我的主观思考）
+
+1. [信号是前端框架的未来](./articles/translated/signals-vs-observables.md)
+2. [信号与可观察值](./articles/translated/signals-vs-observables.md)
+3. [前端框架响应式发展史](./articles/translated/history-of-reactivity.md)
+4. [`==`与`===`](./articles/translated/double-equal-vs-triple-equal.md)
 
 ## 综合的
 
