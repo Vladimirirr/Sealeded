@@ -260,3 +260,83 @@ import.meta 是一个语法！是一个整体！而非普通对象与它键值�
 
 - `url`：模块的绝对路径
 - `resolve(path: string): string`：类似 node.js 里的 resolve 方法，以当前路径和传入路径得到新路径
+
+## insertAdjacentElement/insertAdjacentHTML/insertAdjacentText
+
+adjacent: adj. 相邻的
+
+全部浏览器支持。
+
+### insertAdjacentElement
+
+语法：`(targetElement: Element).insertAdjacentElement(position: string, elementToBeInserted: Element): elementToBeInserted`
+
+参数 position：（值忽略大小写，但标准是全小写）
+
+- `'beforebegin'`: before the `targetElement` itself
+- `'afterend'`: after the `targetElement` itself
+- `'afterbegin'`: inside the `targetElement`, and before its first child
+- `'beforeend'`: inside the `targetElement`, and after its last child
+
+注意：只在节点具有父元素存都存在在文档树里，beforebegin 和 afterend 有效
+
+可视化表达：
+
+```html
+<!-- beforebegin -->
+<target-element>
+  <!-- afterbegin -->
+  childNodes
+  <!-- beforeend -->
+</target-element>
+<!-- afterend -->
+```
+
+### insertAdjacentHTML
+
+与 insertAdjacentElement 类似，但是传入的是代表 HTML 结构的字符串（与 innerHTML 相同）。
+
+与 innerHTML 相比，它不需要额外清空（卸载和销毁）已经存在的内容（节点们），因此，效率更高。
+
+语法：`targetElement.insertAdjacentHTML(position: string, html: string): void`
+
+### insertAdjacentText
+
+与 insertAdjacentElement 类似，但是传入的是代表 HTML 文本节点的字符串。
+
+语法：`targetElement.insertAdjacentText(position: string, html: string): void`
+
+## append/prepend/after/before
+
+全部浏览器支持。
+
+### append
+
+语法：`(targetElement: Element).append(...(string | Element)[]): void`
+
+向 targetElement 的末处插入一组节点（字符串将转换到文本节点）。
+
+与 appendChild 不同：
+
+1. 还能直接插入字符串表示的文本节点
+2. 批量插入
+3. 没有返回值，而 appendChild 返回被插入的节点
+4. appendChild 由 `Node.Prototype` 实现，而 append 由` (Element <- Node).Prototype` 实现
+
+### prepend
+
+同 append，只不过它向始处插入一组节点。
+
+没有诸如 prependChild 方法，这与 appendChild 不对称。
+
+### after
+
+语法：`(targetElement: Element).after(...(string | Element)[]): void`
+
+insertAdjacentElement 的 beforeend 方法的批量形式，字符串转换到文本节点。
+
+### before
+
+语法同 after。
+
+insertAdjacentElement 的 afterbegin 方法的批量形式，字符串转换到文本节点。

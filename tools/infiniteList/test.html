@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="controller">
+      <button onclick="add10()">add 10 items</button>
+      <button onclick="del10()">del 10 items</button>
+    </div>
+    <div class="display">
+      <infinite-list id="ilist" style="--InfiniteListContainerHeight: 420px">
+        <div slot="reached">My Custom LOADING...</div>
+      </infinite-list>
+    </div>
+    <script>
+      window.ilist = document.getElementById('ilist')
+      window.listData = []
+
+      // 工具函数
+      const delay = (t = 1) => new Promise((ok) => setTimeout(ok, t * 1e3))
+
+      // 防止由同一个触底事件而重复发送请求
+      let isRequesting = false
+      // 触底事件处理器
+      window.ilist.addEventListener('reached', async () => {
+        console.log('received a reached event.')
+        if (isRequesting) {
+          console.warn('a request has been sent already.')
+          return
+        }
+        isRequesting = true
+        await delay() // 模拟网络下载的延迟
+        add10()
+        isRequesting = false
+      })
+
+      // 增 10 个项目
+      const add10 = () => {
+        const idPrefix = Date.now()
+        const data = Array.from({ length: 10 }).map((v, i) => ({
+          // 必须要存在一个 id，标识唯一
+          id: `${idPrefix}__${i}`,
+          // 渲染的内容
+          html: `${new Date().toISOString()}__${i}`,
+        }))
+        window.listData.push(...data)
+        ilist.update(data)
+      }
+      // 移 10 个项目
+      const del10 = () => {}
+    </script>
+    <script type="module">
+      import InfiniteList from './index.js'
+
+      // 安装此组件
+      window.customElements.define('infinite-list', InfiniteList)
+    </script>
+  </body>
+</html>

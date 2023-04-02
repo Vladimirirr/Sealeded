@@ -162,6 +162,10 @@ customElements.define(
 
 ### ShadowDom 的插槽
 
+slot 元素本身不会产生任何特定的框（可理解是自带 `display: none;` 的特性），但是会呈现其里面的内容。
+
+slot 元素的 offsetParent 永远是 null。
+
 slot 是一个渲染结果的占位元素（一个透传元素，不对任何已有 dom 树的结构构成影响），占槽元素的渲染结果将映射到此处，但是仅仅是映射而已：
 
 1. 占槽元素依旧在主文档里，位置没有发生改变，它的 owner 是主文档
@@ -194,6 +198,10 @@ ShadowDom 的样式选择器`::slotted`提供了装饰占槽元素的能力，�
 1. `slottedNode.assignedSlot` 返回该占槽元素映射的插槽元素
 2. `slotNode.assignedNodes({ flatten: false })` 返回此插槽正在映射的占槽节点们
 3. `slotNode.assignedElements({ flatten: false })` 同上，只是占槽元素们
+
+参数：
+
+- `flatten`: a boolean value indicating if to return the assigned elements of any available child slot elements (true) or not (false)
 
 #### 下拉菜单的例子
 
@@ -310,3 +318,12 @@ ShadowDom 的样式选择器`::slotted`提供了装饰占槽元素的能力，�
 ```js
 document.body.appendChild(temp11.content.cloneNode(true))
 ```
+
+## 数据传递
+
+WebComponents 间的数据传递：
+
+1. 传统特性只能传递字符串，简单但是数据量不能太多（不像目前前端框架，Vue、React，等，特性可以直接传递任意的数据类型）
+2. 直接将数据挂载在组件的特性上
+3. 采取 CustomEvent 传递
+4. 采取 BlobURL 传递
