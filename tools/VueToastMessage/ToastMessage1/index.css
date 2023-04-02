@@ -1,0 +1,68 @@
+.ToastMessageContainer {
+  /* 容器样式 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  left: 50%;
+  top: 20px; /* 默认离顶端的距离 */
+  z-index: 1122; /* 默认的 z-index (by the way, the 1122 is my birthday's month and date) */
+  transform: translateX(-50%);
+}
+
+.ToastMessageContainer > .ToastMessage {
+  /* ToastMessage 的样式 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-origin: center;
+  padding: 6px 16px;
+  border-radius: 6px;
+  transition: all 0.2s ease-out;
+}
+.ToastMessageContainer > .ToastMessage + .ToastMessage {
+  /* 多个 ToastMessage 的间隔 */
+  margin-top: 15px;
+}
+.ToastMessageContainer > .ToastMessage > img.Icon {
+  /* 图标样式 */
+  width: 18px;
+  margin-right: 6px;
+}
+.ToastMessageContainer > .ToastMessage > div.Content {
+  /* 内容文字的样式 */
+  font-size: 16px;
+  font-weight: normal;
+  /* 防止换行 */
+  max-width: 65vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ToastMessageContainer > .ToastMessageSuccess {
+  background: rgb(240, 248, 236);
+  color: rgb(102, 194, 58);
+}
+.ToastMessageContainer > .ToastMessageError {
+  background: rgb(254, 240, 240);
+  color: rgb(246, 120, 120);
+}
+.ToastMessageContainer > .ToastMessageWarning {
+  background: rgb(252, 246, 236);
+  color: rgb(230, 162, 60);
+}
+.ToastMessageContainer > .ToastMessageTip {
+  background: rgb(236, 242, 252);
+  color: rgb(144, 148, 152);
+}
+
+/* ToastMessage 显示 和 消失 的转场效果 */
+.ToastMessageTransition-enter-active,
+.ToastMessageTransition-leave-active {
+  opacity: 1;
+}
+.ToastMessageTransition-enter,
+.ToastMessageTransition-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}

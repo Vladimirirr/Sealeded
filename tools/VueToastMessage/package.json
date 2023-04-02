@@ -1,0 +1,18 @@
+{
+  "name": "vue-toast-message",
+  "version": "0.0.0",
+  "description": "Vue2 Toast Message Component.",
+  "main": "index.js",
+  "type": "module",
+  "author": "RYZZ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vladimirirr/Sealeded",
+    "directory": "tools/VueToastMessage"
+  },
+  "keywords": [
+    "message",
+    "toast"
+  ],
+  "license": "LGPL-3.0"
+}

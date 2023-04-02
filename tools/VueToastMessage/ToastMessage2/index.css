@@ -1,0 +1,55 @@
+.ToastMessage {
+  /* ToastMessage 的样式 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 30px !important; /* 固定 */
+  padding: 6px 16px;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.2s ease-out;
+}
+.ToastMessage > img.Icon {
+  /* 图标样式 */
+  width: 18px;
+  margin-right: 6px;
+}
+.ToastMessage > div.Content {
+  /* 内容文字的样式 */
+  font-size: 16px !important; /* 固定 */
+  font-weight: normal;
+  /* 防止换行 */
+  max-width: 65vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ToastMessageSuccess {
+  background: rgb(240, 248, 236);
+  color: rgb(102, 194, 58);
+}
+.ToastMessageError {
+  background: rgb(254, 240, 240);
+  color: rgb(246, 120, 120);
+}
+.ToastMessageWarning {
+  background: rgb(252, 246, 236);
+  color: rgb(230, 162, 60);
+}
+.ToastMessageTip {
+  background: rgb(236, 242, 252);
+  color: rgb(144, 148, 152);
+}
+
+/* ToastMessage 显示 和 消失 的转场效果 */
+.ToastMessageTransition-enter-active,
+.ToastMessageTransition-leave-active {
+  opacity: 1;
+}
+.ToastMessageTransition-enter,
+.ToastMessageTransition-leave-to {
+  opacity: 0;
+}
