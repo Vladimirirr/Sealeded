@@ -327,3 +327,9 @@ WebComponents 间的数据传递：
 2. 直接将数据挂载在组件的特性上
 3. 采取 CustomEvent 传递
 4. 采取 BlobURL 传递
+
+## HMR
+
+适合 WebComponents 组件在 Vite 下的热更新代码。
+
+参见：[hmr.js](./hmr.js)

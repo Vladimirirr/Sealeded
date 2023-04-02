@@ -1,4 +1,6 @@
 // Vite 下的 WebComponents 热更新代码
+// 下面的代码直接附在需要热更新的 WebComponents 组件文件的代码里
+// 可写一个插件以自插入下面的代码
 
 if (import.meta.hot) {
   // 引入此 if 语句，在构建时这里的热更新代码可以被 treesharking 掉
