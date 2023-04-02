@@ -61,6 +61,7 @@
 1. [indexedDB 工具 -- idbStorage](./tools/idbStorage/)
 2. [UUID 生成器 -- getUUID](./tools/getUUID/)
 3. [无限列表 -- infiniteList](./tools/infiniteList/)
-4. [小工具集合](./tools/utilities/)
+4. [Vue 公共组件 -- ToastMessage](./tools/VueToastMessage/)
+5. [小工具集合](./tools/utilities/)
 
 注意：工具类代码的许可是独立的，是 LGPL-3.0（详见此目录下的许可文件）
