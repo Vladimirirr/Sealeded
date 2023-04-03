@@ -15,7 +15,7 @@ WebComponents 技术的基建工具：
 
 其他：
 
-1. 一个浏览器不能识别的标签相当 span
+1. 【空白（包括还未 upgrade）的自定义元素】和【HTMLUnknownElement 元素】与【空白的 span 元素】在 CSS 表现上完全一致
 2. 一个 WebComponents 框架 [lit](https://github.com/lit/lit)
 
 ## Custom elements
