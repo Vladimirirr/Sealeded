@@ -8,7 +8,7 @@
 
 于是乎，一个名为 [Emscripten](https://github.com/emscripten-core/emscripten) 的项目由此诞生，将 C/C++ 代码编译为高度优化的 JavaScript，这个规范叫做 asm.js。
 
-无独有偶，当时如火如荼（2016 年以前）的 Adobe Flash 同样存在一个叫做 Mandreel 的框架，使用 C/C++ 来创建 Adobe Flash/AIR 软件，类似地，把 C/C++ 代码编译为高度优化的 ActionScript3 代码。
+无独有偶，当时如火如荼（2016 年以前）的 Adobe Flash 同样存在一个叫做 Mandreel 的框架，采取 C/C++ 来创建 Adobe Flash/AIR 软件，类似地，把 C/C++ 代码编译为高度优化的 ActionScript3 代码。
 
 asm.js 规范：<http://asmjs.org/spec/latest/>
 
@@ -19,10 +19,10 @@ C/C++ -> JavaScript 有两个最大的难点：
 1. 静态语言 vs 动态语言
 2. 手动垃圾回收 vs 自动垃圾回收
 
-而 asm.js 使用下列方法来解决：
+而 asm.js 采取下列方法来解决：
 
 1. 保证变量类型不会发生突变，而且仅支持定义的 2 种类型（signed int 和 signed double）
-2. 尽可能地阻止自动垃圾回收的触发（使用 ArrayBuffer 模拟内存）
+2. 尽可能地阻止自动垃圾回收的触发（采取 ArrayBuffer 模拟内存）
 
 ### 浏览器上的 asm.js
 
@@ -83,7 +83,7 @@ function bar() {
 - 编译器的前端：将编译器支持的各种语言的源代码做词法分析、语法分析和 AST 构建，生成与源代码相关但是与目标机器平台不相关的中间代码
 - 编译器的后端：将中间代码优化同时生成目标机器平台的二进制文件
 
-最初 LLVM(Low Level Virtual Machine) 是伊利诺伊大学厄巴纳香槟分校的学生 Chris Lattner 在研究编译器优化时搭建的一个虚拟机，这个虚拟机内建了一套中立的中间代码（即 LLVM IR），并围绕此中间代码提出了一套全新的编译架构，随着此论文的一发表，位于此虚拟机的这套编译架构越来越出名，慢慢地 LLVM 不再指代此虚拟机，而是指代了这套编译架构。
+最初 LLVM(Low Level Virtual Machine) 是伊利诺伊大学厄巴纳香槟分校的学生 Chris Lattner 在研究编译器优化时搭建的一个虚拟机，这个虚拟机内建了一套中立的中间代码（即 LLVM IR），同时围绕此中间代码提出了一套全新的编译架构，随着此论文的一发表，位于此虚拟机的这套编译架构越来越出名，慢慢地 LLVM 不再指代此虚拟机，而是指代了这套编译架构。
 
 基于 LLVM 架构的编译器：
 
@@ -93,7 +93,7 @@ LLVM IR 的优化由 LLVM 自己实现，当然可以传入自定义的优化配
 
 相比之下，基于传统架构的 GCC 编译器的前后端高度耦合，不能很方便地支持一门新的语言或一个新的机器平台。
 
-### 使用 LLVM 编译 WASM 的流程图
+### 采取 LLVM 编译 WASM 的流程图
 
 ```mermaid
 graph TD
@@ -124,7 +124,7 @@ Emscripten is a complete Open Source compiler toolchain to WebAssembly. Using Em
 
 翻译：
 
-1. 将 C/C++代码或任何其他使用 LLVM 的语言编译为 WebAssembly，并在 Web、Node.js 或其他 wasm 运行时上运行这些代码。
+1. 将 C/C++代码或任何其他采取 LLVM 的语言编译为 WebAssembly，同时在 Web、Node.js 或其他 wasm 运行时上运行这些代码。
 2. 将其他语言的 C/C++运行时编译为 WebAssembly，最终间接地运行这些语言的代码（例如，Python 和 Lua 已经这样做了）。
 
 其他非平台的原生语言，即需要运行时的语言，在编译为 WASM 时，首先需要把它的运行时编译为 WASM，这就大大增加了 WASM 文件的尺寸，效率也会打折扣。

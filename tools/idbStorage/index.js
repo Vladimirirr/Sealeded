@@ -174,7 +174,7 @@ const clear = (db) => {
 const install = () => {
   return new Promise((resolve, reject) => {
     // 得到一个 indexedDB instance
-    // 如果存在话，就直接复用，否则就创建一个
+    // 如果存在话，就不再复建，否则就创建一个
     const openedInfo = {
       db: null,
       version: -1,

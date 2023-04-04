@@ -54,7 +54,7 @@ composedToMainApp["composed all micro Apps(all these productions) into one"]
 
 ### WebComponents
 
-使用 WebComponents 的 shadow 技术实现资源隔离。
+采取 WebComponents 的 shadow 技术实现资源隔离。
 
 兼容性：https://caniuse.com/?search=Web%20Components
 
@@ -82,7 +82,7 @@ composedToMainApp["composed all micro Apps(all these productions) into one"]
 
 ### 注意
 
-1. 每个 microApp 的路由管理不能简单再简单地直接使用浏览器 URL，而是转而使用全局状态管理来完成
+1. 每个 microApp 的路由管理不能简单再简单地直接采取浏览器 URL，而是转而采取全局状态管理来完成
 
 ### 未来
 
