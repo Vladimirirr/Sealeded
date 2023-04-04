@@ -13,6 +13,9 @@
 
 ## 计科基础
 
+1. [100 行 JavaScript 代码实现一个图灵完备语言](./articles/CSBase/BF/index.md)
+2. [TCP 的建立与释放](./articles/CSBase/TCP/index.md)
+
 ## 外文技术文章翻译（带我的主观思考）
 
 1. [信号是前端框架的未来](./articles/translated/signals-vs-observables.md)
