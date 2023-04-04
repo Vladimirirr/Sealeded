@@ -28,6 +28,6 @@
 
 [See document.](./SafelyAccess/index.md)
 
-## 弱引用的数据
+## 弱持有的数据
 
 [See document.](./WeakData/index.md)

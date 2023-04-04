@@ -33,7 +33,7 @@ class Foo {
 
 ## 独立执行
 
-函数的 this 就是全局作用域里的 this，在浏览器下是 window，在 node.js 下是 global，ES2020 提案的 globalThis 关键词统一了 JavaScript 在不同 runtime 下全局作用域里对 this 值的标识符名字。
+函数的 this 就是顶级域里的 this，在浏览器下是 window，在 node.js 下是 global，ES2020 提案的 globalThis 关键词统一了 JavaScript 在不同 runtime 下顶级域里对 this 值的标识符名字。
 
 ```js
 function foo() {
@@ -45,9 +45,9 @@ foo()
 
 ## 方法执行
 
-在 JavaScript 里，如果一个函数被对象的键引用，那么这个函数又叫做此对象的方法。
+在 JavaScript 里，如果一个函数被对象的键指向，那么这个函数又叫做此对象的方法。
 
-注意，在 JavaScript 里，一个对象永远不可能 owner 一个函数，对象只能持有函数的地址（即只能引用一个函数）！这点也与 Java 不同。
+注意，在 JavaScript 里，一个对象永远不可能 owner 一个函数，对象只能持有函数的地址（即只能指向一个函数）！这点也与 Java 不同。
 
 ```js
 const o = {
@@ -92,7 +92,7 @@ function Foo() {
 
 ## 消除 this -- 箭头函数
 
-箭头函数（又叫 lambda 表达式）的作用域没有 this，它的 this 继承自父作用域（就像普通变量沿着作用域链查找一样），如果父也是箭头函数，将一直向上找到顶级作用域（全局作用域）里的 this。
+箭头函数（又叫 lambda 表达式）的域没有 this，它的 this 继承自父域（就像普通变量沿着域链查找一样），如果父也是箭头函数，将一直向上找到顶级域里的 this。
 
 ## 最佳实践
 

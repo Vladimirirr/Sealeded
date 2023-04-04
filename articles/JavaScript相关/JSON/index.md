@@ -92,4 +92,4 @@ console.dir(JSON.stringify(data)) // print: `{"aa":10,"bb":"hi","cc":[11,22]}`
 
 ## 小技巧
 
-我们可以使用 `JSON.parse(JSON.stringify(data))` 来快速深拷贝一个符合 JSON 语义的 JavaScript 对象。
+我们可以采取 `JSON.parse(JSON.stringify(data))` 来快速深拷贝一个符合 JSON 语义的 JavaScript 对象。

@@ -2,7 +2,7 @@
 
 ## 概述
 
-这两个数据类型与 JavaScript 引擎的垃圾回收(GarbageCollection)息息相关，JavaScript 引擎在值【可达】或【可能被使用到】时会将其保持在内存中。
+这两个数据类型与 JavaScript 引擎的垃圾回收(GarbageCollection)息息相关，JavaScript 引擎在值【可达】或【可能被访问到】时会将其保持在内存中。
 
 但 WeakMap 不会阻止垃圾回收对键（对象）的回收，一旦此对象不能被其他任何方法访问时，垃圾回收会将此对象和它关联的值一起回收掉，同理，WeakSet 不会阻止垃圾回收对值（对象）的回收。
 
@@ -14,12 +14,12 @@ let userInfo = { name: 'Jack', age: 22 }
 const weakMap = new WeakMap()
 weakMap.set(userInfo, 'The user information of Jack.')
 
-userInfo = null // 覆盖引用
+userInfo = null // 覆盖指向，使得userInfo之前指向的内容不再能被访问到
 
 // 下一次浏览器引擎（JavaScript引擎）的 GC 时，之前 userInfo 占的内存将被回收
 ```
 
-WeakMap 仅接收对象类型的键。对象被弱持有（弱引用），意味着如果对象本身被垃圾回收掉，那么在 WeakMap 中的记录也会被移除。这是代码层面观察不到的。同理，WeakSet 只是弱持有它的值（对象）。
+WeakMap 仅接收对象类型的键。对象被弱持有（弱指向），意味着如果对象本身被垃圾回收掉，那么在 WeakMap 中的记录也会被移除。这是代码层面观察不到的。同理，WeakSet 只是弱持有它的值（对象）。
 
 由于随时可能给 GC 回收，故不能得到它当前全部 items 的长度，也不能迭代它。
 
@@ -56,7 +56,7 @@ export const countUser = (user) => {
 }
 ```
 
-我们使用它：
+我们引入它：
 
 ```js
 import { visitsCountMap, countUser } from './visits.js'

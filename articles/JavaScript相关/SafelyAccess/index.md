@@ -54,7 +54,7 @@ const res = isNulish(a) ? b : a
 
 ## 警告
 
-`??`是【选择列表中第一个已定义的值】的简便方式的操作符，与 `||` 不是同一个类型的操作符，因此，当 `??` 与 `&&` 或 `||` 一起出现在表达式里，将报错：
+`??`是【选择列表中第一个已定义的值】的简便方式的操作符，与 `||` 不是同一个类型的操作符（语义完全不同），因此，当 `??` 与 `&&` 或 `||` 一起出现在表达式里，将报错：
 
 ```js
 // const x = 1 && 2 ?? 3; // a syntax error happened unless using explicit parentheses around it to make work

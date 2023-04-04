@@ -9,7 +9,7 @@ JavaScript 引擎内部以**UTF-16**编码存储字符。
 码元(Code Unit)：字符在实际传输过程中的编码方式（例如 UTF-8），可能是 1 个字节，也可能是 2 个及以上的字节，这些字节就是码元，**码元就是码点的具体实现**，对码点编码成码元的技术叫做字符编码方式，常见的有 UTF-8、UTF-16 和 UTF-32， UTF 全称 Unicode Transformation Format。
 
 举例：
-Unicode 编码的字符集的汉字【你】的编号是 20320，十六进制是 0x4F60，也就是说，【你】的 Unicode 编码是 0x4F60，码点是 0x4F60，当【你】在网络上传输时，通常使用 UTF-8 编码，经过 UTF-8 编码的【你】变成了二进制的【E4 BD A0】，而这 3 个字节就是【你】的码元。
+Unicode 编码的字符集的汉字【你】的编号是 20320，十六进制是 0x4F60，也就是说，【你】的 Unicode 编码是 0x4F60，码点是 0x4F60，当【你】在网络上传输时，通常采取 UTF-8 编码，经过 UTF-8 编码的【你】变成了二进制的【E4 BD A0】，而这 3 个字节就是【你】的码元。
 
 ## 字符方法
 
@@ -104,4 +104,4 @@ UCS = Universal Character Set
 
 ## JavaScript 的支持
 
-JavaScript 的字符集编解码工具：[TextEncoder 与 TextDecoder 的使用](./Codec.md)
+JavaScript 的字符集编解码工具：[TextEncoder 与 TextDecoder](./Codec.md)
