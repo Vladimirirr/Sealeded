@@ -44,7 +44,7 @@ Vue.use(ToastMessage1) // 或者 ToastMessage2
 export default {
   methods: {
     showToastMessage() {
-      // 传入内容和显示时间（单位：ms），内容默认空字符串，显示时间默认 2 秒
+      // 传入内容和显示时间（单位：ms），内容默认空字符串，显示时间默认 3 秒
       // 得到一个函数（不需要传入参数），可以提前关闭此 ToastMessage
       const closeThisMessageNow = this.$tm.success('Test Ok.', 3e3)
       // 剩余的显示类型

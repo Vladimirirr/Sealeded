@@ -103,7 +103,7 @@ const initToastMessage = (Vue) => {
     clear: () => {
       // 需要固定当前的 allMessages，防止在 onClosing 里移除数组项目导致的数组颤抖使此处的 forEach 次数不对
       allMessages.slice().forEach((i) => i.close())
-      // allMessages.length = 0; // 不需要再重置 length 了，此时数组已经空
+      // allMessages.length = 0 // 不需要再重置 length 了，此时数组已经空
     },
     ...messageFns,
   }

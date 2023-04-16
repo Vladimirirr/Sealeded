@@ -72,7 +72,7 @@ if (crypto?.randomUUID) {
     return uuid
   }
 } else if (Math?.random) {
-  // createObjectURL available
+  // random available
   info.engine = Math.random.bind(Math)
   const getChar = () => {
     const i = Math.floor(info.engine() * charMapLen)

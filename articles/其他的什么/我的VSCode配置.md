@@ -8,7 +8,7 @@
   "workbench.sideBar.location": "right",
   "editor.fontSize": 18,
   "editor.tabSize": 2,
-  "editor.fontFamily": "Fira Code, 微软雅黑",
+  "editor.fontFamily": "JetBrains Mono, Microsoft YaHei UI",
   "editor.fontLigatures": true,
   "editor.minimap.enabled": false,
   "editor.suggest.snippetsPreventQuickSuggestions": false,

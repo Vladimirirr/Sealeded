@@ -6,6 +6,7 @@ class App extends HTMLElement {
     console.log('App constructed')
   }
   connectedCallback() {
+    // Node.isConnected 可检测一个节点是否已经接入到了一个文档里（主文档或Shadow文档）
     console.log('App connected')
     const shadowDom = this.attachShadow({ mode: 'open' })
     const num = this.getAttribute('counter-begin-number')

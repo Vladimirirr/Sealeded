@@ -86,7 +86,7 @@ export default {
       // 当消失的专场特效结束了，对此 ToastMessage 清理
 
       this.$destroy()
-      this.$el.remove() // window.document.body.removeChild(this.$el);
+      this.$el.remove() // window.document.body.removeChild(this.$el)
     },
     close() {
       // 进入关闭状态

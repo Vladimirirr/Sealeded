@@ -47,8 +47,8 @@ const setItem = (db, key, value) => {
       return e // e.target.result 是设定的值的 key
     }
     req.onerror = (e) => {
-      // e.preventDefault() -> does not abort the transaction, triggers the onerror but ignores the onabort
-      // e.stopPropagation() -> aborts the transaction, triggers the onabort but ignores the onerror
+      // e.preventDefault() -> does not abort the transaction, and triggers the onerror on it but ignores the onabort
+      // e.stopPropagation() -> aborts the transaction, and triggers the onabort on it but ignores the onerror
       // e.preventDefault() and stopPropagation() -> does not abort the transaction, ignores both the onerror and onabort
       return e // e.target.error
     }
@@ -210,15 +210,8 @@ const install = () => {
       removeItem: removeItem.bind(empty, openedInfo.db),
       clear: clear.bind(empty, openedInfo.db),
     }
-    // 挂载
-    Object.defineProperty(globalThis, internalDBName, {
-      configurable: false,
-      enumerable: true,
-      writable: false,
-      value: Object.freeze(exposed),
-    })
-    // 返回
-    return exposed
+    // 挂载和返回
+    return (globalThis[internalDBName] = exposed)
   })
 }
 
@@ -227,9 +220,18 @@ const install = () => {
  */
 const uninstall = () => {
   return new Promise((resolve, reject) => {
-    const req = indexedDB.deleteDatabase(internalDBName)
-    req.onsuccess = (e) => resolve(e.target.result) // result = undefined
-    req.onerror = (e) => reject(e.target.error)
+    // close the db connection
+    // the close method return undefined and mark the connection closed immediately, and then close the connection asynchronously
+    // create a transaction will throw an exception if the connection is closing or closed
+    globalThis[internalDBName].__db.close()
+    const delReq = indexedDB.deleteDatabase(internalDBName)
+    delReq.onsuccess = (e) => {
+      // resolve the promise
+      resolve(e.target.result) // result = undefined
+      // then remove instance
+      delete globalThis[internalDBName]
+    }
+    delReq.onerror = (e) => reject(e.target.error)
   })
 }
 
