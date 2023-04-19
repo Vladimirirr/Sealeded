@@ -9,7 +9,7 @@
 
 hack 方法：
 
-- `opacity: 0` 设置此元素全模糊（表现上即全透明）
+- `opacity: 0` 设置此元素全不模糊 (= transparent)
 - `position: fixed; left: -9999px;` 离文档很远的距离
 - `transform: scale(0)` 缩放节点到没有大小的状态
 

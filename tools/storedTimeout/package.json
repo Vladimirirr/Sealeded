@@ -1,21 +1,18 @@
 {
-  "name": "get-uuid",
+  "name": "stored-timeout",
   "version": "1.0.0",
-  "description": "Get a uuid in all browsers.",
+  "description": "Stored Timeout.",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "test": "echo \"Open the test.html for testing.\""
-  },
   "author": "RYZZ",
   "repository": {
     "type": "git",
     "url": "https://github.com/Vladimirirr/Sealeded",
-    "directory": "tools/getUUID"
+    "directory": "tools/storedTimeout"
   },
   "keywords": [
-    "uuid",
-    "random"
+    "storedTimeout",
+    "timeout"
   ],
   "license": "LGPL-3.0"
 }

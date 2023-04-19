@@ -1,7 +1,7 @@
 {
   "name": "idb-storage",
-  "version": "0.0.0",
-  "description": "A WebStorage-like apis wrapper for indexedDB",
+  "version": "1.0.0",
+  "description": "A WebStorage-like apis wrapper for indexedDB.",
   "main": "index.js",
   "type": "module",
   "typings": "index.d.ts",

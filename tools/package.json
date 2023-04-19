@@ -1,0 +1,23 @@
+{
+  "name": "tools",
+  "version": "0.0.0",
+  "description": "Sealeded Tools.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build:get-uuid": "node index.js getUUID",
+    "build:idb-storage": "node index.js idbStorage",
+    "build:stored-timeout": "node index.js storedTimeout",
+    "build:utilities": "node index.js utilities"
+  },
+  "author": "RYZZ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vladimirirr/Sealeded",
+    "directory": "tools"
+  },
+  "license": "LGPL-3.0",
+  "dependencies": {
+    "esbuild": "0.15.1"
+  }
+}

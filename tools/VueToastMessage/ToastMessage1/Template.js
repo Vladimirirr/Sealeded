@@ -1,13 +1,7 @@
 // ToastMessage 的模板
 
 import IconsMap from '../icons/index.js' // 图标映射
-
-// 首字母大写
-const makeFirstCharUpper = (type) => {
-  const chars = Array.from(type)
-  chars.unshift(chars.shift().toUpperCase())
-  return chars.join('')
-}
+import { makeFirstCharUpper } from '../utils.js'
 
 export default {
   name: 'ToastMessageTemplate',

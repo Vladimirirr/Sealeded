@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="controller" style="padding-bottom: 10px">
+      <button id="btnBegin">Begin</button>
+      <button id="btnPause">Pause</button>
+      <button id="btnReset">Reset</button>
+      <button id="btnEnd">End</button>
+      <button id="btnClear">Clear</button>
+    </div>
+    <div class="displayPanel">
+      <div>
+        状态：
+        <b id="timeStatus"></b>
+      </div>
+      <div>
+        剩：
+        <b id="timeRemaining"></b>秒
+      </div>
+    </div>
+    <script type="module">
+      import useTimeout from './index.js'
+
+      const timeStatusElm = document.getElementById('timeStatus')
+      const timeRemainingElm = document.getElementById('timeRemaining')
+
+      const statusMap = {
+        TICK: '正在倒计时',
+        END: '已经结束',
+      }
+      const timeoutManager = useTimeout('test', 10, (type, timeRemaining) => {
+        timeStatusElm.innerText = statusMap[type]
+        timeRemainingElm.innerText = timeRemaining
+      })
+
+      const btnBegin = document.getElementById('btnBegin')
+      const btnPause = document.getElementById('btnPause')
+      const btnReset = document.getElementById('btnReset')
+      const btnEnd = document.getElementById('btnEnd')
+      const btnClear = document.getElementById('btnClear')
+
+      btnBegin.onclick = timeoutManager.begin
+      btnPause.onclick = timeoutManager.pause
+      btnReset.onclick = timeoutManager.reset
+      btnEnd.onclick = timeoutManager.end
+      btnClear.onclick = timeoutManager.clear
+    </script>
+  </body>
+</html>

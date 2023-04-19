@@ -1,0 +1,21 @@
+{
+  "name": "vue-reusable-template",
+  "version": "0.0.0",
+  "description": "Vue3 Reusable Template.",
+  "main": "index.js",
+  "type": "module",
+  "author": "RYZZ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vladimirirr/Sealeded",
+    "directory": "tools/VueReusableTemplate"
+  },
+  "peerDependencies": {
+    "vue": "^2.7 || ^3",
+    "lodash": "^4"
+  },
+  "keywords": [
+    "VueReusableTemplate"
+  ],
+  "license": "LGPL-3.0"
+}
