@@ -71,7 +71,10 @@
 1. [一个封装轻巧的 indexedDB 工具 -- idbStorage](./tools/idbStorage/)
 2. [一个大差不差的 UUID 生成器 -- getUUID](./tools/getUUID/)
 3. [一个较简单的长列表 -- infiniteList](./tools/infiniteList/)
-4. [一个 Vue 公共组件 -- ToastMessage](./tools/VueToastMessage/)
-5. [一些小工具集合](./tools/utilities/)
+4. [一个持久化的计时器 -- storedTimeout](./tools/storedTimeout/)
+5. [一个 Vue 公共组件 -- ToastMessage](./tools/VueToastMessage/)
+6. [一个 Vue 公共组件 -- VueReusableTemplate](./tools/VueReusableTemplate/)
+7. [一些小工具集合](./tools/utilities/)
 
-注意：工具类代码的许可是独立的，是 LGPL-3.0（详见此目录下的许可文件）
+- 可直接在此目录下 `npm run <script-name>` 来构建你需要的工具。
+- 注意，工具类代码的许可是独立的，是 LGPL-3.0（详见此目录下的许可文件）。
