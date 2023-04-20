@@ -1,4 +1,7 @@
 public
 node_modules
+dist
 package-lock.json
 LICENSE
+*.dist.js
+*.dist.min.js
