@@ -6,6 +6,8 @@
 {
   "workbench.iconTheme": "material-icon-theme",
   "workbench.sideBar.location": "right",
+  "workbench.layoutControl.enabled": false,
+  "workbench.startupEditor": "none",
   "editor.fontSize": 18,
   "editor.tabSize": 2,
   "editor.fontFamily": "JetBrains Mono, Microsoft YaHei UI",

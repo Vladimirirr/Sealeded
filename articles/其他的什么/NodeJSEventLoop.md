@@ -1,5 +1,7 @@
 # EventLoop in Node.js
 
+> 参考：<https://www.builder.io/blog/visual-guide-to-nodejs-event-loop>
+
 ## 单线程的 JavaScript
 
 JavaScript 是一门 同步的、阻塞的、单线程的 语言，这就是 JavaScript 的设计思想，因此任何符合 JavaScript 标准的 Runtime 里有且只有一个 JavaScript 引擎。
@@ -108,7 +110,7 @@ setTimeout(() => console.log('setTimeout 3'))
 process.nextTick(() => console.log('process.nextTick 1'))
 process.nextTick(() => {
   console.log('process.nextTick 2')
-  process.nextTick(() => console.log('inner nextTick in next tick'))
+  process.nextTick(() => console.log('inner nextTick in nextTick'))
 })
 process.nextTick(() => console.log('process.nextTick 3'))
 
@@ -124,7 +126,7 @@ Promise.resolve().then(() => console.log('Promise.resolve 3'))
 process.nextTick 1
 process.nextTick 2
 process.nextTick 3
-inner nextTick in next tick
+inner nextTick in nextTick
 Promise.resolve 1
 Promise.resolve 2
 Promise.resolve 3
@@ -198,3 +200,35 @@ setImmediate(() => console.log('setImmediate 1'))
 ```
 
 两条 log 输出不固定。CPU 的工作负荷会导致此类情况的出现，当 CPU 繁忙时 setTimeout 会被推迟。
+
+### test 06
+
+```js
+const fs = require('fs')
+
+const readableStream = fs.createReadStream(__filename)
+readableStream.close()
+readableStream.on('close', () => {
+  // enqueue to the close queue
+  console.log('close')
+})
+
+setImmediate(() => console.log('setImmediate'))
+setTimeout(() => console.log('setTimeout'), 0)
+Promise.resolve().then(() => console.log('Promise.resolve'))
+process.nextTick(() => console.log('nextTick'))
+```
+
+```txt
+nextTick
+Promise.resolve
+setTimeout
+setImmediate
+close
+```
+
+## Conclusion
+
+The EventLoop is a C++ program that coordinates the execution of synchronous and asynchronous codes in Node.js, and manages all 6 different queues: nextTick, promise, timer, I/O, check and close.
+
+The execution order for all queues is fixed, and it's important to note that the nextTick and promise queues are executed in between each queue and also in between each callback execution in the timer and check queues.

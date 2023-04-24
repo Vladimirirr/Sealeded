@@ -4,17 +4,18 @@
 
 # What is this
 
-- `articles`目录：一些前端相关的知识点
-- `tools`目录：一些前端相关的工具
-- `books`目录：一些前端相关的书籍学习笔记
-- `blogs`目录：大学时写的博客【已精选、已存档】
+- [articles](./articles/)目录：一些前端相关的知识点
+- [tools](./tools/)目录：一些前端相关的工具
+- [books](./books/)目录：一些前端相关的书籍学习笔记
+- [blogs](./blogs/)目录：大学时写的博客【已精选、已存档】
 
 # 🤪 精选文章 (Selected Articles)
 
 ## 计科基础
 
 1. [100 行 JavaScript 代码实现一个图灵完备语言](./articles/CSBase/BF/index.md)
-2. [TCP 的建立与释放](./articles/CSBase/TCP/index.md)
+2. [HTTPS 保障通信安全](./articles/HTTPS/index.md)
+3. [TCP 的建立与释放](./articles/CSBase/TCP/index.md)
 
 ## 外文技术文章翻译（带我的主观思考）
 
@@ -25,13 +26,13 @@
 
 ## 综合的
 
-1. [什么都有的大杂烩](./essence.md)
-2. [一些浏览器 API](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/APIs.md)
+1. [2022 年学到的核心知识点汇总](./essence.md)
+2. [一些浏览器的 APIs 汇总](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/APIs.md)
 
 ## 框架相关的
 
 1. [写一个最小化的 Vue3 响应式系统](./articles/%E6%B7%B1%E5%85%A5%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/Vue3/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86/index.md)
-2. [React 设计思想](./articles/%E6%B7%B1%E5%85%A5%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/React/Mental.md)
+2. [我看到的 Vue 与 React](./articles/%E6%B7%B1%E5%85%A5%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/React.vs.Vue/index.md)
 3. [uniapp 是如何工作的](./articles/uniapp%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3/index.md)
 4. [更多与 Vue 内部源码相关的文章](https://github.com/Vladimirirr/HowVueWorksSealeded)
 
@@ -41,10 +42,11 @@
 2. [浏览器的 NoSQL -- IndexedDB](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/IndexedDB/index.md)
 3. [构建 PWA 技术的核心 -- ServiceWorker](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/ServiceWorker/index.md)
 4. [浏览器内置组件封装技术 -- WebComponents](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/WebComponents/index.md)
-5. [数据与管道 -- Stream](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/Stream/index.md)
-6. [处理二进制数据](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/HandleBinary/index.md)
-7. [DOM 树观察器 MutationObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/DomObserver/MutationObserver.md)
-8. [元素可见性检测观察器 IntersectionObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/DomObserver/IntersectionObserver.md)
+5. [处理二进制数据 -- ArrayBuffer & Blob](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/HandleBinary/index.md)
+6. [DOM 树观察器 -- MutationObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/DomObserver/MutationObserver.md)
+7. [元素可见性检测观察器 -- IntersectionObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/DomObserver/IntersectionObserver.md)
+8. [内容预拉取 -- Prefetch](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/Prefetch.md)
+9. [内容安全策略 -- CSP](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/Prefetch.md)
 
 ## JavaScript 相关的
 
@@ -64,9 +66,10 @@
 1. [曾经的神话 -- JSONP](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/JSONP.md)
 2. [让我们再快点 -- WebAssembly](./articles/WebAssembly/index.md)
 3. [再见巨石 -- 微前端技术](./articles/%E5%BE%AE%E5%89%8D%E7%AB%AF/index.md)
-4. [安全通信 -- HTTPS](./articles/HTTPS/index.md)
 
 # 🐂 工具 (All Tools)
+
+列表：
 
 1. [一个封装轻巧的 indexedDB 工具 -- idbStorage](./tools/idbStorage/)
 2. [一个大差不差的 UUID 生成器 -- getUUID](./tools/getUUID/)
@@ -76,5 +79,7 @@
 6. [一个 Vue 公共组件 -- VueReusableTemplate](./tools/VueReusableTemplate/)
 7. [一些小工具集合](./tools/utilities/)
 
-- 可直接在此目录下 `npm run <script-name>` 来构建你需要的工具。
-- 注意，工具类代码的许可是独立的，是 LGPL-3.0（详见此目录下的许可文件）。
+备注：
+
+- 如何构建一个工具：在 [tools](./tools/) 目录下输入 `npm install && npm run build:<toolName>` 来构建你需要的工具
+- **不同的许可证**：工具类代码的许可证是独立的（是 [LGPL-3.0](./tools/LICENSE)）
