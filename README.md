@@ -1,42 +1,64 @@
+# Introduction
+
+This is My Own Personal Library, including all kinds of Computer Science technologies.
+
+我的个人图书馆。
+
 # 目录
 
-[TOC]
+1. [目录结构](#目录结构)
+2. [精选](#🤪-精选)
+   1. [计科基础](#计科基础)
+   2. [外文翻译](#外文翻译)
+   3. [综合](#综合)
+   4. [框架](#框架)
+   5. [浏览器技术](#浏览器技术)
+   6. [JavaScript](#javascript)
+   7. [CSS](#css)
+   8. [其他的什么](#其他的什么)
+3. [工具](#🐂-工具)
 
-# What is this
+# 目录结构
 
 - [articles](./articles/)目录：一些前端相关的知识点
 - [tools](./tools/)目录：一些前端相关的工具
 - [books](./books/)目录：一些前端相关的书籍学习笔记
 - [blogs](./blogs/)目录：大学时写的博客【已精选、已存档】
 
-# 🤪 精选文章 (Selected Articles)
+# 🤪 精选
 
 ## 计科基础
 
 1. [100 行 JavaScript 代码实现一个图灵完备语言](./articles/CSBase/BF/index.md)
 2. [HTTPS 保障通信安全](./articles/HTTPS/index.md)
 3. [TCP 的建立与释放](./articles/CSBase/TCP/index.md)
+4. [路由交换：IPv4](./articles/CSBase/Network/IPv4.md)
+5. [路由交换：IGP](./articles/CSBase/Network/IGP.md)
+6. [路由交换：路由与交换器](./articles/CSBase/Network/RouterWithSwitch.md)
+7. [路由交换：VLAN](./articles/CSBase/Network/VLAN.md)
 
-## 外文技术文章翻译（带我的主观思考）
+## 外文翻译
+
+带我主观思考。
 
 1. [信号是前端框架的未来](./articles/translated/signals-vs-observables.md)
 2. [信号与可观察值](./articles/translated/signals-vs-observables.md)
 3. [前端框架响应式发展史](./articles/translated/history-of-reactivity.md)
 4. [`==`与`===`](./articles/translated/double-equal-vs-triple-equal.md)
 
-## 综合的
+## 综合
 
 1. [2022 年学到的核心知识点汇总](./essence.md)
 2. [一些浏览器的 APIs 汇总](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/APIs.md)
 
-## 框架相关的
+## 框架
 
 1. [写一个最小化的 Vue3 响应式系统](./articles/%E6%B7%B1%E5%85%A5%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/Vue3/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86/index.md)
 2. [我看到的 Vue 与 React](./articles/%E6%B7%B1%E5%85%A5%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/React.vs.Vue/index.md)
 3. [uniapp 是如何工作的](./articles/uniapp%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3/index.md)
 4. [更多与 Vue 内部源码相关的文章](https://github.com/Vladimirirr/HowVueWorksSealeded)
 
-## 浏览器技术相关的
+## 浏览器技术
 
 1. [多线程技术 -- WebWorker](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/WebWorker/index.md)
 2. [浏览器的 NoSQL -- IndexedDB](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/IndexedDB/index.md)
@@ -46,16 +68,16 @@
 6. [DOM 树观察器 -- MutationObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/DomObserver/MutationObserver.md)
 7. [元素可见性检测观察器 -- IntersectionObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/DomObserver/IntersectionObserver.md)
 8. [内容预拉取 -- Prefetch](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/Prefetch.md)
-9. [内容安全策略 -- CSP](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/Prefetch.md)
+9. [内容安全策略 -- CSP](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/CSP.md)
 
-## JavaScript 相关的
+## JavaScript
 
 1. [看，这就是闭包！](./articles/JavaScript%E7%9B%B8%E5%85%B3/%E9%97%AD%E5%8C%85/index.md)
 2. [Promise 拯救嵌套！](./articles/JavaScript%E7%9B%B8%E5%85%B3/Promise/index.md)
 3. [变来变去的 this！](./articles/JavaScript%E7%9B%B8%E5%85%B3/%E5%85%B3%E9%94%AE%E8%AF%8Dthis/index.md)
 4. [这不是我想要的类型转换！](./articles/JavaScript%E7%9B%B8%E5%85%B3/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/index.md)
 
-## CSS 相关的
+## CSS
 
 1. [CSS 选择器](./articles/CSS%E7%9B%B8%E5%85%B3/CSS%E9%80%89%E6%8B%A9%E5%99%A8.md)
 2. [CSS Flex 布局](./articles/CSS%E7%9B%B8%E5%85%B3/Flex.md)
@@ -67,7 +89,7 @@
 2. [让我们再快点 -- WebAssembly](./articles/WebAssembly/index.md)
 3. [再见巨石 -- 微前端技术](./articles/%E5%BE%AE%E5%89%8D%E7%AB%AF/index.md)
 
-# 🐂 工具 (All Tools)
+# 🐂 工具
 
 列表：
 

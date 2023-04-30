@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="btns">
+      <button onclick="window.scheduler.begin()">begin</button>
+      <button onclick="window.scheduler.pause()">pause</button>
+      <button onclick="window.scheduler.restart()">restart</button>
+      <button onclick="window.scheduler.end()">end</button>
+    </div>
+    <script type="module">
+      import getSimpleTasksScheduler from './index.js'
+
+      // the lower the `priority` value set, the higher the task priority is.
+      const scheduler = getSimpleTasksScheduler([
+        {
+          name: 'TASK 01', // it has no actual purpose for the scheduler currently
+          fn: () => console.log('TASK 111111 RUNNING...'),
+          priority: 1, // the highest priority among the three tasks
+        },
+        {
+          name: 'TASK 02',
+          fn: () => console.log('TASK 222222 RUNNING...'),
+          priority: 2, // the higher priority among the three tasks
+        },
+        {
+          name: 'TASK 03',
+          fn: () => console.log('TASK 333333 RUNNING...'),
+          priority: 4, // the lowest priority among the three tasks
+        },
+      ])
+
+      window.scheduler = scheduler // exposed to btns above
+    </script>
+  </body>
+</html>

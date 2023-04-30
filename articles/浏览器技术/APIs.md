@@ -340,3 +340,14 @@ insertAdjacentElement 的 beforeend 方法的批量形式，字符串转换到�
 语法同 after。
 
 insertAdjacentElement 的 afterbegin 方法的批量形式，字符串转换到文本节点。
+
+## requestFullscreen
+
+The `Element.requestFullscreen(): Promise<undefined | Error>` method triggers an asynchronous request for browsers to make the element be displayed in fullscreen mode.
+
+The browser maintains a fullscreen-ed stack. So, the `requestFullscreen` means push, while the `exitFullscreen` means pop.
+
+此方法带前缀的踩坑记录：
+
+- `Element.webkitRequestFullscreen` 和 `Element.webkitRequestFullScreen`（注意，此处的 `S` ！）都存在在 Chrome 里。但是只有 `webkitExitRequestFullscreen` 存在, 而 `webkitExitRequestFullScreen` 不存在（离谱！）。
+- 带前缀的 `webkitRequest*` 和 `webkitExit*` 只触发带前缀的 `onwebkitfullscreenchange` 事件，不触发标准的 `onfullscreenchange` 的事件。同理，标准的 `reques*` 和 `exit*` 只触发标准的 `onfullscreenchange` 事件。

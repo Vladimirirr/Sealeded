@@ -7,6 +7,7 @@
   "scripts": {
     "build:get-uuid": "node index.js getUUID",
     "build:idb-storage": "node index.js idbStorage",
+    "build:simple-tasks-scheduler": "node index.js SimpleTasksScheduler",
     "build:stored-timeout": "node index.js storedTimeout",
     "build:utilities": "node index.js utilities"
   },
