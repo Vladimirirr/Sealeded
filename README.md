@@ -45,6 +45,7 @@ This is My Own Personal Library, including all kinds of Computer Science technol
 2. [信号与可观察值](./articles/translated/signals-vs-observables.md)
 3. [前端框架响应式发展史](./articles/translated/history-of-reactivity.md)
 4. [`==`与`===`](./articles/translated/double-equal-vs-triple-equal.md)
+5. [被低估的 HTML 标签](./articles/translated/powerful-html-tags.md)
 
 ## 综合
 
@@ -54,9 +55,10 @@ This is My Own Personal Library, including all kinds of Computer Science technol
 ## 框架
 
 1. [写一个最小化的 Vue3 响应式系统](./articles/%E6%B7%B1%E5%85%A5%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/Vue3/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B8%8E%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86/index.md)
-2. [我看到的 Vue 与 React](./articles/%E6%B7%B1%E5%85%A5%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/React.vs.Vue/index.md)
-3. [uniapp 是如何工作的](./articles/uniapp%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3/index.md)
-4. [更多与 Vue 内部源码相关的文章](https://github.com/Vladimirirr/HowVueWorksSealeded)
+2. [React 设计思想](./articles/%E6%B7%B1%E5%85%A5%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/React/Mental.md)
+3. [我看到的 Vue 与 React](./articles/%E6%B7%B1%E5%85%A5%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/React.vs.Vue/index.md)
+4. [uniapp 是如何工作的](./articles/uniapp%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3/index.md)
+5. [更多与 Vue 内部实现相关的文章](https://github.com/Vladimirirr/HowVueWorksSealeded)
 
 ## 浏览器技术
 
