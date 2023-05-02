@@ -70,7 +70,7 @@ This is My Own Personal Library, including all kinds of Computer Science technol
 6. [DOM 树观察器 -- MutationObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/DomObserver/MutationObserver.md)
 7. [元素可见性检测观察器 -- IntersectionObserver](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/DomObserver/IntersectionObserver.md)
 8. [内容预拉取 -- Prefetch](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/Prefetch.md)
-9. [内容安全策略 -- CSP](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/CSP.md)
+9. [Web 安全](./articles/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8A%80%E6%9C%AF/%E5%AE%89%E5%85%A8/index.md)
 
 ## JavaScript
 
