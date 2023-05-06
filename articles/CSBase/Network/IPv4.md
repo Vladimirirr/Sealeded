@@ -40,7 +40,7 @@ Internet Protocol version 4.
 
 ### 私有地址
 
-仅活跃在本地本局域网内的 IP，外发时将被路由器拦截掉。
+仅活跃在本地本局域网内的 IP，外发时将被路由器拦截掉。（私有地址与掩码不相关，`192.168.1.1/24` 和 `192.168.1.1/16` 都是私有地址）
 
 - A 类的：`[10.0.0.0, 10.255.255.255]` 即 `10.0.0.0/8`
 - B 类的：`[170.16.0.0, 172.31.255.255]` 即 `172.16.0.0/12`
@@ -48,12 +48,57 @@ Internet Protocol version 4.
 
 ## Enhanced IPv4 with subnet mask
 
+实现任意的 IP 类型（网络号 + 终端号），从而实现自己的子网。
+
 ## Enhanced IPv4 with NAT
 
 目的：
 
-1. 解决 IPv4 地址不足的问题
-2. 隐藏内部地址
+1. 隐藏内部地址（最早的目的）
+2. 解决 IPv4 地址不足的问题
+
+### static NAT
+
+私有地址和公网地址一一对应（路由器出口维持着这些映射关系），只能隐藏内部网络，不能解决地址不足的问题。
+
+```txt
+<router> nat set --static --internal=192.186.10.10  --external=200.10.10.10
+
+```
+
+### dynamic NAT
+
+地址池维持的私与公的相互转换，与 static NAT 一样也不能解决地址不足的问题。
+
+```txt
+<router> rem 创建一个 NAT 地址池
+<router> nat set --name=nat_aa --address-pool="12.1.1.10, 12.1.1.20"
+<router> rem 创建一个 ACL，匹配需要被 NAT 转换的内网 IP
+<router> acl set --name=acl_aa --permit="10.1.1.0/8"
+<router> rem 把 ACL 放到 NAT 里，port 是 0 表示不转换端口
+<router> nat set --filter=acl_aa --pool=nat_aa --port=0
+
+```
+
+### NATP (NAT with Port)
+
+真正解决地址不足的问题：能让多个内部地址映射到同一个共有地址的不同端口上。
+
+图示：
+
+```mermaid
+flowchart TD
+
+PC1["192.168.1.1/24"] --- switch("switch") --- router("router \n 出接口：200.10.10.1/16") --- cloud(("Cloud"))
+PC2["192.168.1.2/24"] --- switch
+PC3["100.1.1.1/24"] --- cloud
+
+```
+
+- PC1 的 s=192.168.1.1:1025 d=100.1.1.1:80 经过出口变成 s=200.10.10.2:2025 d=100.1.1.1:80
+- PC2 的 s=192.168.1.2:1026 d=100.1.1.1:80 经过出口变成 s=200.10.10.2:2026 d:100.1.1.1:80
+
+配置上和 dynamic NAT 一样，只不过不再需要 `--port=0` 参数，而且也不再需要多个共有地址，现在只需要一个即可。
 
 ## IPv6
 
