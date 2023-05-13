@@ -1,4 +1,4 @@
-# SimpleTasksScheduler
+# simpleTasksScheduler
 
 A simple but enough tasks scheduler based on time interval by using the built-in method setInterval.
 

@@ -1,6 +1,6 @@
 # TreeWalker
 
-内置的 DOM 树 walker 或 traveller，方式是 DFS(Depth First Search)。
+内置的 DOM 树 walker（或 traveller），方式是 DFS(Depth First Search) 或 BFS(Breath First Search)。
 
 一个节点是否可视只取决它的 `whatToShow` 和 `filter` 配置，而不管它是否被渲染。
 
@@ -74,6 +74,11 @@
 - `previousSibling()`: Go back sibling.
 - `parentNode()`: Go to the parent node of current.
 
+备注：
+
+- nextNode 和 previousNode 和 parentNode 是 DFS
+- nextSibling 和 previousSibling 和 firstChild 和 lastChild 是 BFS
+
 ## NodeIterator
 
 较简单的 TreeWalker。
@@ -93,3 +98,8 @@
 
 - `nextNode`
 - `previousNode`
+
+### 一些不同
+
+1. NodeIterator 的 nextNode 方法首次结果是根节点，而 TreeWalker 的直接是它的首个子节点
+2. NodeIterator 只能是 DFS

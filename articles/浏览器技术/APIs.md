@@ -118,6 +118,8 @@ textContent 获取节点包含的**全部**文本内容，innerText 获取节点
 - `confirm(message: string = ''): boolean` 确认框
 - `prompt(title: string, default?: string = ''): string | null` 输入框
 
+兼容性问题：prompt 方法在 iOS 上的 Cancel 和 OK 两个按钮一样，按理，取消按钮的值得是 null。在 Chrome、Firefox 和 AndroidWebView 上都正常。
+
 ## 对象拷贝 -- Object.assign 与 structuredClone
 
 ### Object.assign

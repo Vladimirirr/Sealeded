@@ -1,6 +1,6 @@
 # Introduction
 
-This is My Own Personal Library, including all kinds of Computer Science technologies.
+This is My Own Personal Library, including all kinds of Computer Science technologies and tools.
 
 我的个人图书馆。
 
@@ -34,8 +34,7 @@ This is My Own Personal Library, including all kinds of Computer Science technol
 3. [TCP 的建立与释放](./articles/CSBase/TCP/index.md)
 4. [路由交换：IPv4](./articles/CSBase/Network/IPv4.md)
 5. [路由交换：IGP](./articles/CSBase/Network/IGP.md)
-6. [路由交换：路由与交换器](./articles/CSBase/Network/RouterWithSwitch.md)
-7. [路由交换：VLAN](./articles/CSBase/Network/VLAN.md)
+6. [路由交换：VLAN](./articles/CSBase/Network/VLAN.md)
 
 ## 外文翻译
 
@@ -97,11 +96,12 @@ This is My Own Personal Library, including all kinds of Computer Science technol
 
 1. [一个封装轻巧的 indexedDB 工具 -- idbStorage](./tools/idbStorage/)
 2. [一个大差不差的 UUID 生成器 -- getUUID](./tools/getUUID/)
-3. [一个较简单的长列表 -- infiniteList](./tools/infiniteList/)
-4. [一个持久化的计时器 -- storedTimeout](./tools/storedTimeout/)
-5. [一个 Vue 公共组件 -- ToastMessage](./tools/VueToastMessage/)
-6. [一个 Vue 公共组件 -- VueReusableTemplate](./tools/VueReusableTemplate/)
-7. [一些小工具集合](./tools/utilities/)
+3. [一个持久化的计时器 -- storedTimeout](./tools/storedTimeout/)
+4. [一个简单任务计划器 -- simpleTasksScheduler](./tools/simpleTasksScheduler/)
+5. [一个较简单的长列表 -- InfiniteList](./tools/InfiniteList/)
+6. [一个 Vue 公共组件 -- ToastMessage](./tools/VueToastMessage/)
+7. [一个 Vue 公共组件 -- VueReusableTemplate](./tools/VueReusableTemplate/)
+8. [一些小工具集合](./tools/utilities/)
 
 备注：
 

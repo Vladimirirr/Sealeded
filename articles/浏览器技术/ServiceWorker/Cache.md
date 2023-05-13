@@ -51,15 +51,26 @@ matchCfg:
 
 文档：<https://developer.mozilla.org/en-US/docs/Web/API/Cache>
 
+## 缓存清理
+
+```js
+caches.open(`caches_${currentVersion}`)
+caches.keys().then((name) => {
+  if (isTooOld(name, currentVersion)) {
+    caches.delete(name)
+  }
+})
+```
+
 ## Header `vary` 与缓存的关系
 
 单词 vary：v. 不同（特征、环境、等等）
 
 示例：
 
-小红操作 IE（旧代浏览器）和 Firefox（现代浏览器）访问目标网站，Server 会根据不同的 UA(UserAgent) 返回不同的结果（IE 的代码可能被转译），以提高访客的浏览体验，同时设置 `header.set('vary', 'user-agent')` 到返回的 response 里，以告诉下游的缓存 Server（如果有的话）在缓存此 response 时还要关注 `user-agent` 字段，不同的此字段的请求需要返回不同的缓存 response。
+小红操作 IE（旧代浏览器）和 Firefox（现代浏览器）访问同一个目标网站，该网站会根据不同的 UA(UserAgent) 返回不同的结果（IE 的代码可能被转译），以提高访客的浏览体验，同时在 response 设置 `header.set('vary', 'user-agent')`，以告诉下游的缓存代理（如果有的话）在缓存此 response 时还要关注 `user-agent` 字段，不同的此字段的请求需要返回不同的缓存 response。
 
-`vary`的目标是【缓存和代理 Server】，告诉这些 Server 要如何去缓存一个 response（除了要查看 host 和 path，还要关注 vary 字段）。
+`vary`的目标是【缓存 Serevr 和 代理 Server】，告诉这些 Server 要如何去缓存一个 response（除了要查看 host 和 path，还要关注 vary 字段）。
 
 因此，不同 `vary` 的相同请求（相同 URL）依旧表示不同的请求。
 

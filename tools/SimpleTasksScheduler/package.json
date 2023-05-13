@@ -8,10 +8,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Vladimirirr/Sealeded",
-    "directory": "tools/SimpleTasksScheduler"
+    "directory": "tools/simpleTasksScheduler"
   },
   "keywords": [
-    "SimpleTasksScheduler",
+    "simpleTasksScheduler",
     "scheduler"
   ],
   "license": "LGPL-3.0"
