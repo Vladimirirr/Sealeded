@@ -8,3 +8,155 @@
 ## 表单提交的页面
 
 当一个页面是由表单提交 `<form action method="POST">` 而得到的，重载此页面浏览器将提示 “是否重发已提交的表单？”。
+
+## 搭建私有 npm 仓库
+
+基本工作方式：
+
+1. 设置此 npm 的接口是内网地址：`npm config set registry http://172.31.0.10`
+2. 搭建 npm server，代理需要的 npm 请求（比如，下载、上传）
+3. 拦截下载请求，在内部里查找是否存在此包，存在的话就输出此包
+4. 不存在的话，查询外网地址（比如 npm 的官方地址），下载和缓存此包再输出
+5. 拦截上传请求，将包存放在内部
+
+包的保存方式：
+
+1. Filesystem
+2. Database
+3. Others: OSS
+
+方案：
+
+1. [verdaccio](https://github.com/verdaccio/verdaccio) (based on filesystem)
+2. [cnpmcore](https://github.com/cnpm/cnpmcore) (based on database)
+3. [nexus](https://www.sonatype.com/products/nexus-repository) 企业级的解决方案
+4. [artifactory](https://jfrog.com/artifactory) 同上
+
+## 路由与 URL
+
+在 URL 上，你能在【一个文件】或【一个目录】里，以`\`做区分，而在命令行模式下，你不能在【一个文件】里，永远只能在【一个目录】里，这是 URL 与命令行在路径处理上的最大区别，ReachRouter 采取的是命令行格式的路径，它忽视末端的`\`，`\some\where\` = `\some\where`。
+
+## axios 核心代码
+
+```js
+/**
+ * 发送请求的核心axios方法，来自axios.0.19.2
+ * @param {Object} config 请求的配置对象，与默认配置整合
+ * @return {Promise} 请求的结果
+ */
+Axios.prototype.request = function request(config) {
+  // get the resolved config
+  config = mergeConfig(this.defaults, config)
+
+  // 得到请求的promise链
+  // dispatchRequest在浏览器里就是XMLHttpRequest方法的封装
+  // 如果一个promise的then的fulfillment处理器是undefined或null，表示将结果继续传递下去
+  // 如果一个promise的then的rejection处理器是undefined或null，表示将错误继续抛出
+  var chain = [dispatchRequest, undefined]
+
+  // 得到请求结果的promise
+  var promise = Promise.resolve(config)
+
+  // 将此请求的全部请求拦截器（在请求前的中间件）插入到chain前面
+  this.interceptors.request.forEach(function unshiftRequestInterceptors(
+    interceptor
+  ) {
+    chain.unshift(interceptor.fulfilled, interceptor.rejected)
+  })
+
+  // 相反
+  this.interceptors.response.forEach(function pushResponseInterceptors(
+    interceptor
+  ) {
+    chain.push(interceptor.fulfilled, interceptor.rejected)
+  })
+
+  // 激活整个promise链
+  while (chain.length) {
+    promise = promise.then(chain.shift(), chain.shift())
+  }
+  // 核心！promise链！
+  // return (
+  //  Promise.resolve(config)
+  //  .then(requestInterceptor_2_fulfillment, requestInterceptor_2_rejection)
+  //  .then(requestInterceptor_1_fulfillment, requestInterceptor_1_rejection)
+  //  .then(dispatchRequest, undefined)
+  //  .then(responseInterceptor_1_fulfillment, responseInterceptor_1_rejection)
+  //  .then(responseInterceptor_2_fulfillment, responseInterceptor_2_rejection)
+  // )
+  // 得到表示请求结果的promise
+
+  return promise
+}
+```
+
+## underscore#template
+
+```js
+var userListView = `
+  <ol>
+  <%for ( let i = 0; i < users.length; i++ ){%>
+    <li>
+      <a href="<%=users[i].url%>">
+        <%=users[i].name%>
+        is
+        <%=users[i].age%>
+        years old.
+      </a>
+    </li>
+  <% } %>
+  </ol>
+  <b>above total: <%= users.length %></b>
+`
+var userListData = [
+  { name: 'nat', age: 18, url: 'http://localhost:3000/nat' },
+  { name: 'jack', age: 22, url: 'http://localhost:3000/jack' },
+]
+function templateSimple(str) {
+  var head = "var p = []; with(data){ p.push('"
+  var body = str
+    .replace(/[\r\n]/g, ' ')
+    .replace(/<%=(.+?)%>/g, "');p.push($1);p.push('")
+    .replace(/%>/g, "p.push('")
+    .replace(/<%/g, "');")
+  var tail = "');} return p.join('');"
+  return new Function('data', head + body + tail)
+}
+function template(str) {
+  var [interpolate, evaluate] = [/<%=(.+?)%>/g, /<%(.+?)%>/g] // interpolate插值 和 evaluate语句
+  var matcher = new RegExp(`${interpolate.source}|${evaluate.source}|$`, 'g')
+  var index = 0
+  var p = '' // position
+  var escapes = {
+    '\n': 'n',
+    '\r': 'r',
+    '\u2028': 'u2028',
+    '\u2029': 'u2029',
+    '\\': '\\',
+    "'": "'",
+  }
+  var escapeRegexp = /[\n\r\u2028\u2029\\']/g
+  var escapeChar = (match) => '\\' + escapes[match]
+  str.replace(matcher, function (match, interpolate, evaluate, offset) {
+    p += str.slice(index, offset).replace(escapeRegexp, escapeChar)
+
+    index = offset + match.length
+
+    if (interpolate) {
+      p += `' + (${interpolate} || \'\') + '`
+    } else if (evaluate) {
+      p += `'; ${evaluate} p+='`
+    }
+
+    return match
+  })
+  p = "var p = ''; with(data){ p+='" + p + "';} return p;"
+  return new Function('data', p)
+}
+```
+
+## 长连接技术
+
+1. Use setTimeout or setInterval
+2. SSE, Server Send Event (only server can send message and only supports text format)
+3. websocket (full duplex communication and supports binary and text format)
