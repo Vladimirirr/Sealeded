@@ -160,3 +160,41 @@ function template(str) {
 1. Use setTimeout or setInterval
 2. SSE, Server Send Event (only server can send message and only supports text format)
 3. websocket (full duplex communication and supports binary and text format)
+
+## TaggedTemplate
+
+带标签的模板字符串能实现一些特殊的目的，例如，能当作一门 DSL 的语法模板。因此，标准要求实现需要记住带标签的模板字符串得到的结果里任何与模板自己相关的内容（即，表现在 strings 参数上）。方便在构造 DSL 时，能知晓它是否来自同一个模板（即缓存模板）。
+
+示例：
+
+```js
+const store = new WeakMap()
+const html = (strings, ...vals) => {
+  if (store.has(strings)) {
+    console.log('Exists')
+    return store.get(strings)
+  }
+  console.log('New')
+  store.set(strings, vals.join('----'))
+  return store.get(strings)
+}
+
+{
+  html`aaaa${1}bbbb`
+  html`aaaa${2}bbbb`
+  // output: Exists x2
+}
+{
+  const getTpl = (title) => html`aaaa${title}bbbb`
+  getTpl(1)
+  getTpl(2)
+  // output: New Exists
+}
+
+// Spec: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates>
+
+// 标准指出：
+// The first argument received by the tag function is an array of strings. For any template literal, its length is equal to the number of substitutions (occurrences of `${expr}`) plus one, and is therefore always non-empty.
+// For any particular tagged template literal expression, the tag function will always be called with the exact same literal array, no matter how many times the literal is evaluated.
+// This allows the tag to cache the result based on the identity of its first argument. To further ensure the array value's stability, the first argument and its raw property are both frozen, so you can't mutate them in any way.
+```
