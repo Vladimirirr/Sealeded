@@ -91,7 +91,9 @@ func 函数的实际执行时间间隔要比代码中设定的时间间隔要短
 
 ## textContent 与 innerText
 
-textContent 获取节点包含的**全部**文本内容，innerText 获取节点**已经渲染出来**的文本。因此，innerText 获取不到 script 和 style 的内容。
+textContent 获取节点包含的**全部**文本内容（包括子节点的），innerText 获取节点**已经渲染出来**的文本（包括子节点的，简单地说，它和光标在此节点上选中的文本一样）。因此，innerText 获取不到 script 和 style 的内容。
+
+如果 innerText 的节点未被渲染（未被插入文档 或 被隐藏），此时它与 textContent 一样。
 
 ```html
 <div id="test">
@@ -106,9 +108,9 @@ textContent 获取节点包含的**全部**文本内容，innerText 获取节点
 </script>
 ```
 
-如果对 textContent 或 innerText 赋值，其实就是 innerHTML 的赋值！只是赋值的内容都将转成文本（特殊字符将被转义）。
+如果对 textContent 或 innerText 赋值，则移除之前的全部节点，再插入一个文本节点！特殊字符将被转义，空白将被缩合，但是 innterText 还会将 `\n` 转换到 `<br>`。
 
-换句话说，它和光标选中的此元素的文本内容相同。
+innerText 受样式的影响，因此在读它时会以目前的样式实时渲染一次，再输出结果，性能较低，会导致重排重绘，这与读节点的 scrollTop 类似。
 
 ## alert、confirm 与 prompt
 
