@@ -40,11 +40,12 @@ This is My Own Personal Library, including all kinds of Computer Science technol
 
 带我主观思考。
 
-1. [信号是前端框架的未来](./articles/translated/signals-vs-observables.md)
-2. [信号与可观察值](./articles/translated/signals-vs-observables.md)
-3. [前端框架响应式发展史](./articles/translated/history-of-reactivity.md)
-4. [`==`与`===`](./articles/translated/double-equal-vs-triple-equal.md)
-5. [被低估的 HTML 标签](./articles/translated/powerful-html-tags.md)
+1. [WebAssemblyScript 文档](./articles/WebAssembly/WebAssemblyScript/index.md)
+2. [信号是前端框架的未来](./articles/translated/signals-vs-observables.md)
+3. [信号与可观察值](./articles/translated/signals-vs-observables.md)
+4. [前端框架响应式发展史](./articles/translated/history-of-reactivity.md)
+5. [`==`与`===`](./articles/translated/double-equal-vs-triple-equal.md)
+6. [被低估的 HTML 标签](./articles/translated/powerful-html-tags.md)
 
 ## 综合
 
