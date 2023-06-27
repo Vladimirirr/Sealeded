@@ -75,3 +75,5 @@ No, AssemblyScript compiles to WebAssembly bytecode directly, statically, ahead-
 ### [Language](./Language.md)
 
 ### [Runtime](./Runtime.md)
+
+### [Examples](./Examples.md)
