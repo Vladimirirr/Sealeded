@@ -1,5 +1,7 @@
 # WebAssembly(WASM) 概述
 
+WebAssembly (abbreviated wasm) is a binary instruction format with a stack-based virtual machine, and is designed as a portable compilation target for programming languages, and can be run on browsers and other environments implementing WASI (WebAssembly System Interface).
+
 标准：<https://webassembly.github.io/spec/core/index.html>
 
 ## 前生：asm.js
@@ -109,7 +111,7 @@ import Foo from './foo.js'
 
 ## WASM 与 WASI
 
-[WAT](./WASI.md)
+[WASI](./WASI.md)
 
 ## Emscripten
 

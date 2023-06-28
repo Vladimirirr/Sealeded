@@ -97,7 +97,7 @@ Result WAT:
      i32.const 1
      i32.add
      local.set $i
-     br $for-loop-0 ;; block return, means to continue
+     br $for-loop-0 ;; br = break, here means continue loop
     end
    end
    local.get $sum ;; 最终的 sum 值入栈，栈目前只有一项（函数结果）
@@ -109,6 +109,15 @@ Result WAT:
   (export "factorial" (func $factorial))
 )
 
+```
+
+## 宿主函数的回值
+
+```wat
+(import "env" "outTest" (func $outTest (result i32)))
+;; 回值会被 JavaScript 转成符合 i32 类型的值
+;; 在 wasm 的 NaN = f32 or f64 的 0x8000000000000
+;; 在 wasm 的 Infinity = f32 or f64 的 inf
 ```
 
 ## 打印字符串的示例
@@ -171,4 +180,101 @@ const wasm = await WebAssembly.instantiateStreaming(
 )
 const memory = wasm.instance.exports.memory
 wasm.instance.exports.printHello()
+```
+
+## Table 的简单示例
+
+`WebAssembly`:
+
+```wat
+(module
+  (func $f1 (result i32)
+    i32.const 42)
+  (func $f2 (result i32)
+    i32.const 16)
+  (table 2 funcref) ;; includes 2 elements with type funcref(function reference)
+  (elem (i32.const 0) $f1 $f2) ;; `i32.const 0` represents the start offset of $f1 and $f2
+  (type $return_i32 (func (result i32))) ;; defines a type
+  (func (export "callWithIndex") (param $idx i32) (result i32)
+    local.get $idx
+    call_indirect (type $return_i32) ;; call a function at position $idx with specified type
+  )
+)
+
+```
+
+`test.js`:
+
+```js
+const wasm = await WebAssembly.instantiateStreaming(
+  fetch('./build/test.wasm'),
+  {}
+)
+console.log(wasm.instance.exports.callByIndex(0)) // 42
+console.log(wasm.instance.exports.callByIndex(1)) // 16
+console.log(wasm.instance.exports.callByIndex(2)) // RuntimeError: The table index is out of bounds.
+```
+
+## Table 和 Memory 实现函数共享
+
+A simple kind of DLL(Dynamic Link Library).
+
+两个 wasm 共享同一个 内存对象 和 表格对象（函数**指针**）。
+
+`test1.wat`:
+
+```wat
+(module
+  (import "env" "memory" (memory 1)) ;; 导入的内存大小要匹配
+  (import "env" "table" (table 2 funcref)) ;; 导入的数量和类型要匹配
+  (elem (i32.const 0) $sharedFn) ;; 把 $sharedFn 保存到 table 的 0 号位置（目前仅支持一个 table，因此不需要显式指定 table 名字）
+  (func $sharedFn (result i32)
+    i32.const 0
+    i32.load ;; 载入和得到内存 0 位置的值
+
+    ;; 或这样写（参数在指令的下面），像 JavaScript 的函数一样，但不是全部的 WAT Compiler 都支持
+    ;; i32.load (i32.const 0)
+  )
+)
+
+```
+
+`test2.wat`:
+
+```wat
+(module
+  (import "env" "memory" (memory 1))
+  (import "env" "table" (table 2 funcref))
+  (type $void_to_i32 (func (result i32)))
+  (func (export "callSharedFnWithParams") (result i32)
+    i32.const 0
+    i32.const 42
+    i32.store ;; store 42(as a param for sharedFn) at address 0
+    i32.const 0
+    call_indirect (type $void_to_i32) ;; call
+  )
+)
+
+```
+
+`test.js`:
+
+```js
+const table = new WebAssembly.Table({ initial: 2, element: 'anyfunc' }) // 2 elements with anyfunc(eq funcref in new version)
+const memory = new WebAssembly.Memory({ initial: 1 }) // 1 Page = 64 KB = 65536 Bytes
+
+const importObject = {
+  env: { table, memory },
+}
+
+const init = async () => {
+  const wasm = await Promise.all([
+    WebAssembly.instantiateStreaming(fetch('./build/test1.wasm'), importObject),
+    WebAssembly.instantiateStreaming(fetch('./build/test2.wasm'), importObject),
+  ])
+  window.wasm = wasm
+  console.log('result', wasm[1].instance.exports.callSharedFnWithParams())
+}
+
+init()
 ```
