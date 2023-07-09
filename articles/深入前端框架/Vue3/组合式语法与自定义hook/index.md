@@ -265,6 +265,10 @@ const Foo = {
 
 ## 自定义 Hook 的本质
 
+Vue 的 Hook 本质上是将响应式的低级 API 暴露出来，响应式功能灵活多变，不再只有【data】和【computed】的两个定义方式，也不再只有【watch】的一个自定义处理入口。
+
+React 的 Hook 本质是解决函数组件不具备副效果的问题（比如 Lifecycle）。
+
 ### React
 
 React 一直是基于 `state > render > vdom > diff > patch > view` 思想的工作方式，React16 及其后续版本提出的异步与并发渲染也只是把 diff 阶段变地可中断，整体工作方式依旧不变。

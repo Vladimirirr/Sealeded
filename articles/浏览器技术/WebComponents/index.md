@@ -74,6 +74,34 @@ Order: div constructed -> div connected -> p constructed -> p connected -> div d
 
 示例 [index.html](./customBuiltinElm/index.html)。
 
+此标准没有被 Safari 或 WebKit 的浏览器实现，它们认为扩展一个已知元素功能的最好方法是对此元素附上不同功能的特性（即 CustomAttribute，类似 Vue 的自定义指令），例如（伪代码）：
+
+```html
+<p make-round="12px">Hello</p>
+<script>
+  // 对节点 `border-radius: xxxx`
+  class MakeRound extends Attribute {
+    constructor() {}
+    makeRound() {
+      this.style.borderRadius = this.attributes.get('make-round')
+    }
+    connectedCallback() {
+      // 此特性附上节点时，或带此特性的节点连接到文档时
+      this.makeRound()
+    }
+    disconnectedCallback() {
+      // 相反
+      this.style.borderRadius = ''
+    }
+    valueChanged(oldValue, newValue) {
+      // 特性值变化时
+      this.makeRound()
+    }
+  }
+  customAttrbutes.define('make-round', MakeRound)
+</script>
+```
+
 ## Shadow Dom
 
 一个元素可以有如下两种 DOM 树：
