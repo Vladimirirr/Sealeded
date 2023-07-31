@@ -1,6 +1,6 @@
 # SharedWorker
 
-SharedWorker 是一个特定类型的 WebWorker，可在多个浏览器上下文间共享数据，例如，多个 窗口、iframe、DedicatedWorker、等等。
+SharedWorker 是一个特定类型的 WebWorker，可在多个浏览器上下文间共享同一个 Worker，例如，多个 窗口、iframe、worker、等等。
 
 这些上下文需要 same-origin。
 

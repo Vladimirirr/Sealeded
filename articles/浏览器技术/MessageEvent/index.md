@@ -1,6 +1,6 @@
 # MessageEvent
 
-不同【浏览上下文】间的信息交换格式 MessageEvent(<- Event <- Object)。
+不同【浏览上下文】间的信息交换格式 MessageEvent(<- Event <- Object)，即便此事件继承自 DOM Event 接口，但是它【不冒泡】、【不能取消】、【没有默认行为】。
 
 The properties of the MessageEvent:
 

@@ -1,6 +1,8 @@
 # MessageChannel
 
-连接两个不同的【浏览上下文】，比如：iframe 的、DWroker 的、等等。
+连接两个不同的【浏览上下文】（不必 same-origin），比如：iframe 的、worker 的、等等。
+
+它有两个 MessagePort 对象（即 port1 和 port2），是消息管道的两端，同时也是 Transferable 对象，因此可通过支持传递它们的 postMessage 方法传递到其他地方从而建立安全的消息管道。
 
 ## 示例
 
