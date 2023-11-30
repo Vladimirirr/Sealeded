@@ -4,13 +4,15 @@ Run concurrent works with a limit.
 
 有限制地控制并发量。
 
-实现基理：
+参见 `test.html` 的示例以学习如何操作。
+
+## 实现基理
 
 1. JavaScript 单线程，一次只能处理一个任务
 2. 迭代器的每次消耗都是唯一的值，不会出现重复的消耗
 
 ```js
-// 演示 demo
+// 实现基理的演示 demo
 
 const delay = (t) => new Promise((a) => setTimeout(a, t * 1e3))
 

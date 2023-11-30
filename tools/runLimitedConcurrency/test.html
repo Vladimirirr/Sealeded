@@ -22,12 +22,14 @@
       const test1Flag = 'test without limited, should be 5s'
       const test2Flag = 'test with limited 2, should be 7s'
 
+      // 无限制
       console.time(test1Flag)
       runLimitedConcurrency(testWorks).then((res) => {
         console.log("the 1 testWorks' results", res)
         console.timeEnd(test1Flag)
       })
 
+      // 限制最大并发量 2，因此结果会慢一点
       console.time(test2Flag)
       runLimitedConcurrency(testWorks, 2).then((res) => {
         console.log("the 2 testWorks' results", res)
