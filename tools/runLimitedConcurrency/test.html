@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script type="module">
+      import runLimitedConcurrency from './index.js'
+
+      const delay = (t) => new Promise((a) => setTimeout(a, t * 1e3))
+
+      const testWorks = [
+        async () => (await delay(1)) || 11,
+        async () => (await delay(2)) || 22,
+        async () => (await delay(4)) || 44,
+        async () => (await delay(5)) || 55,
+      ]
+
+      const test1Flag = 'test without limited, should be 5s'
+      const test2Flag = 'test with limited 2, should be 7s'
+
+      console.time(test1Flag)
+      runLimitedConcurrency(testWorks).then((res) => {
+        console.log("the 1 testWorks' results", res)
+        console.timeEnd(test1Flag)
+      })
+
+      console.time(test2Flag)
+      runLimitedConcurrency(testWorks, 2).then((res) => {
+        console.log("the 2 testWorks' results", res)
+        console.timeEnd(test2Flag)
+      })
+    </script>
+  </body>
+</html>

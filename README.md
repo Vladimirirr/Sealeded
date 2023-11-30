@@ -96,12 +96,13 @@ This is My Own Personal Library, including all kinds of Computer Science technol
 
 1. [一个封装轻巧的 indexedDB 工具 -- idbStorage](./tools/idbStorage/)
 2. [一个大差不差的 UUID 生成器 -- getUUID](./tools/getUUID/)
-3. [一个持久化的计时器 -- storedTimeout](./tools/storedTimeout/)
-4. [一个简单任务计划器 -- simpleTasksScheduler](./tools/simpleTasksScheduler/)
-5. [一个较简单的长列表 -- InfiniteList](./tools/InfiniteList/)
-6. [一个 Vue 公共组件 -- ToastMessage](./tools/VueToastMessage/)
-7. [一个 Vue 公共组件 -- VueReusableTemplate](./tools/VueReusableTemplate/)
-8. [一些小工具集合](./tools/utilities/)
+3. [一个并发量控制器 -- runLimitedConcurrency](./tools/runLimitedConcurrency/)
+4. [一个持久化的计时器 -- storedTimeout](./tools/storedTimeout/)
+5. [一个简单任务计划器 -- simpleTasksScheduler](./tools/simpleTasksScheduler/)
+6. [一个较简单的长列表 -- InfiniteList](./tools/InfiniteList/)
+7. [一个 Vue 公共组件 -- ToastMessage](./tools/VueToastMessage/)
+8. [一个 Vue 公共组件 -- VueReusableTemplate](./tools/VueReusableTemplate/)
+9. [一些小工具集合](./tools/utilities/)
 
 备注：
 

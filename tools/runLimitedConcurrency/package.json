@@ -1,0 +1,23 @@
+{
+  "name": "run-limited-concurrency",
+  "version": "1.0.0",
+  "description": "Run concurrent works with a limit.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Open the test.html for testing.\""
+  },
+  "author": "RYZZ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vladimirirr/Sealeded",
+    "directory": "tools/runLimitedConcurrency"
+  },
+  "keywords": [
+    "concurrency",
+    "concurrent",
+    "limited",
+    "promise"
+  ],
+  "license": "LGPL-3.0"
+}

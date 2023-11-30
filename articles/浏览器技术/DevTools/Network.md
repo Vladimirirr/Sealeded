@@ -10,7 +10,7 @@
 
 ```json
 // 修改 testReq 请求的配置文件的内容
-// ~/localhost%3A5500/home/testPage/testReq/.headers
+// ~/localhost%3A5500/home/testPage/.headers
 [
   {
     "applyTo": "testReq", // 支持通配符 `*`（零或多个字符）和 `?`（一个字符）
@@ -26,7 +26,7 @@
 
 ### `Override content`
 
-覆盖（修改）某请求的内容体，同样按照 URL 保存在本地。
+覆盖（修改）某请求的内容体，内容体按 URL 以文件的方式保存在本地（因此不支持全部的响应方式，也不支持通配符）。
 
 这能快速地实现前端的 mock 需求。
 
