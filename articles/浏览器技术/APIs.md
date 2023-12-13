@@ -209,7 +209,9 @@ This method is intended for analytics and diagnostics code to send data to a ser
 - 任何 fetch 或 XHR 支持的内容类型都可以被发送（包括，ArrayBuffer、Blob、FormData、字符串、等等）
 - 返回值表示浏览器是否已经接受了此请求（同时也做出承诺）
 
-## WebShare API
+## Web Share API
+
+文档：<https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API>
 
 The Web Share API provides a mechanism for sharing text, links, files, and other content to an arbitrary share target selected by the user.
 
@@ -250,6 +252,38 @@ btn.addEventListener('click', async () => {
     alert('失败（其他）')
   }
 })
+```
+
+## Web Device Memory API
+
+文档：<https://developer.mozilla.org/en-US/docs/Web/API/Device_Memory_API>
+
+仅在安全上下文。也存在 Worker 里。
+
+仅 FF 不支持。
+
+能帮我们推测当前客户端的内存大小（估计值），以前只能靠 `userAgent` 去猜。
+
+```ts
+type T_RAM = 0.25 | 0.5 | 1 | 2 | 4 | 8 // 单位 GB
+const RAM: T_RAM = navigator.deviceMemory
+// 只会返回 T_RAM 定义的值，不暴露真正的内存大小（保护低配或高配设备的隐私）
+```
+
+## Web Vibration API
+
+文档：<https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API>
+
+仅 Safari 不支持。
+
+Vibration for mobile devices.
+
+```js
+navigator.vibrate(200) // vibrate 200ms
+navigator.vibrate([200, 100, 200]) // vibrate 200ms -> pause 100ms -> vibrate 200ms
+navigator.vibrate(0) // 取消当前的 vibrate，下同
+navigator.vibrate([])
+navigator.vibrate([0])
 ```
 
 ## import.meta
