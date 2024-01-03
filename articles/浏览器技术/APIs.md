@@ -134,11 +134,11 @@ ES6 标准。
 
 ### structuredClone
 
-深拷贝一个值（任意类型）。
+深拷贝一个值（任意类型），且支持对象键对的循环互引。
 
-语法：`structuredClone(value: any, { transfer?: Transferable[] }): any`
+语法：`structuredClone(value: T<any>, { transfer?: Transferable[] }): T | Error`
 
-这其实是浏览器内部的 [结构化拷贝方法](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) 对外暴露的实现方法。
+这其实是浏览器内部的 [结构化拷贝方法](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) 对外暴露的实现方法，它还支持转移原始值中的可转移对象。
 
 下面列出的值不能拷贝：
 
