@@ -36,60 +36,6 @@
 
 在 URL 上，你能在【一个文件】或【一个目录】里，以`\`做区分，而在命令行模式下，你不能在【一个文件】里，永远只能在【一个目录】里，这是 URL 与命令行在路径处理上的最大区别，ReachRouter 采取的是命令行格式的路径，它忽视末端的`\`，`\some\where\` = `\some\where`。
 
-## axios 核心代码
-
-```js
-/**
- * 发送请求的核心axios方法，来自axios.0.19.2
- * @param {Object} config 请求的配置对象，与默认配置整合
- * @return {Promise} 请求的结果
- */
-Axios.prototype.request = function request(config) {
-  // get the resolved config
-  config = mergeConfig(this.defaults, config)
-
-  // 得到请求的promise链
-  // dispatchRequest在浏览器里就是XMLHttpRequest方法的封装
-  // 如果一个promise的then的fulfillment处理器是undefined或null，表示将结果继续传递下去
-  // 如果一个promise的then的rejection处理器是undefined或null，表示将错误继续抛出
-  var chain = [dispatchRequest, undefined]
-
-  // 得到请求结果的promise
-  var promise = Promise.resolve(config)
-
-  // 将此请求的全部请求拦截器（在请求前的中间件）插入到chain前面
-  this.interceptors.request.forEach(function unshiftRequestInterceptors(
-    interceptor
-  ) {
-    chain.unshift(interceptor.fulfilled, interceptor.rejected)
-  })
-
-  // 相反
-  this.interceptors.response.forEach(function pushResponseInterceptors(
-    interceptor
-  ) {
-    chain.push(interceptor.fulfilled, interceptor.rejected)
-  })
-
-  // 激活整个promise链
-  while (chain.length) {
-    promise = promise.then(chain.shift(), chain.shift())
-  }
-  // 核心！promise链！
-  // return (
-  //  Promise.resolve(config)
-  //  .then(requestInterceptor_2_fulfillment, requestInterceptor_2_rejection)
-  //  .then(requestInterceptor_1_fulfillment, requestInterceptor_1_rejection)
-  //  .then(dispatchRequest, undefined)
-  //  .then(responseInterceptor_1_fulfillment, responseInterceptor_1_rejection)
-  //  .then(responseInterceptor_2_fulfillment, responseInterceptor_2_rejection)
-  // )
-  // 得到表示请求结果的promise
-
-  return promise
-}
-```
-
 ## underscore#template
 
 ```js

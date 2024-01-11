@@ -1,6 +1,10 @@
 # lodash
 
-## 链式方法
+官网：<https://github.com/lodash/lodash>
+
+一套 JavaScript 工具方法集，是 underscore 的继承者。
+
+## 链式
 
 Use `_.chain(dataSource).methodA(func).methodB(func)[...methods].value()` to open an operations chaining.
 
