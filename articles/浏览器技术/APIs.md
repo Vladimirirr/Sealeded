@@ -389,3 +389,9 @@ The browser maintains a fullscreen-ed stack. So, the `requestFullscreen` means p
 
 - `Element.webkitRequestFullscreen` 和 `Element.webkitRequestFullScreen`（注意，此处的 `S` ！）都存在在 Chrome 里。但是只有 `webkitExitRequestFullscreen` 存在, 而 `webkitExitRequestFullScreen` 不存在（离谱！）。
 - 带前缀的 `webkitRequest*` 和 `webkitExit*` 只触发带前缀的 `onwebkitfullscreenchange` 事件，不触发标准的 `onfullscreenchange` 的事件。同理，标准的 `reques*` 和 `exit*` 只触发标准的 `onfullscreenchange` 事件。
+
+## document.designMode
+
+`document.designMode: 'on' || 'off' = 'off'` 控制整个文档是否可编辑。
+
+所有浏览器都支持。
