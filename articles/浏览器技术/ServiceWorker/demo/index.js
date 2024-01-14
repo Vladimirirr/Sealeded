@@ -1,11 +1,22 @@
 // 当前环境 this = ServiceWorkerGlobalScope
 
+/**
+ * sw 有如下事件：
+ * 生命事件：oninstall onactivate
+ * 功能事件：onfetch onsync onpush
+ * 通信事件：onmessage
+ * 由于 oninstall 和 onactivate 需要一定的准备时间，因此提供了 waitUntil 方法，它能保证功能事件在其准备结束才被陆续处理
+ */
+
 const thisVersion = '20230222.1' // the version of the sw, which created in building stage
 
 oninstall = (e) => {
+  // 开始安装，进入安装过程
+  // 安装过程通常做：缓存的建立（比如 indexedDB 和 caches）
   // initialize the indexedDB or caches
   // 此时此 sw 可能不能立刻激活（可能其他正在执行旧 sw 的页面还没全部关闭）
-  // 可以在这里执行 skipWaiting() 来立刻激活此 sw 而不需要再等待，需要注意的是，只是接下来 open 的页面执行此 sw，老的已经 opened 的页面继续旧的 sw
+  // 可以在这里执行 skipWaiting() 来要求此 sw 立刻进入激活过程而不需要再等待旧的页面关闭，需要注意的是，只是接下来 open 的页面执行此 sw，老的已经 opened 的页面继续旧的 sw
+  // skipWaiting 方法仅在 oninstall 里有效
   // 一个 sw 的 install 只执行一次
   console.log('sw installing', e)
   // install 的准备工作
@@ -38,7 +49,8 @@ oninstall = (e) => {
 }
 
 onactivate = (e) => {
-  // 此 sw 需要做激活前的准备工作（比如，清除旧的缓存）
+  // 开始激活，进入激活过程
+  // 激活过程通常做：缓存的清理（比如 清除旧的缓存）
   // 一个 sw 的 activate 只执行一次
   console.log('sw activating', e)
   e.waitUntil(async () => {
@@ -154,3 +166,6 @@ onfetch = (e) => {
 // onmessage = (e) => {
 //   console.log(`The ServiceWorker received a message from host: ${e.data}`)
 // }
+
+// onsync
+// onpush

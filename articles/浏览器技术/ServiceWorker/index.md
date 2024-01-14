@@ -1,5 +1,7 @@
 # ServiceWorker
 
+地址：<https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API>
+
 ## 概述
 
 离线缓存的终极方案，代理一个网站的**全部**请求，从而细颗粒度地控制需要被缓存的资源。

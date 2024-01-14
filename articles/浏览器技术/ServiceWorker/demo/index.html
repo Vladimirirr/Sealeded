@@ -56,10 +56,11 @@
     </script>
     <script>
       // SW 的功能非常强大，只能在 https 或 localhost 下使用
+      // 如果获取的 index.js 与已经安装的特征码（比如 md5）相同，则直接忽略
       navigator.serviceWorker.register('/index.js').then(
-        (e) => {
-          console.log('SW registered', e)
-          // swInstance = e.active = navigator.serviceWorker.controller
+        (registration) => {
+          console.log('SW registered', registration)
+          // swInstance = registration.active = navigator.serviceWorker.controller
         },
         (err) => {
           console.error(err)

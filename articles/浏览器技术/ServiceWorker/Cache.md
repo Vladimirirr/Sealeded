@@ -1,5 +1,7 @@
 # Cache
 
+地址：<https://developer.mozilla.org/en-US/docs/Web/API/caches>
+
 The Cache interface provides a persistent storage mechanism for request and response object pairs that are cached in long lived memory.
 
 Note that the Cache interface is exposed to GlobalThis and WebWorker. You don't have to use it in conjunction with ServiceWorker, even though it is defined in the ServiceWorker specification.
