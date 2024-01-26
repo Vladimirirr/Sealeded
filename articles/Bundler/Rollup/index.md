@@ -2,21 +2,15 @@
 
 JavaScript 的打包工具，严格践行 ES Module 标准。
 
+官网：<https://rollupjs.org/>
+
 ## vs. Webpack
 
 Webpack 是大而全的 web 打包工具（从名字便能看出），而 Rollup 更专注 JavaScript 的打包。
 
 ## 重要或难懂的配置
 
-### input
-
-### output
-
-### external
-
-### plugins
-
-### watch
+查看 `./preset/rollup.config.lib.js` 模板。
 
 ## 插件
 
@@ -30,16 +24,14 @@ Rollup 仅能读写标准的 ES 模块，不支持旧时的 CJS 模块，因此�
 
 #### @rollup/plugin-node-resolve
 
-Locate modules using the [Node.js resolution algorithm](https://nodejs.org/api/modules.html#modules_all_together) for using third party modules in `node_modules`.
-
-它详细阐述了 CJS 中有关 `require()` 方法的生效细节，及其伪代码。
+Locate a module with the [Node.js resolution algorithm](https://nodejs.org/api/modules.html#modules_all_together).
 
 举例：
 
 ```js
 // 如果没引入此插件，打包会报错，不能找到此导入，因为标准的 ESM 必须需要文件的路径和扩展名
-import foo from 'Foo' // 没有 路径 和 扩展名
-import foo from './Foo' // 没有 扩展名
+import foo from 'foo' // 没有 路径 和 扩展名
+import foo from './foo' // 没有 扩展名
 ```
 
 #### @rollup/plugin-babel
@@ -115,7 +107,7 @@ Replace targeted strings in files while bundling.
 
 Import a file as a base64 data or asset identifier(if the file's size exceeds the limit).
 
-This will copy a file to the destination with a hashed filename, if the size exceeds the limit. A file will always be copied when the limit is set to 0.
+This will copy a file to the destination with a hashed filename if the size exceeds the limit. A file will always be copied when the limit is set to 0.
 
 #### @rollup/image
 

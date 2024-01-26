@@ -350,5 +350,3 @@ var desc = 'some math operations'
   var __webpack_exports__ = __webpack_require__('./src/index.js')
 })()
 ```
-
-> 2021-03-16
