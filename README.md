@@ -62,6 +62,8 @@ This is My Own Personal Library, including all kinds of Computer Science technol
 
 ## 打包相关
 
+这些目录下的 `preset` 子目录存放着此打包工具的一些场景的最佳实践（个认）。
+
 1. [Webpack](./articles/Bundler/Webpack/index.md)
 2. [Rollup](./articles/Bundler/Rollup/index.md)
 3. [Babel](./articles/Bundler/Babel/index.md)
