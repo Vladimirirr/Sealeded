@@ -244,6 +244,7 @@ Tree Sharking = 树摇，摇晃一棵树从而去掉死去的枝叶。
 
 早在 Webpack2 时，已经存在了检测死模块的技术，会报告未被任何东西依赖的模块（即死模块）。随着 ES Module 出现（静态模块机制），Rollup 将 TreeSharking 发扬到极致。接着，Webpack4 升级了它的 Tree Sharking。
 
-## 深入打包结果
+## 实践
 
-[传送门](./output.example.md)
+- [深入打包结果](./output.example.md)
+- [vue-loader 如何工作的](./VueLoader.md)
