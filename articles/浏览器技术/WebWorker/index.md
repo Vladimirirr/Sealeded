@@ -67,7 +67,9 @@ TransferableObject: <https://developer.mozilla.org/en-US/docs/Web/API/Web_Worker
 
 语法：`[self.]importScript(path1, path2, ...)`
 
-在 worker 内部引入脚本（直接在当前的 worker 环境内执行此脚本，相当于 C 语言的`#include`）。
+路径可以是绝对的或相对的，如果是相对的，那么相当于当前文档的根地址（即 HTML document's base URL）。
+
+在 worker 内部引入脚本（直接在当前的 worker 环境内执行此脚本，相当于 C 语言的`#include`），不需要遵循同源策略。
 
 The importScripts method **synchronously** imports and runs one or more scripts into the worker's scope。
 
