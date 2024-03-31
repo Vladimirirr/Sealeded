@@ -250,3 +250,4 @@ Tree Sharking = 树摇，摇晃一棵树从而去掉死去的枝叶。
 
 - [深入打包结果](./output.example.md)
 - [vue-loader 如何工作的](./VueLoader.md)
+- [dynamic require](./DynamicRequire.md)
