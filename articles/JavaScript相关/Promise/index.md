@@ -2,7 +2,15 @@
 
 Promise 的出现与最佳实践。
 
-## Callback
+A Promise represents the eventual result(completed or failed) of an asynchronous operation, in other words, a Promise is a future value for an asynchronous operation.
+
+本文不考虑 [Thenable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#thenables)（在真正的 Promise 未出现前，JavaScript 社区对 Promise 的一种简易实现）。
+
+文档：<https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise>
+
+标准：<https://tc39.es/ecma262/multipage/control-abstraction-objects.html#sec-promise-objects>
+
+## Callback (Traditional callback-based asynchronous operations)
 
 关键词：失去控制、失去信任、嵌套地狱
 
@@ -39,7 +47,7 @@ Promise 的出现与最佳实践。
 嵌套地狱的代码示例：
 
 ```js
-// 采取一个很简单的前端工具框架 -- jQuery
+// 采取一个很简单的前端工具库 -- jQuery
 // $是jQuery的简写标识符
 // $.ajax是jQuery对XHR的封装，类似axios
 $.ajax({
@@ -76,7 +84,7 @@ $.ajax({
 
 ```html
 <script>
-  // 控制反转、信任反转：我们的callback的控制权依旧是我们的，而且我们可以信任callback执行的次数和传入的参数、等等
+  // 控制反转、信任反转：我们的callback的控制权依旧是我们的，而且我们可以信任callback执行的次数和传入的参数
   // 代理、中立：其他系统代码与我们的callback被一个中立的代理者控制着
   // 一次性：其他系统代码只能返回一次结果（即Promise里的决议术语），即便将来它继续返回结果也将被代理者忽略
 
@@ -84,8 +92,8 @@ $.ajax({
   const payBtn = document.getElementById('payBtn')
   // 我们请出我们的代理者，即Promise
   const promise = new Promise((resolve) => {
-    // 此函数将立刻执行
-    // 我们把resolve传入其他系统的代码里（即，我们的callback不再是我们的支付函数，而是代理者的决议标识函数），resolve表示决议此Promise，而且只有首次的resolve有效，这就是控制反转，Promise让我们的callback又回到了我们自己的代码里
+    // 此函数在代理者创建完成时立刻执行
+    // 我们把resolve传入到其他系统的代码里（即，我们的callback不再是我们的支付函数，而是代理者的决议标识函数），resolve表示决议此Promise，而且只有首次的resolve有效，这就是控制反转，Promise让对我们的callback的操作又回到了我们自己的代码里，耶！
     payBtn.addEventListener('click', resolve)
   })
   promise.then((res) => {
@@ -159,6 +167,67 @@ const foo = async () => {
 }
 ```
 
+## Promise report time
+
+On microtask lifecycle in each EventLoop, JavaScript engine will check all existed promises:
+
+1. 如果此 Promise 已拒绝，且还没有任何 onRejected 处理器处理过它，将在控制台报告此 Promise，即 `Uncaught (in promise) Error: xxxx`
+2. 如果此 Promise 已决议，且存在还未被调用过的处理器，那么这些处理器将被执行
+
+## Promise status
+
+Promise 的状态变化是单一方向的，即，pending 要么变到 fulfilled（通过 resolve 方法），要么变到 rejected（通过 resolve 或 reject 方法），要么不变。
+
+Promise 的状态是不可逆转的，即，一旦变到了 fulfilled 或 rejected（统称 settled），再也不可能变回到 pending。
+
+### 术语
+
+- `pending 挂起`：Promise 的结果还是未知的
+- `resolve 解决`：尝试去解决一个 Promise，结果可能是 fulfilled，也可能是 rejected，甚至是 pending，取决传入给 resolve 方法的参数
+- `reject 拒绝`：直接拒绝此 Promise
+- `resolved 已解决`：resolve 了的 Promise
+- `fulfilled 已成功、已完成`：Promise 已经有了结果，是一个成功的结果
+- `rejected 已拒绝、被拒绝`：Promise 已经有了结果，是一个失败的结果
+- `settled 已决议`：Promise 已经有了结果，即已经决议
+
+### 状态变化
+
+#### resolve 导致的变化
+
+```mermaid
+flowchart TD
+
+settled["settled"]
+resolved["resolved"]
+
+pending["A pending Promise called A"] --"resolve"--> resolving["resolving"]
+
+resolving --"resolve with a non-Promise value"--> resolved --"fulfilled with the value" --> fulfilled["fulfilled"] --> settled
+resolving --"resolve with another Promise called X"--> resolved --"listen for the Promise X"--> listen["listening"]
+
+listen --"X always pending\nA always pending too"--> pending2["pending forever"]
+listen --"X fulfilled\nfullfill A with X's value"--> fulfilled2["fulfilled"] --> settled
+listen --"X rejected\nreject A with X's reason"--> rejected["rejected"] --> settled
+
+```
+
+#### reject 导致的变化
+
+```mermaid
+flowchart TD
+
+pending["pending"] --"reject"--> rejected["rejected with the reason passed in"] --> settled["settled"]
+```
+
+#### 变化说明
+
+1. 有一个 Promise，它已经做好了某一件事，那么 resolve 它，让它从 pending 变到 fulfilled，同时传入一个 value 表示此事的结果
+2. 有一个 Promise，它未能做好某一个事，那么 reject 它，让它从 pending 变到 rejected，同时传入一个 reason 表示它为什么没有做好此事
+
+## APIs
+
+[Promise APIs.](./APIs.md)
+
 ## 总结
 
 Promise 目的：使非同步任务**可控制可信任**且**高效地链式组合**的技术
@@ -172,5 +241,3 @@ Promise 如何解决：
 
 1. 创建一个 promise，由此 promise 代理此 api 的状态变更和对应的 callback
 2. 支持链式语法
-
-Promise 执行的时机：每轮事件循环的微任务阶段，JavaScript 引擎将收集和执行全部已经决议的 promise，遇到未被捕获的拒绝的 promise 将抛出错误
