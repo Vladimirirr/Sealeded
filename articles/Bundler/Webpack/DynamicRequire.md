@@ -2,6 +2,8 @@
 
 Env: webpack@4，同时也参考了 webpack@5 的输出
 
+## 正文
+
 目录结构：
 
 ```txt
@@ -13,7 +15,7 @@ Env: webpack@4，同时也参考了 webpack@5 的输出
     ./mockServer.js
 ```
 
-`/src/utils/mockServer.js` 文件：
+文件 `/src/utils/mockServer.js`：
 
 ```js
 // 当 require 导入的模块带表达式时（即 dynamic require），由于构建时不知道会导入的具体模块，因此会创建一个模块请求上下文（包含了所有可能导入的模块，并被打包到此导入所在的 bundle 里）
@@ -131,3 +133,33 @@ const webpackInternalModulesMap = {
   },
 }
 ```
+
+## 额外的
+
+### 带表达式的 require
+
+带表达式的 require 导入模块时的通常格式：`require( static files_directory, dynamic file_name, static file_extension )`。
+
+#### 示例
+
+下面输出基于 webpack@5。
+
+例子：
+
+1. `require("../mock/" + which + ".js")` -> `__webpack_require__("./src/mock sync recursive ^\\.\\/.*\\.js$")("./" + which + ".js")`
+2. `require("../mock" + which + ".js")` -> `__webpack_require__("./src sync recursive ^\\.\\/mock.*\\.js$")("./mock" + which + ".js")`
+3. `require("../mock/" + which + which2 + ".js")` -> `__webpack_require__("./src/mock sync recursive ^\\.\\/.*\\.js$")("./" + which + which2 + ".js")`
+4. `require("../mock/" + which + ".js" + which2)` -> `__webpack_require__("./src/mock sync recursive ^\\.\\/.*$")("./" + which + ".js" + which2)`
+5. `require("../mock/" + which)` -> `__webpack_require__("./src/mock sync recursive ^\\.\\/.*$")("./" + which)`
+6. `require(which0 + "../mock/" + which + ".js")` -> `__webpack_require__("./src/utils sync recursive ^.*\\.js$")(which0 + "../mock/" + which + ".js")`
+7. `require(which)` -> `__webpack_require__("./src/utils sync recursive ^.*$")(which)`
+
+释义：
+
+1. 标准，给出了意义明确的三部分，即，目录、变量和扩展名
+2. 由于少了目录的结束分隔符，因此导入的目录不是 `../mock` 而是 `../`
+3. 根本上与 `1` 一样，多个变量相当于一个
+4. 由于文件扩展名定义处出现了变量，因此相当于没给出真正的扩展名
+5. 同样没给出文件扩展名
+6. 由于文件目录定义处出现了变量，因此相当于没给出真正的目录，webpack 默认是此导入所在的目录
+7. 没给出目录和扩展名
