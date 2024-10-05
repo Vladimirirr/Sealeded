@@ -149,10 +149,10 @@ Flex 是 Flexible Box 的缩写，一种灵活的一维布局方案（一维指�
 
 语法：`flex-basic: auto* | content | <length>`
 
-主轴方向的项目的基本尺寸（基本尺寸指的是，此项目在未被伸缩之前的尺寸）。
+主轴方向的项目的基本尺寸（基本尺寸指的是初始尺寸，即此项目在未被伸缩之前的尺寸）。
 
-- `auto`：同下
-- `content`：表示参考我的 width 或 height，如果没 width 也没 height，就参考我的实际内容产生的尺寸
+- `auto`：参考我的 width 或 height，如果未设置即 `content`
+- `content`：参考我的实际内容产生的尺寸
 
 它会覆盖通过 width（主轴水平方向时） 或 height（主轴垂直方向时） 设置的项目的尺寸。
 
