@@ -144,3 +144,17 @@ const html = (strings, ...vals) => {
 // For any particular tagged template literal expression, the tag function will always be called with the exact same literal array, no matter how many times the literal is evaluated.
 // This allows the tag to cache the result based on the identity of its first argument. To further ensure the array value's stability, the first argument and its raw property are both frozen, so you can't mutate them in any way.
 ```
+
+## 模板字符串中的换行在源代码与运行时里的不同
+
+假设 `foo.js` 文件是 CRLF 换行：
+
+```js
+const aa = `
+a
+b
+`
+console.log(aa.length) // output: 4
+```
+
+此文件模板字符串部分的字节大小是 6，但是 JavaScript 引擎（Chrome 和 Firefox）在解析这部分字符串时，`\r\n` 变成了 `\n`。
